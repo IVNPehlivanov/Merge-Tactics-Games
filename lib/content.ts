@@ -1,0 +1,87 @@
+export const SITE = {
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://mergedle.com",
+  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Mergedle",
+  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@mergedle.com",
+};
+
+export type GameMetaItem = {
+  slug: string;
+  title: string;
+  description: string;
+  shortDesc: string;
+  mode: "daily" | "endless";
+  comingSoon?: boolean;
+  seoHowItWorks: string;
+};
+
+export const GAME_META: GameMetaItem[] = [
+  {
+    slug: "classic",
+    title: "Classic Wordle",
+    description: "Guess the daily Merge Tactics tactician from stat clues",
+    shortDesc: "Guess from stats",
+    mode: "daily",
+    seoHowItWorks: "Each guess reveals whether the mystery tactician matches on elixir cost, traits, type, and release year.",
+  },
+  {
+    slug: "pixel",
+    title: "Pixel Card",
+    description: "Identify the tactician from a pixelated card image",
+    shortDesc: "Pixelated image",
+    mode: "daily",
+    seoHowItWorks: "The card image starts heavily pixelated. Each wrong guess reveals a clearer version.",
+  },
+  {
+    slug: "skin",
+    title: "Guess the Skin",
+    description: "Which tactician does this skin belong to?",
+    shortDesc: "Skin clue",
+    mode: "daily",
+    seoHowItWorks: "A skin image is shown — guess which tactician it belongs to.",
+  },
+  {
+    slug: "mode-4",
+    title: "Coming Soon",
+    description: "New game mode — coming soon",
+    shortDesc: "Coming soon",
+    mode: "daily",
+    comingSoon: true,
+    seoHowItWorks: "",
+  },
+  {
+    slug: "mode-5",
+    title: "Coming Soon",
+    description: "New game mode — coming soon",
+    shortDesc: "Coming soon",
+    mode: "daily",
+    comingSoon: true,
+    seoHowItWorks: "",
+  },
+];
+
+// Only real game slugs (no coming-soon) — used for daily progress tracking
+export const DAILY_ACTIVE_SLUGS = ["classic", "pixel", "skin"] as const;
+
+// Flow order for NextModeLink
+export const GAME_FLOW_SLUGS = ["classic", "pixel", "skin"];
+
+export function getGameMetaBySlug(slug: string): GameMetaItem | undefined {
+  return GAME_META.find((g) => g.slug === slug);
+}
+
+export function getNextGameBySlug(currentSlug: string): GameMetaItem | null {
+  const idx = GAME_FLOW_SLUGS.indexOf(currentSlug);
+  if (idx === -1 || idx === GAME_FLOW_SLUGS.length - 1) return null;
+  return getGameMetaBySlug(GAME_FLOW_SLUGS[idx + 1]) ?? null;
+}
+
+export function getGameLogoPath(slug: string): string {
+  const map: Record<string, string> = {
+    classic: "/Game-Logos/Classic.webp",
+    pixel:   "/Game-Logos/Pixel.webp",
+    skin:    "/Game-Logos/Skin.webp",
+    "mode-4": "/Game-Logos/Coming-Soon.webp",
+    "mode-5": "/Game-Logos/Coming-Soon.webp",
+  };
+  return map[slug] ?? "/Game-Logos/Classic.webp";
+}

@@ -1,0 +1,22 @@
+# Mergedle — AI Search Index
+
+Mergedle is an unofficial Merge Tactics fan site with daily Wordle-style puzzle games.
+All games are free and require no login. Game state is stored in your browser only.
+
+## Active Games
+
+- https://mergedle.com/classic — Classic Wordle: guess the daily Merge Tactics tactician from stat clues (elixir cost, traits, type, release year)
+- https://mergedle.com/pixel — Pixel Card: guess the tactician from a pixelated card image that gets clearer with each wrong guess
+- https://mergedle.com/skin — Guess the Skin: identify which tactician owns the daily skin image
+
+## Site Pages
+
+- https://mergedle.com — Homepage with all game modes
+- https://mergedle.com/about-us — About Mergedle
+- https://mergedle.com/privacy-policy — Privacy Policy
+- https://mergedle.com/terms-of-service — Terms of Service
+
+## Notes
+
+- Puzzles reset daily at midnight UTC
+- Not affiliated with Supercell
