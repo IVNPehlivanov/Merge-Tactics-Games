@@ -2,67 +2,63 @@
 import Link from "next/link";
 import { GAME_META } from "@/lib/content";
 
-const CENTER = { x: 300, y: 300 };
-const RADIUS = 190;
-const NODE_R = 60;
-const ANGLES = [270, 342, 54, 126, 198]; // degrees, clockwise from top
-
-function toLogoPath(slug: string): string {
-  return `/Game-Logos/${slug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("-")}.webp`;
-}
+const BTN_BG = "url('/homepage/buttons.jpg')";
 
 export default function HomeInfographic() {
-  const nodes = GAME_META.map((game, i) => {
-    const angle = (ANGLES[i] * Math.PI) / 180;
-    return {
-      ...game,
-      x: CENTER.x + RADIUS * Math.cos(angle),
-      y: CENTER.y + RADIUS * Math.sin(angle),
-    };
-  });
-
   return (
-    <section className="w-full flex justify-center py-8 px-4">
-      <svg viewBox="0 0 600 600" className="w-full max-w-lg" aria-label="Game modes">
-        {/* Connector lines */}
-        {nodes.map((n) => {
-          const dx = n.x - CENTER.x;
-          const dy = n.y - CENTER.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const ex = CENTER.x + (dx / dist) * NODE_R;
-          const ey = CENTER.y + (dy / dist) * NODE_R;
-          return (
-            <line key={n.slug} x1={ex} y1={ey} x2={n.x} y2={n.y}
-              stroke={n.comingSoon ? "rgba(156,163,175,0.2)" : "rgba(99,102,241,0.35)"}
-              strokeWidth="1.5" />
-          );
-        })}
+    <section className="w-full max-w-sm mx-auto px-4 pb-6 flex flex-col gap-3" aria-label="Game modes">
+      <p className="text-center text-white/60 text-xs uppercase tracking-widest font-semibold mb-1">
+        Choose a gamemode
+      </p>
 
-        {/* Center node */}
-        <circle cx={CENTER.x} cy={CENTER.y} r={NODE_R} fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.5)" strokeWidth="2" />
-        <text x={CENTER.x} y={CENTER.y + 6} textAnchor="middle" fill="#818cf8" fontSize="12" fontWeight="bold">MERGEDLE</text>
-
-        {/* Game nodes */}
-        {nodes.map((n) =>
-          n.comingSoon ? (
-            <g key={n.slug} opacity="0.4">
-              <circle cx={n.x} cy={n.y} r={NODE_R}
-                fill="rgba(30,30,50,0.9)" stroke="rgba(156,163,175,0.4)" strokeWidth="2" />
-              <text x={n.x} y={n.y - 6} textAnchor="middle" fill="#9ca3af" fontSize="18">?</text>
-              <text x={n.x} y={n.y + NODE_R + 16} textAnchor="middle" fill="#6b7280" fontSize="10">Coming Soon</text>
-            </g>
-          ) : (
-            <Link key={n.slug} href={`/${n.slug}`}>
-              <circle cx={n.x} cy={n.y} r={NODE_R}
-                fill="rgba(30,30,50,0.9)" stroke="rgba(99,102,241,0.6)" strokeWidth="2"
-                className="cursor-pointer hover:stroke-indigo-400 transition-all" />
-              <image href={toLogoPath(n.slug)}
-                x={n.x - 24} y={n.y - 24} width="48" height="48" />
-              <text x={n.x} y={n.y + NODE_R + 16} textAnchor="middle" fill="white" fontSize="10">{n.title}</text>
-            </Link>
-          )
-        )}
-      </svg>
+      {GAME_META.map((game) =>
+        game.comingSoon ? (
+          <div
+            key={game.slug}
+            className="relative flex items-center cursor-not-allowed select-none"
+            style={{ height: 80 }}
+          >
+            <div
+              className="absolute inset-0 grayscale opacity-40"
+              style={{ backgroundImage: BTN_BG, backgroundSize: "100% 100%" }}
+            />
+            <div className="relative flex items-center w-full px-3">
+              {/* circle slot */}
+              <div className="flex-shrink-0 w-14 h-14 flex items-center justify-center">
+                <span className="text-white/30 text-2xl font-bold">?</span>
+              </div>
+              {/* text */}
+              <div className="ml-3">
+                <p className="font-game text-white/30 text-base leading-tight">Coming Soon</p>
+                <p className="text-white/25 text-xs mt-0.5">New game mode</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <Link
+            key={game.slug}
+            href={`/${game.slug}`}
+            className="relative flex items-center group"
+            style={{ height: 80 }}
+          >
+            <div
+              className="absolute inset-0 transition-brightness duration-150 group-hover:brightness-110"
+              style={{ backgroundImage: BTN_BG, backgroundSize: "100% 100%" }}
+            />
+            <div className="relative flex items-center w-full px-3">
+              {/* circle slot — left area of button image */}
+              <div className="flex-shrink-0 w-14 h-14" />
+              {/* text on the dark panel */}
+              <div className="ml-3 min-w-0">
+                <p className="font-game text-amber-400 text-lg leading-tight drop-shadow group-hover:text-amber-300 transition-colors">
+                  {game.title}
+                </p>
+                <p className="text-white/70 text-xs mt-0.5 leading-snug">{game.description}</p>
+              </div>
+            </div>
+          </Link>
+        )
+      )}
     </section>
   );
 }
