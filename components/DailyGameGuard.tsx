@@ -21,6 +21,7 @@ import dynamic from "next/dynamic";
 const ClassicGame = dynamic(() => import("@/app/classic/ClassicGame"));
 const PixelGame = dynamic(() => import("@/app/pixel/PixelGame"));
 const SkinGame = dynamic(() => import("@/app/skin/SkinGame"));
+const DescriptionGame = dynamic(() => import("@/app/description/DescriptionGame"));
 
 interface Props {
   slug: string;
@@ -62,12 +63,13 @@ export default function DailyGameGuard({ slug }: Props) {
   }
 
   if (hasPlayed) {
-    const rulerKey = persistedState?.secretRulerKey ?? "";
     const cardKey = persistedState?.secretKey ?? persistedState?.secretCardKey ?? "";
     const isSkin = slug === "skin";
     const guessCount = (persistedState?.guesses ?? []).length;
-    const imgSrc = isSkin && rulerKey ? rulerImagePath(rulerKey) : cardKey ? cardImagePath(cardKey) : null;
-    const displayName = isSkin && rulerKey ? (getRulerByKey(rulerKey)?.name ?? rulerKey) : cardKey ? getCardDisplayName(cardKey) : null;
+    const skinImagePath = (persistedState as Record<string, unknown>)?.secretSkinImagePath as string | undefined;
+    const skinName     = (persistedState as Record<string, unknown>)?.secretSkinName     as string | undefined;
+    const imgSrc      = isSkin ? (skinImagePath ?? null) : cardKey ? cardImagePath(cardKey) : null;
+    const displayName = isSkin ? (skinName ?? null)      : cardKey ? getCardDisplayName(cardKey) : null;
 
     return (
       <div className="text-center py-8 animate-fade-up">
@@ -155,6 +157,8 @@ export default function DailyGameGuard({ slug }: Props) {
       const secretEntry: SkinEntry = getDailySecretFromPool(skinPool, "skin", dayKey);
       return <SkinGame secretEntry={secretEntry} dayKey={dayKey} onSolved={onSolved} />;
     }
+    case "description":
+      return <DescriptionGame dayKey={dayKey} onSolved={onSolved} />;
     default:
       return <p className="text-white/50 text-center">Unknown game mode.</p>;
   }

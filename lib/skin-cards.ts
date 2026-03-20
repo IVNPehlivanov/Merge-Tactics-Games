@@ -1,44 +1,39 @@
 import { RULERS } from "./ruler-stats";
 
 export interface SkinEntry {
-  rulerKey: string;   // must match a key in RULERS
-  skinName: string;   // display name
-  imagePath: string;  // /Skins/*.webp
+  rulerKey: string;
+  skinName: string;
+  imagePath: string;
 }
 
 export const SKIN_POOL: SkinEntry[] = [
-  // Royale King
-  { rulerKey: "royale_king",    skinName: "Marble King",         imagePath: "/Skins/Marble-King.webp" },
-  { rulerKey: "royale_king",    skinName: "Velvet King",         imagePath: "/Skins/Velvet-King.webp" },
-  { rulerKey: "royale_king",    skinName: "Ghoul King",          imagePath: "/Skins/Ghoul-King.webp" },
-  { rulerKey: "royale_king",    skinName: "Santa King",          imagePath: "/Skins/Santa-King.webp" },
+  // Royal King
+  { rulerKey: "royale_king",    skinName: "Marble King",       imagePath: "/rulers/Royal_King/Marble_Royal_King.png" },
+  { rulerKey: "royale_king",    skinName: "Velvet King",       imagePath: "/rulers/Royal_King/Velvet_Royal_King.png" },
+  { rulerKey: "royale_king",    skinName: "Ghoul King",        imagePath: "/rulers/Royal_King/Ghoul_Royal_King.png" },
+  { rulerKey: "royale_king",    skinName: "Santa King",        imagePath: "/rulers/Royal_King/Santa_Royal_King.png" },
   // Spirit Empress
-  { rulerKey: "spirit_empress", skinName: "Ivy Empress",         imagePath: "/Skins/Ivy-Empress.webp" },
-  { rulerKey: "spirit_empress", skinName: "Auric Empress",       imagePath: "/Skins/Auric-Empress.webp" },
-  { rulerKey: "spirit_empress", skinName: "Wushi Empress",       imagePath: "/Skins/Wushi-Empress.webp" },
-  { rulerKey: "spirit_empress", skinName: "Astral Empress",      imagePath: "/Skins/Astral-Empress.webp" },
+  { rulerKey: "spirit_empress", skinName: "Ivy Empress",       imagePath: "/rulers/Spirit_Empress/Ivy_Spirit_Empress.png" },
+  { rulerKey: "spirit_empress", skinName: "Auric Empress",     imagePath: "/rulers/Spirit_Empress/Auric_Spirit_Empress.png" },
+  { rulerKey: "spirit_empress", skinName: "Wushi Empress",     imagePath: "/rulers/Spirit_Empress/Wushi_Spirit_Empress.png" },
+  { rulerKey: "spirit_empress", skinName: "Astral Empress",    imagePath: "/rulers/Spirit_Empress/Astral_Spirit_Empress.png" },
   // Goblin Queen
-  { rulerKey: "goblin_queen",   skinName: "Jade Queen",          imagePath: "/Skins/Jade-Queen.webp" },
-  { rulerKey: "goblin_queen",   skinName: "Chaos Queen",         imagePath: "/Skins/Chaos-Queen.webp" },
-  { rulerKey: "goblin_queen",   skinName: "Malevolent Queen",    imagePath: "/Skins/Malevolent-Queen.webp" },
-  { rulerKey: "goblin_queen",   skinName: "Serpentine Queen",    imagePath: "/Skins/Serpentine-Queen.webp" },
+  { rulerKey: "goblin_queen",   skinName: "Jade Queen",        imagePath: "/rulers/Goblin_Queen/Jade_Goblin_Queen.png" },
+  { rulerKey: "goblin_queen",   skinName: "Chaos Queen",       imagePath: "/rulers/Goblin_Queen/Chaos_Goblin_Queen.png" },
+  { rulerKey: "goblin_queen",   skinName: "Malevolent Queen",  imagePath: "/rulers/Goblin_Queen/Malevolent_Goblin_Queen.png" },
+  { rulerKey: "goblin_queen",   skinName: "Serpentine Queen",  imagePath: "/rulers/Goblin_Queen/Serpentine_Goblin_Queen.png" },
   // Elixir Loong
-  { rulerKey: "elixir_loong",   skinName: "Spirit Loong",        imagePath: "/Skins/Spirit-Loong.webp" },
-  { rulerKey: "elixir_loong",   skinName: "Lava Loong",          imagePath: "/Skins/Lava-Loong.webp" },
-  { rulerKey: "elixir_loong",   skinName: "Aqua Loong",          imagePath: "/Skins/Aqua-Loong.webp" },
+  { rulerKey: "elixir_loong",   skinName: "Spirit Loong",      imagePath: "/rulers/Elixir_Loong/Spirit_Elixir_Loong.png" },
+  { rulerKey: "elixir_loong",   skinName: "Lava Loong",        imagePath: "/rulers/Elixir_Loong/Lava_Elixir_Loong.png" },
+  { rulerKey: "elixir_loong",   skinName: "Aqua Loong",        imagePath: "/rulers/Elixir_Loong/Aqua_Elixir_Loong.png" },
   // Battle Machine
-  { rulerKey: "battle_machine", skinName: "Zebrawood Machine",   imagePath: "/Skins/Zebrawood-Machine.webp" },
-  { rulerKey: "battle_machine", skinName: "Scheme Machine",      imagePath: "/Skins/Scheme-Machine.webp" },
-  { rulerKey: "battle_machine", skinName: "Forge Machine",       imagePath: "/Skins/Forge-Machine.webp" },
+  { rulerKey: "battle_machine", skinName: "Zebrawood Machine", imagePath: "/rulers/Battle_Machine/Zebrawood_Battle_Machine.png" },
+  { rulerKey: "battle_machine", skinName: "Scheme Machine",    imagePath: "/rulers/Battle_Machine/Scheme_Battle_Machine.png" },
+  { rulerKey: "battle_machine", skinName: "Forge Machine",     imagePath: "/rulers/Battle_Machine/Forge_Battle_Machine.png" },
   // Echo Sage
-  { rulerKey: "echo_sage",      skinName: "Echo Sage",           imagePath: "/Skins/Echo-Sage.webp" },
-  { rulerKey: "echo_sage",      skinName: "Sunlight Sage",       imagePath: "/Skins/Sunlight-Sage.webp" },
-  { rulerKey: "echo_sage",      skinName: "Starborn Sage",       imagePath: "/Skins/Starborn-Sage.webp" },
-  { rulerKey: "echo_sage",      skinName: "Spectral Sage",       imagePath: "/Skins/Spectral-Sage.webp" },
-  // Dagger Duchess
-  { rulerKey: "dagger_duchess", skinName: "Disguised Duchess",   imagePath: "/Skins/Disguised-Duchess.webp" },
-  { rulerKey: "dagger_duchess", skinName: "Duchess of Hearts",   imagePath: "/Skins/Duchess-of-Hearts.webp" },
-  { rulerKey: "dagger_duchess", skinName: "Crystalline Duchess", imagePath: "/Skins/Crystalline-Duchess.webp" },
+  { rulerKey: "echo_sage",      skinName: "Sunlight Sage",     imagePath: "/rulers/Echo_Sage/Sunlight_Echo_Sage.png" },
+  { rulerKey: "echo_sage",      skinName: "Starborn Sage",     imagePath: "/rulers/Echo_Sage/Starborn_Echo_Sage.png" },
+  { rulerKey: "echo_sage",      skinName: "Spectral Sage",     imagePath: "/rulers/Echo_Sage/Spectral_Echo_Sage.png" },
 ];
 
 export function getValidSkinPool(): SkinEntry[] {

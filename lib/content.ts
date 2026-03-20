@@ -40,13 +40,12 @@ export const GAME_META: GameMetaItem[] = [
     seoHowItWorks: "A skin image is shown — guess which tactician it belongs to.",
   },
   {
-    slug: "mode-4",
-    title: "Coming Soon",
-    description: "New game mode — coming soon",
-    shortDesc: "Coming soon",
+    slug: "description",
+    title: "Description",
+    description: "Read the card description and guess which card it is",
+    shortDesc: "Description clue",
     mode: "daily",
-    comingSoon: true,
-    seoHowItWorks: "",
+    seoHowItWorks: "A card's in-game description is shown. Guess which Merge Tactics card matches it.",
   },
   {
     slug: "mode-5",
@@ -60,10 +59,10 @@ export const GAME_META: GameMetaItem[] = [
 ];
 
 // Only real game slugs (no coming-soon) — used for daily progress tracking
-export const DAILY_ACTIVE_SLUGS = ["classic", "pixel", "skin"] as const;
+export const DAILY_ACTIVE_SLUGS = ["classic", "pixel", "skin", "description"] as const;
 
 // Flow order for NextModeLink
-export const GAME_FLOW_SLUGS = ["classic", "pixel", "skin"];
+export const GAME_FLOW_SLUGS = ["classic", "pixel", "skin", "description"];
 
 export function getGameMetaBySlug(slug: string): GameMetaItem | undefined {
   return GAME_META.find((g) => g.slug === slug);
@@ -77,11 +76,10 @@ export function getNextGameBySlug(currentSlug: string): GameMetaItem | null {
 
 export function getGameLogoPath(slug: string): string {
   const map: Record<string, string> = {
-    classic: "/Game-Logos/Classic.webp",
-    pixel:   "/Game-Logos/Pixel.webp",
-    skin:    "/Game-Logos/Skin.webp",
-    "mode-4": "/Game-Logos/Coming-Soon.webp",
-    "mode-5": "/Game-Logos/Coming-Soon.webp",
+    classic:     "/game_logos/classicmergedle.webp",
+    pixel:       "/game_logos/pixelmergedle.webp",
+    skin:        "/game_logos/skinmergedle.webp",
+    description: "/game_logos/descriptionmergedle.webp",
   };
-  return map[slug] ?? "/Game-Logos/Classic.webp";
+  return map[slug] ?? "/game_logos/mergedlelogo.webp";
 }

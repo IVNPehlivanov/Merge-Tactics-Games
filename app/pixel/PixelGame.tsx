@@ -1,13 +1,9 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+
+import { useMemo, useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
-import {
-  getCardKeys,
-  getCardDisplayName,
-  cardMatchesSearch,
-  findExactMatchKey,
-  cardImagePath,
-} from "@/lib/card-stats";
+import { getCardKeys, getCardDisplayName, cardImagePath } from "@/lib/card-stats";
+import { getRulerKeys, getRulerByKey, defaultRulerImagePath } from "@/lib/ruler-stats";
 import {
   getDailySecretFromPool,
   markPlayedToday,
@@ -15,163 +11,354 @@ import {
   getPersistedGameState,
 } from "@/lib/daily";
 import NextModeLink from "@/components/NextModeLink";
-import Image from "next/image";
+import DailyResetTimer from "@/components/DailyResetTimer";
 
-interface Props {
-  dayKey: string;
-  onSolved: () => void;
+// ── Canvas pixel config (copied from wrdle) ──────────────────────────────────
+const DISPLAY_WIDTH  = 200;
+const DISPLAY_HEIGHT = 260;
+
+/** Pixelation grid: (wrongCount + 2) × (wrongCount + 3), starts at 2×3 */
+function getPixelGrid(wrongCount: number): [number, number] {
+  return [wrongCount + 2, wrongCount + 3];
 }
 
-interface PersistedState {
-  guesses: string[];
-  won: boolean;
-  secretKey: string;
+/** Crop insets so we sample inner art only, avoiding card frame edges */
+const CROP_INSET_X      = 0.15;
+const CROP_INSET_TOP    = 0.25;
+const CROP_INSET_BOTTOM = 0.25;
+
+// ── PixelatedCard ─────────────────────────────────────────────────────────────
+function PixelatedCard({ src, pixelWidth, pixelHeight }: { src: string; pixelWidth: number; pixelHeight: number }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !src) return;
+
+    const img = new Image();
+    img.onload = () => {
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const w = Math.max(2, pixelWidth);
+      const h = Math.max(2, pixelHeight);
+
+      const sx = img.width  * CROP_INSET_X;
+      const sy = img.height * CROP_INSET_TOP;
+      const sw = img.width  * (1 - 2 * CROP_INSET_X);
+      const sh = img.height * (1 - CROP_INSET_TOP - CROP_INSET_BOTTOM);
+
+      const offscreen = document.createElement("canvas");
+      offscreen.width  = w;
+      offscreen.height = h;
+      const off = offscreen.getContext("2d");
+      if (!off) return;
+
+      off.imageSmoothingEnabled = false;
+      off.drawImage(img, sx, sy, sw, sh, 0, 0, w, h);
+
+      const data    = off.getImageData(0, 0, w, h);
+      const blockW  = DISPLAY_WIDTH  / w;
+      const blockH  = DISPLAY_HEIGHT / h;
+
+      canvas.width  = DISPLAY_WIDTH;
+      canvas.height = DISPLAY_HEIGHT;
+      for (let py = 0; py < h; py++) {
+        for (let px = 0; px < w; px++) {
+          const idx = (py * w + px) * 4;
+          const r = data.data[idx];
+          const g = data.data[idx + 1];
+          const b = data.data[idx + 2];
+          const a = data.data[idx + 3];
+          const x  = Math.floor(px * blockW);
+          const y  = Math.floor(py * blockH);
+          const bw = px === w - 1 ? DISPLAY_WIDTH  - x : Math.ceil(blockW);
+          const bh = py === h - 1 ? DISPLAY_HEIGHT - y : Math.ceil(blockH);
+          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+          ctx.fillRect(x, y, bw, bh);
+        }
+      }
+    };
+    img.src = src;
+  }, [src, pixelWidth, pixelHeight]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={DISPLAY_WIDTH}
+      height={DISPLAY_HEIGHT}
+      className="rounded-lg shadow-lg"
+    />
+  );
 }
 
-const MAX_BLUR = 40;
-const BLUR_STEP = 8;
+// ── EntryThumbnail ────────────────────────────────────────────────────────────
+function EntryThumbnail({ imagePath }: { imagePath: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded bg-white/10 text-white/40">?</div>
+    );
+  }
+  return (
+    <img
+      src={imagePath}
+      alt=""
+      width={56}
+      height={56}
+      className="h-14 w-14 flex-shrink-0 rounded object-contain"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
+// ── Combined pool (cards + rulers) ───────────────────────────────────────────
+interface PoolEntry { key: string; name: string; imagePath: string; }
+
+function buildPool(): PoolEntry[] {
+  const cards = getCardKeys().map((k) => ({
+    key: k,
+    name: getCardDisplayName(k),
+    imagePath: cardImagePath(k),
+  }));
+  const rulers = getRulerKeys().map((k) => ({
+    key: `ruler__${k}`,
+    name: getRulerByKey(k)?.name ?? k,
+    imagePath: defaultRulerImagePath(k),
+  }));
+  return [...cards, ...rulers];
+}
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface Props { dayKey: string; onSolved: () => void; }
+interface PersistedState { wrongGuesses: string[]; won: boolean; secretKey: string; }
+
+// ── Main component ────────────────────────────────────────────────────────────
 export default function PixelGame({ dayKey, onSolved }: Props) {
-  const cardKeys = getCardKeys();
-  const secretKey = getDailySecretFromPool(cardKeys, "pixel", dayKey);
+  const pool      = useMemo(() => buildPool(), []);
+  const poolKeys  = useMemo(() => pool.map((e) => e.key), [pool]);
+  const secretKey = useMemo(() => getDailySecretFromPool(poolKeys, "pixel", dayKey), [poolKeys, dayKey]);
+  const secretEntry = useMemo(() => pool.find((e) => e.key === secretKey)!, [pool, secretKey]);
 
-  const [guesses, setGuesses] = useState<string[]>([]);
-  const [won, setWon] = useState(false);
-  const [input, setInput] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [error, setError] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [wrongGuesses, setWrongGuesses] = useState<string[]>([]);
+  const [won,          setWon]          = useState(false);
+  const [search,       setSearch]       = useState("");
+  const [dropdownOpen, setDropdown]     = useState(false);
 
+  const searchInputRef   = useRef<HTMLInputElement>(null);
+  const searchSectionRef = useRef<HTMLDivElement>(null);
+  const winBoxRef        = useRef<HTMLElement | null>(null);
+  const justWonRef       = useRef(false);
+
+  // Restore persisted state
   useEffect(() => {
     const saved = getPersistedGameState<PersistedState>("pixel", dayKey);
     if (saved && saved.secretKey === secretKey) {
-      setGuesses(saved.guesses);
-      setWon(saved.won);
+      setWrongGuesses(saved.wrongGuesses ?? []);
+      if (saved.won) setWon(true);
     }
   }, [dayKey, secretKey]);
 
-  const blurAmount = Math.max(0, MAX_BLUR - guesses.length * BLUR_STEP);
-  const imagePath = cardImagePath(secretKey);
+  // Confetti on win
+  useEffect(() => {
+    if (!won || !justWonRef.current || !winBoxRef.current) return;
+    const el = winBoxRef.current;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const x = (rect.left + rect.width  / 2) / window.innerWidth;
+        const y = (rect.top  + rect.height / 2) / window.innerHeight;
+        const opts = { particleCount: 120, origin: { x, y }, spread: 100, startVelocity: 65, scalar: 1.8 };
+        confetti({ ...opts, angle: 60 });
+        confetti({ ...opts, angle: 120 });
+        justWonRef.current = false;
+      });
+    });
+  }, [won]);
 
-  const persist = (g: string[], w: boolean) => {
-    setPersistedGameState("pixel", dayKey, { guesses: g, won: w, secretKey });
-  };
+  // Close dropdown on outside click
+  useEffect(() => {
+    function onOutside(e: MouseEvent | TouchEvent) {
+      if (searchSectionRef.current?.contains(e.target as Node)) return;
+      setDropdown(false);
+    }
+    document.addEventListener("mousedown", onOutside);
+    document.addEventListener("touchstart", onOutside, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", onOutside);
+      document.removeEventListener("touchstart", onOutside);
+    };
+  }, []);
 
-  const handleInput = (val: string) => {
-    setInput(val);
-    setError("");
-    if (val.length < 1) { setSuggestions([]); return; }
-    setSuggestions(
-      cardKeys
-        .filter((k) => cardMatchesSearch(k, val) && !guesses.includes(k))
-        .slice(0, 8)
-    );
-  };
+  const alreadyGuessed  = useMemo(() => new Set(wrongGuesses), [wrongGuesses]);
+  const filteredEntries = useMemo(() => {
+    if (!search.trim()) return [];
+    const q = search.trim().toLowerCase();
+    return pool.filter((e) => !alreadyGuessed.has(e.key) && e.name.toLowerCase().includes(q));
+  }, [pool, search, alreadyGuessed]);
 
-  const submitGuess = (key: string) => {
-    setInput("");
-    setSuggestions([]);
-    if (guesses.includes(key)) { setError("Already guessed!"); return; }
+  const [pixelWidth, pixelHeight] = getPixelGrid(wrongGuesses.length);
+  const src = secretEntry.imagePath;
 
-    const newGuesses = [...guesses, key];
-    const isWon = key === secretKey;
+  function handleGuess(key: string) {
+    if (alreadyGuessed.has(key)) return;
+    setSearch("");
+    setDropdown(false);
 
-    setGuesses(newGuesses);
-    persist(newGuesses, isWon);
-
-    if (isWon) {
+    if (key === secretKey) {
+      justWonRef.current = true;
       setWon(true);
       markPlayedToday("pixel");
+      setPersistedGameState("pixel", dayKey, { wrongGuesses, won: true, secretKey });
       onSolved();
-      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ["#818cf8", "#34d399", "#60a5fa"] });
+      return;
     }
-  };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const key = findExactMatchKey(input);
-    if (key) { submitGuess(key); return; }
-    if (suggestions.length === 1) { submitGuess(suggestions[0]); return; }
-    setError("Select a card from the list.");
-  };
+    const newWrong = [...wrongGuesses, key];
+    setWrongGuesses(newWrong);
+    setPersistedGameState("pixel", dayKey, { wrongGuesses: newWrong, won: false, secretKey });
+  }
+
+  function submitFromSearch() {
+    if (filteredEntries.length === 0) return;
+    const q = search.trim().toLowerCase();
+    const exact = filteredEntries.find((e) => e.name.toLowerCase() === q);
+    handleGuess(exact ? exact.key : filteredEntries[0].key);
+  }
 
   return (
-    <div className="space-y-4">
-      {/* Pixelated image */}
-      <div className="flex justify-center my-4">
-        <div className="relative w-48 h-48 rounded-2xl overflow-hidden border-2 border-white/20">
-          <Image
-            src={imagePath}
-            alt="Mystery card"
-            fill
-            className="object-cover transition-all duration-500"
-            style={{ filter: won ? "none" : `blur(${blurAmount}px)`, transform: "scale(1.05)" }}
-            unoptimized
+    <div className="space-y-6">
+
+      {/* ── Pixelated / revealed image ── */}
+      <section className="flex justify-center">
+        {won ? (
+          <img
+            src={src}
+            alt={secretEntry.name}
+            width={DISPLAY_WIDTH}
+            height={DISPLAY_HEIGHT}
+            className="rounded-lg shadow-lg"
+            style={{ width: DISPLAY_WIDTH, height: DISPLAY_HEIGHT, objectFit: "contain" }}
           />
-        </div>
-      </div>
+        ) : (
+          <PixelatedCard src={src} pixelWidth={pixelWidth} pixelHeight={pixelHeight} />
+        )}
+      </section>
 
-      {!won && (
-        <p className="text-center text-white/50 text-xs">
-          Wrong guesses reduce blur · {guesses.length} guess{guesses.length !== 1 ? "es" : ""} so far
-        </p>
-      )}
-
-      {!won && (
-        <div className="relative">
-          <form onSubmit={handleFormSubmit} className="flex gap-2">
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => handleInput(e.target.value)}
-              placeholder="Type a card name…"
-              autoComplete="off"
-              className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/30 outline-none focus:border-indigo-400/60 text-sm"
-            />
-            <button type="submit" className="px-4 py-2 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-400 transition-colors text-sm">
-              Guess
-            </button>
-          </form>
-
-          {suggestions.length > 0 && (
-            <ul className="absolute z-20 w-full mt-1 bg-gray-900 border border-white/20 rounded-lg overflow-hidden shadow-xl">
-              {suggestions.map((k) => (
-                <li key={k}>
-                  <button
-                    type="button"
-                    className="w-full text-left px-3 py-2 text-sm hover:bg-white/10 text-white"
-                    onClick={() => submitGuess(k)}
-                  >
-                    {getCardDisplayName(k)}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-
-      {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
+      {/* ── Win box ── */}
       {won && (
-        <div className="text-center py-4 animate-fade-up">
-          <p className="text-green-400 font-bold text-xl mb-1">{getCardDisplayName(secretKey)}!</p>
-          <p className="text-white/60 text-sm">{guesses.length} {guesses.length === 1 ? "guess" : "guesses"}</p>
+        <section
+          ref={winBoxRef}
+          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
+        >
+          <DailyResetTimer />
+          <p className="mt-3 text-green-400 font-bold text-2xl mb-1">
+            {secretEntry.name}!
+          </p>
+          <p className="text-white/60 text-sm mb-4">
+            Solved in {wrongGuesses.length + 1} {wrongGuesses.length + 1 === 1 ? "guess" : "guesses"}
+          </p>
           <NextModeLink currentSlug="pixel" />
-        </div>
+        </section>
       )}
 
-      {guesses.filter((k) => k !== secretKey).length > 0 && (
-        <div className="mt-4">
-          <p className="text-white/40 text-xs mb-2">Wrong guesses:</p>
-          <div className="flex flex-wrap gap-2">
-            {guesses.filter((k) => k !== secretKey).map((k) => (
-              <span key={k} className="px-2 py-1 bg-red-900/40 border border-red-500/30 rounded text-xs text-white/60 animate-wrong-in">
-                {getCardDisplayName(k)}
-              </span>
-            ))}
+      {/* ── Search input ── */}
+      {!won && (
+        <section ref={searchSectionRef} className="relative mx-auto max-w-md">
+          <p className="text-center text-white/50 text-xs mb-3">
+            {wrongGuesses.length === 0
+              ? "Guess to reveal more pixels"
+              : `${wrongGuesses.length} wrong guess${wrongGuesses.length !== 1 ? "es" : ""} — image getting clearer`}
+          </p>
+          <div className="relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search any tactician..."
+              value={search}
+              autoComplete="off"
+              onChange={(e) => { setSearch(e.target.value); if (e.target.value.trim()) setDropdown(true); }}
+              onFocus={() => { if (search.trim()) setDropdown(true); }}
+              onKeyDown={(e) => {
+                if (e.key !== "Enter") return;
+                e.preventDefault();
+                submitFromSearch();
+              }}
+              className="w-full rounded-xl border-2 border-gray-300 bg-white py-3 pl-4 pr-20 text-base text-gray-900 placeholder:text-sm placeholder:text-gray-500 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={submitFromSearch}
+              className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+              aria-label="Submit guess"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              </svg>
+            </button>
+            {search.trim() && (
+              <button
+                type="button"
+                onClick={() => { setSearch(""); setDropdown(false); searchInputRef.current?.focus(); }}
+                className="absolute right-12 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Clear search"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            )}
           </div>
-        </div>
+
+          {dropdownOpen && search.trim() && (
+            <div
+              className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
+              role="listbox"
+            >
+              {filteredEntries.length === 0 ? (
+                <p className="px-4 py-3 text-sm text-gray-600">No tacticians match.</p>
+              ) : (
+                <ul role="list">
+                  {filteredEntries.map((entry) => (
+                    <li key={entry.key} role="option">
+                      <button
+                        type="button"
+                        onClick={() => handleGuess(entry.key)}
+                        className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                      >
+                        <EntryThumbnail imagePath={entry.imagePath} />
+                        <span className="text-base font-medium">{entry.name}</span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* ── Wrong guesses list ── */}
+      {wrongGuesses.length > 0 && (
+        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm">
+          <h3 className="mb-3 text-center text-sm font-semibold uppercase tracking-wide text-white/90">
+            Wrong guesses
+          </h3>
+          <div className="mx-auto max-w-md space-y-2">
+            {[...wrongGuesses].reverse().map((key) => {
+              const entry = pool.find((e) => e.key === key);
+              return (
+                <div
+                  key={key}
+                  className="animate-wrong-guess-in flex w-full items-center gap-3 rounded-xl border-2 border-red-400/80 bg-white/10 px-4 py-3 backdrop-blur-sm"
+                >
+                  {entry && <EntryThumbnail imagePath={entry.imagePath} />}
+                  <span className="text-base font-medium text-white">{entry?.name ?? key}</span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       )}
     </div>
   );

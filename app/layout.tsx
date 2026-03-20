@@ -24,12 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/fonts/MergeTactics.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/Supercell-Magic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/homepage/March_Season_-_Dagger_Duchess_Skin_Color_v1.webp" as="image" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white min-h-screen`}>
         {children}
-        <div className="relative z-10">
+        <div className="relative z-20">
           <Footer />
         </div>
         <Analytics />

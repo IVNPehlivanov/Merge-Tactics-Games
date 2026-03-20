@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: "Merge Tactics";
-  src: url("/fonts/MergeTactics.ttf") format("truetype");
+  font-family: "Supercell Magic";
+  src: url("/fonts/Supercell-Magic.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,10 +11,12 @@
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-game: "Merge Tactics", system-ui, sans-serif;
+  --font-game: "Supercell Magic", system-ui, sans-serif;
+  --font-supercell: "Supercell Magic", system-ui, sans-serif;
 }
 
 .font-game { font-family: var(--font-game); }
+.font-supercell { font-family: var(--font-supercell); }
 .homepage-text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.8); }
 
 @keyframes wrong-guess-in {
@@ -51,5 +53,43 @@ html.dark { scrollbar-color: #4b5563 #111827; }
   transform: scale(1.06);
   filter: drop-shadow(0 4px 12px rgba(99,102,241,0.5));
 }
+
+/* ── Classic game: staggered cell reveal ── */
+@keyframes attribute-reveal {
+  from { opacity: 0; transform: scale(0.92) translateY(4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.animate-attribute-reveal {
+  animation: attribute-reveal 0.5s ease-out forwards;
+}
+
+/* ── Classic game: win message slide-in ── */
+@keyframes win-message-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-win-message {
+  animation: win-message-in 0.6s ease-out forwards;
+}
+
+/* ── Card search dropdown ── */
+.card-search-dropdown {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-color: #9ca3af #ffffff;
+  /* Show ~3 cards without scrolling, then scroll; cap so it never overlaps footer */
+  max-height: min(15rem, calc(100vh - 14rem));
+}
+.card-search-dropdown [role="option"] button {
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.card-search-dropdown [role="option"] button:hover,
+.card-search-dropdown [role="option"] button:focus {
+  transform: translateX(4px);
+}
+.card-search-dropdown::-webkit-scrollbar       { width: 10px; }
+.card-search-dropdown::-webkit-scrollbar-track { background: #ffffff; border-radius: 0 10px 10px 0; }
+.card-search-dropdown::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 5px; border: 2px solid #ffffff; }
+.card-search-dropdown::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -1,7 +1,7 @@
 // AUTO-GENERATED (partially) by scripts/scrape-merge-tactics.mjs — fill real data after scraping
 
 export type CardRarity = "Common" | "Rare" | "Epic" | "Legendary" | "Champion";
-export type CardType = "Troop" | "Building";
+export type CardType = "Troop" | "Building" | "Spawn/Swarm";
 // Role only applies to Troops; null for Buildings
 export type TroopRole = "Melee" | "Ranged" | "Flying" | "Support" | "Tank" | "Magic";
 
@@ -86,7 +86,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     elixirCost: 0,
     primaryTrait: "undead",
     secondaryTrait: "none",
-    cardType: "Troop",
+    cardType: "Spawn/Swarm",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
     description: "The Skeleton is a troop able to be spawned by Witch and Skeleton King, belonging to the Undead trait. It is a single-target melee troop with very low or low hitpoints, very low damage, and moderate attack speed. The Skeleton takes the appearance of a small undead creature with a skull that lacks a lower jaw and wields a short sword.",
@@ -506,8 +506,13 @@ export function compareReleaseYear(
 
 // Image path helper: "mini_pekka" → "/Cards/Mini-Pekka.webp"
 export function cardImagePath(key: string): string {
-  return `/Cards/${key
+  const fileName = key
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join("-")}.webp`;
+    .join("_");
+  // Filenames that use dashes instead of underscores
+  const dashNames: Record<string, string> = {
+    Mini_Pekka: "Mini-Pekka",
+  };
+  return `/cards/${dashNames[fileName] ?? fileName}.webp`;
 }

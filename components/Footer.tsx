@@ -1,19 +1,23 @@
-"use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { GAME_META, SITE } from "@/lib/content";
 
 export default function Footer() {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
   const activeGames = GAME_META.filter((g) => !g.comingSoon);
 
   return (
-    <footer className="w-full border-t border-white/10 mt-16 py-8 px-4 text-sm text-white/50">
-      {isHome ? (
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-6">
-          <div>
-            <p className="font-game text-indigo-400 text-lg mb-2">Mergedle</p>
+    <footer className="w-full border-t border-white/10 mt-16 py-8 px-4 text-sm text-white/70 [text-shadow:0_1px_6px_rgba(0,0,0,0.9),0_2px_12px_rgba(0,0,0,0.7)]">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Top row: Mergedle brand — full width on mobile, 1/3 on desktop */}
+        <div className="md:hidden">
+          <p className="font-game text-white text-lg mb-1">Mergedle</p>
+          <p className="text-xs">Daily Merge Tactics Wordle games</p>
+        </div>
+
+        {/* Bottom section: Info + Games side by side on mobile, 3-col on desktop */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {/* Desktop-only brand column */}
+          <div className="hidden md:block">
+            <p className="font-game text-white text-lg mb-2">Mergedle</p>
             <p className="text-xs">Daily Merge Tactics Wordle games</p>
           </div>
           <div>
@@ -35,13 +39,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-      ) : (
-        <div className="max-w-4xl mx-auto flex flex-wrap gap-4 justify-center">
-          {activeGames.map((g) => (
-            <Link key={g.slug} href={`/${g.slug}`} className="hover:text-white transition-colors">{g.title}</Link>
-          ))}
-        </div>
-      )}
+      </div>
 
       {/* REQUIRED: Supercell fan content disclaimer — DO NOT REMOVE */}
       <div className="max-w-4xl mx-auto mt-6 pt-4 border-t border-white/10 text-xs text-center text-white/30">

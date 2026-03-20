@@ -5,6 +5,7 @@ import DailyProgress from "@/components/DailyProgress";
 import BackToAllGames from "@/components/BackToAllGames";
 import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
+import HowToPlayModal from "@/components/HowToPlayModal";
 import Link from "next/link";
 
 const SLUG = "skin";
@@ -30,45 +31,52 @@ export default function SkinPage() {
   return (
     <GamePageBackground>
       <GameSchema slug={SLUG} title="Guess the Skin" description="Guess which Merge Tactics tactician owns the daily skin" faqs={FAQS} />
-      <BackToAllGames />
-      <DailyProgress />
-      <h1 className="font-game text-3xl text-indigo-400 text-center mt-6">Guess the Skin</h1>
-      <h2 className="text-center text-white/70 mb-4 text-lg">Which Tactician Owns This Skin?</h2>
-      <DailyGameGuard slug={SLUG} />
 
-      <section className="mt-16 space-y-8 text-white/70 text-sm leading-relaxed">
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">How to Play</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>A skin image and name are shown in full.</li>
-            <li>Type the name of the tactician you think owns that skin.</li>
-            <li>Submit your guess — correct or wrong, your attempts are tracked.</li>
-            <li>No progressive reveal — the challenge is pure skin knowledge.</li>
+      {/* Nav row */}
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <BackToAllGames />
+        <HowToPlayModal triggerAriaLabel="How to Play Guess the Skin">
+          <h2 id="how-to-play-title" className="mb-4 text-xl font-bold text-white">
+            How to Play Guess the Skin
+          </h2>
+          <p className="text-sm text-slate-300">
+            A Merge Tactics skin is shown in full — can you name which tactician it belongs to?
+          </p>
+
+          <h3 className="mb-2 mt-4 text-base font-semibold text-white">How it works</h3>
+          <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
+            <li><strong className="text-white">Skin shown in full</strong> — no blur, no clues. Pure cosmetic knowledge.</li>
+            <li><strong className="text-white">Type and guess</strong> — submit the tactician you think owns the skin.</li>
+            <li><strong className="text-white">Wrong guesses</strong> are tracked so you can see your attempts.</li>
+            <li><strong className="text-white">No stat clues</strong> — the challenge is recognising skins by appearance.</li>
           </ul>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">About Skin Mode</h2>
-          <p>Guess the Skin is a unique Mergedle mode that tests your Merge Tactics cosmetic knowledge. A new skin challenge unlocks every day at midnight UTC.</p>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-3">Frequently Asked Questions</h2>
+
+          <p className="mt-4 text-sm text-slate-300">
+            A new skin challenge unlocks every day at midnight UTC. Come back daily to keep your streak!
+          </p>
+
+          <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
           <div className="space-y-4">
             {FAQS.map((f) => (
               <div key={f.question}>
-                <h3 className="text-white/90 font-medium">{f.question}</h3>
-                <p>{f.answer}</p>
+                <p className="text-sm font-medium text-white">{f.question}</p>
+                <p className="text-sm text-slate-300">{f.answer}</p>
               </div>
             ))}
           </div>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">More Games</h2>
-          <ul className="space-y-1">
+
+          <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
+          <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle — guess from stat clues</Link></li>
             <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Card — guess from a blurred image</Link></li>
           </ul>
-        </div>
-      </section>
+        </HowToPlayModal>
+      </div>
+
+      <DailyProgress currentSlug="skin" />
+      <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Guess the Skin</h1>
+      <h2 className="text-center text-white/70 mb-6 text-lg">Which Tactician Owns This Skin?</h2>
+      <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );
 }

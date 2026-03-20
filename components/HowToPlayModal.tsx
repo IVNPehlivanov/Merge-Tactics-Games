@@ -1,47 +1,114 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface Props {
-  title: string;
-  steps: string[];
+function QuestionIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
 }
 
-export default function HowToPlayModal({ title, steps }: Props) {
-  const [open, setOpen] = useState(false);
+/**
+ * Always in the DOM so search engines crawl the content.
+ * Visibility is toggled via CSS opacity/pointer-events.
+ */
+export default function HowToPlayModal({
+  children,
+  triggerAriaLabel = "How to Play",
+}: {
+  children: React.ReactNode;
+  triggerAriaLabel?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Lock scroll and handle Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setIsOpen(false); };
+    const scrollY = window.scrollY;
+    document.body.style.overflow   = "hidden";
+    document.body.style.position   = "fixed";
+    document.body.style.top        = `-${scrollY}px`;
+    document.body.style.width      = "100%";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top      = "";
+      document.body.style.width    = "";
+      window.scrollTo(0, scrollY);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen]);
 
   return (
     <>
+      {/* (?) trigger button */}
       <button
-        onClick={() => setOpen(true)}
-        className="text-white/50 hover:text-white text-sm underline transition-colors"
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="shrink-0 rounded-full border-2 border-white/30 bg-white/10 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+        aria-label={triggerAriaLabel}
       >
-        How to play
+        <QuestionIcon className="size-5" />
       </button>
 
-      {open && (
+      {/* Modal — always in DOM for SEO; hidden via CSS when closed */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="how-to-play-title"
+        aria-hidden={!isOpen}
+        className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-opacity duration-200 ${
+          isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        style={{ overscrollBehavior: "contain" }}
+      >
+        {/* Backdrop */}
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4"
-          onClick={() => setOpen(false)}
+          className="fixed inset-0 min-h-[100dvh] bg-black/70 backdrop-blur-sm"
+          onClick={() => setIsOpen(false)}
+          aria-hidden
+          style={{ touchAction: "none" }}
+        />
+
+        {/* Panel */}
+        <div
+          className="relative max-h-[90dvh] w-full max-w-lg overflow-hidden rounded-2xl border border-white/10 bg-gray-900 shadow-xl"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div
-            className="bg-gray-900 border border-white/20 rounded-2xl p-6 max-w-sm w-full"
-            onClick={(e) => e.stopPropagation()}
+          {/* Close X */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="absolute right-3 top-3 z-10 rounded-full p-1.5 text-gray-400 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label="Close"
           >
-            <h2 className="font-game text-indigo-400 text-xl mb-4">How to Play: {title}</h2>
-            <ol className="space-y-2 text-sm text-white/80 list-decimal list-inside">
-              {steps.map((step, i) => (
-                <li key={i}>{step}</li>
-              ))}
-            </ol>
-            <button
-              onClick={() => setOpen(false)}
-              className="mt-6 w-full py-2 bg-indigo-500 text-white font-bold rounded-lg hover:bg-indigo-400 transition-colors"
-            >
-              Got it!
-            </button>
+            <svg className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div
+            className="max-h-[90dvh] overflow-y-auto p-6 pr-12 pb-10"
+            style={{ paddingBottom: "calc(2.5rem + env(safe-area-inset-bottom))" }}
+          >
+            <div className="space-y-3">{children}</div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }

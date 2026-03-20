@@ -5,6 +5,7 @@ import DailyProgress from "@/components/DailyProgress";
 import BackToAllGames from "@/components/BackToAllGames";
 import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
+import HowToPlayModal from "@/components/HowToPlayModal";
 import Link from "next/link";
 
 const SLUG = "pixel";
@@ -30,45 +31,53 @@ export default function PixelPage() {
   return (
     <GamePageBackground>
       <GameSchema slug={SLUG} title="Pixel Tactician" description="Guess the daily Merge Tactics tactician from a pixelated card image" faqs={FAQS} />
-      <BackToAllGames />
-      <DailyProgress />
-      <h1 className="font-game text-3xl text-indigo-400 text-center mt-6">Pixel Tactician</h1>
-      <h2 className="text-center text-white/70 mb-4 text-lg">Guess from the Blurred Card Image</h2>
-      <DailyGameGuard slug={SLUG} />
 
-      <section className="mt-16 space-y-8 text-white/70 text-sm leading-relaxed">
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">How to Play</h2>
-          <ul className="list-disc list-inside space-y-1">
-            <li>A tactician card image is shown — heavily pixelated at first.</li>
-            <li>Type a tactician name and submit your guess.</li>
-            <li>Each wrong guess reduces the blur, revealing a clearer image.</li>
-            <li>Guess correctly before the image fully reveals for the best score.</li>
+      {/* Nav row */}
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <BackToAllGames />
+        <HowToPlayModal triggerAriaLabel="How to Play Pixel Tactician">
+          <h2 id="how-to-play-title" className="mb-4 text-xl font-bold text-white">
+            How to Play Pixel Tactician
+          </h2>
+          <p className="text-sm text-slate-300">
+            A tactician card is shown blurred. Guess the name before the image fully reveals itself!
+          </p>
+
+          <h3 className="mb-2 mt-4 text-base font-semibold text-white">How it works</h3>
+          <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
+            <li><strong className="text-white">Blurred image</strong> — the card starts heavily pixelated.</li>
+            <li><strong className="text-white">Type and guess</strong> — submit any tactician name.</li>
+            <li><strong className="text-white">Each wrong guess</strong> reduces the blur, revealing more detail.</li>
+            <li><strong className="text-white">Guess early</strong> — fewer guesses means a better score and streak.</li>
+            <li><strong className="text-white">Full reveal</strong> — the image completely unblurs after enough wrong guesses.</li>
           </ul>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">About Pixel Card Mode</h2>
-          <p>Pixel Card challenges you to recognise Merge Tactics tacticians from blurred card art. The puzzle resets daily at midnight UTC — a new card awaits every day.</p>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-3">Frequently Asked Questions</h2>
+
+          <p className="mt-4 text-sm text-slate-300">
+            A new card is chosen every day at midnight UTC. Come back daily to keep your streak alive!
+          </p>
+
+          <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
           <div className="space-y-4">
             {FAQS.map((f) => (
               <div key={f.question}>
-                <h3 className="text-white/90 font-medium">{f.question}</h3>
-                <p>{f.answer}</p>
+                <p className="text-sm font-medium text-white">{f.question}</p>
+                <p className="text-sm text-slate-300">{f.answer}</p>
               </div>
             ))}
           </div>
-        </div>
-        <div>
-          <h2 className="text-white font-semibold text-base mb-2">More Games</h2>
-          <ul className="space-y-1">
+
+          <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
+          <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle — guess from stat clues</Link></li>
             <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the tactician from a skin</Link></li>
           </ul>
-        </div>
-      </section>
+        </HowToPlayModal>
+      </div>
+
+      <DailyProgress currentSlug="pixel" />
+      <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Pixel Tactician</h1>
+      <h2 className="text-center text-white/70 mb-6 text-lg">Guess from the Blurred Card Image</h2>
+      <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );
 }
