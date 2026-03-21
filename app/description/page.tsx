@@ -14,7 +14,8 @@ export function generateMetadata(): Metadata {
     description: "Read the in-game description and guess which Merge Tactics card it belongs to. Daily Wordle-style game — free, no login.",
     keywords: ["merge tactics wordle", "guess the card", "mergedle description"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Guess the Card by Description", images: [{ url: "/og/defaultogimage.webp" }] },
+    robots: { index: false, follow: false },
+    openGraph: { title: "Guess the Card by Description", images: [{ url: "/og/ogimage.png" }] },
   };
 }
 

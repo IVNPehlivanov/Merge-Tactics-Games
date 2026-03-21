@@ -12,12 +12,26 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { template: "%s | Mergedle", default: "Mergedle — Daily Merge Tactics Wordle Games" },
-  description: "Play daily Wordle-style Merge Tactics mini-games. Guess the Tactician, Skin, and more — free, no login required.",
+  description: "Play daily Wordle-style Merge Tactics mini-games. Guess the Card, Skin, and more — free, no login required.",
   openGraph: {
     siteName: SITE.name,
-    images: [{ url: "/og/defaultogimage.webp", width: 1200, height: 630 }],
+    images: [{ url: "/og/ogimage.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },
+};
+
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE.url}/#organization`,
+  name: SITE.name,
+  url: SITE.url,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE.url}/game_logos/mergedlelogo.webp`,
+    width: 240,
+    height: 90,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -25,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <link rel="preload" href="/fonts/Supercell-Magic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/homepage/March_Season_-_Dagger_Duchess_Skin_Color_v1.webp" as="image" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white min-h-screen`}>
         {children}

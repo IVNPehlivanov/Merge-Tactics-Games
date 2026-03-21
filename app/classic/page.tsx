@@ -12,25 +12,25 @@ const SLUG = "classic";
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Merge Tactics Wordle | Guess the Daily Tactician",
-    description: "Guess today's mystery Merge Tactics tactician from stat clues. Daily Wordle-style game — free, no login.",
-    keywords: ["merge tactics wordle", "guess the tactician", "mergedle"],
+    title: "Merge Tactics Wordle | Guess the Daily Card",
+    description: "Guess today's mystery Merge Tactics Card from stat clues. Daily Wordle-style game — free, no login.",
+    keywords: ["merge tactics wordle", "guess the card", "mergedle"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Merge Tactics Wordle", images: [{ url: "/og/defaultogimage.webp" }] },
+    openGraph: { title: "Merge Tactics Wordle", description: "Guess the daily Merge Tactics card from stat clues. Rarity, Elixir Cost, Traits, Type, and Release Year - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }] },
   };
 }
 
 const FAQS = [
-  { question: "How do I play Merge Tactics Wordle?", answer: "Type any tactician name to guess. Each guess reveals whether the mystery tactician matches on elixir cost, primary trait, secondary trait, type, and release year." },
+  { question: "How do I play Merge Tactics Wordle?", answer: "Type any card name to guess. Each guess reveals whether the mystery card matches on 6 attributes: Rarity, Elixir Cost, Primary Trait, Secondary Trait, Type, and Release Year." },
   { question: "How many guesses do I get?", answer: "Unlimited guesses — but try to solve it in as few as possible to build your streak!" },
   { question: "What clues does it give?", answer: "6 attributes: Rarity, Elixir Cost (with higher/lower arrows), Primary Trait, Secondary Trait, Type, and Release Year. Green = correct match, arrows = higher or lower for numeric fields." },
-  { question: "When does the puzzle reset?", answer: "Every day at midnight UTC. A new tactician is selected for all players worldwide." },
+  { question: "When does the puzzle reset?", answer: "Every day at midnight UTC. A new card is selected for all players worldwide." },
 ];
 
 export default function ClassicPage() {
   return (
     <GamePageBackground>
-      <GameSchema slug={SLUG} title="Merge Tactics Wordle" description="Guess the daily Merge Tactics tactician from stat clues" faqs={FAQS} />
+      <GameSchema slug={SLUG} title="Merge Tactics Wordle" description="Guess the daily Merge Tactics card from stat clues" faqs={FAQS} />
 
       {/* Nav row */}
       <div className="mb-6 flex items-center justify-between gap-3">
@@ -40,12 +40,12 @@ export default function ClassicPage() {
             How to Play Classic Wordle
           </h2>
           <p className="text-sm text-slate-300">
-            Guess the secret Merge Tactics tactician. You have unlimited tries — type a name to begin.
+            Guess the secret Merge Tactics card. You have unlimited tries — type a name to begin.
           </p>
 
           <h3 className="mb-2 mt-4 text-base font-semibold text-white">How it works</h3>
           <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
-            <li><strong className="text-white">Start anywhere</strong> — type any tactician name to make your first guess.</li>
+            <li><strong className="text-white">Start anywhere</strong> — type any card name to make your first guess.</li>
             <li><strong className="text-white">Green boxes</strong> — an exact match on that attribute.</li>
             <li><strong className="text-white">Arrows (↑ / ↓)</strong> — the secret value is higher or lower than your guess for numeric fields (Rarity, Elixir, Year).</li>
             <li><strong className="text-white">Attributes:</strong> Rarity, Elixir Cost, Primary Trait, Secondary Trait, Type, and Release Year.</li>
@@ -53,7 +53,7 @@ export default function ClassicPage() {
           </ul>
 
           <p className="mt-4 text-sm text-slate-300">
-            A new tactician is chosen every day at midnight UTC. Come back daily to keep your streak alive!
+            A new card is chosen every day at midnight UTC. Come back daily to keep your streak alive!
           </p>
 
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
@@ -69,14 +69,14 @@ export default function ClassicPage() {
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
           <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Card — guess from a blurred image</Link></li>
-            <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the tactician from a skin</Link></li>
+            <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the card from a skin</Link></li>
           </ul>
         </HowToPlayModal>
       </div>
 
       <DailyProgress currentSlug="classic" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Merge Tactics Wordle</h1>
-      <h2 className="text-center text-white/70 mb-6 text-lg">Guess the Daily Tactician</h2>
+      <h2 className="text-center text-white/70 mb-6 text-lg">Guess the Daily Card</h2>
       <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );

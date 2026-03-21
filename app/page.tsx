@@ -5,15 +5,30 @@ import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Mergedle — Daily Merge Tactics Wordle Games",
-  description: "Daily Wordle-style Merge Tactics games. Guess the Tactician, Skin, and more. Free, no login.",
+  description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
   alternates: { canonical: SITE.url },
-  openGraph: { images: [{ url: "/og/defaultogimage.webp" }] },
+  openGraph: {
+    description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
+    images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }],
+  },
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE.url}/#website`,
+  name: "Mergedle",
+  url: SITE.url,
+  description: "Daily Wordle-style Merge Tactics games. Free, no login required.",
+  inLanguage: "en",
 };
 
 export default function HomePage() {
   return (
     <main className="relative min-h-screen flex flex-col items-center overflow-x-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       {/* Background */}
+      <link rel="preload" href="/homepage/March_Season_-_Dagger_Duchess_Skin_Color_v1.webp" as="image" />
       <div
         className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: "url('/homepage/March_Season_-_Dagger_Duchess_Skin_Color_v1.webp')" }}

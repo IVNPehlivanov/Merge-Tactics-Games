@@ -17,5 +17,5 @@ export interface PersistedPixelState {
 export interface PersistedSkinState {
   guesses: string[];
   won: boolean;
-  secretTacticianKey: string;
+  secretCardKey: string;
 }

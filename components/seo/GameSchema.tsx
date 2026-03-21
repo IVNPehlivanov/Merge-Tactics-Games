@@ -10,9 +10,11 @@ interface Props {
 
 export default function GameSchema({ slug, title, description, faqs }: Props) {
   const url = `${SITE.url}/${slug}`;
+  const orgId = `${SITE.url}/#organization`;
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumb`,
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: SITE.url },
       { "@type": "ListItem", position: 2, name: title, item: url },
@@ -21,19 +23,22 @@ export default function GameSchema({ slug, title, description, faqs }: Props) {
   const gameSchema = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
+    "@id": `${url}#game`,
     name: title,
     description,
     url,
+    inLanguage: "en",
     applicationCategory: "GameApplication",
     operatingSystem: "Web Browser",
     genre: "Puzzle",
     gamePlatform: "Web Browser",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    author: { "@type": "Organization", name: SITE.name, url: SITE.url },
+    author: { "@id": orgId },
   };
   const faqSchema = faqs.length > 0 ? {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `${url}#faq`,
     mainEntity: faqs.map((f) => ({
       "@type": "Question",
       name: f.question,

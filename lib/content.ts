@@ -18,15 +18,15 @@ export const GAME_META: GameMetaItem[] = [
   {
     slug: "classic",
     title: "Classic Wordle",
-    description: "Guess the daily Merge Tactics tactician from stat clues",
+    description: "Guess the daily Merge Tactics card from stat clues",
     shortDesc: "Guess from stats",
     mode: "daily",
-    seoHowItWorks: "Each guess reveals whether the mystery tactician matches on elixir cost, traits, type, and release year.",
+    seoHowItWorks: "Each guess reveals whether the mystery card matches on elixir cost, traits, type, and release year.",
   },
   {
     slug: "pixel",
     title: "Pixel Card",
-    description: "Identify the tactician from a pixelated card image",
+    description: "Identify the card from a pixelated card image",
     shortDesc: "Pixelated image",
     mode: "daily",
     seoHowItWorks: "The card image starts heavily pixelated. Each wrong guess reveals a clearer version.",
@@ -34,10 +34,10 @@ export const GAME_META: GameMetaItem[] = [
   {
     slug: "skin",
     title: "Guess the Skin",
-    description: "Which tactician does this skin belong to?",
+    description: "Which card does this skin belong to?",
     shortDesc: "Skin clue",
     mode: "daily",
-    seoHowItWorks: "A skin image is shown — guess which tactician it belongs to.",
+    seoHowItWorks: "A skin image is shown — guess which card it belongs to.",
   },
   {
     slug: "description",

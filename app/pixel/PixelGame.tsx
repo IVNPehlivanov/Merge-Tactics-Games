@@ -274,7 +274,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder="Search any tactician..."
+              placeholder="Search any card..."
               value={search}
               autoComplete="off"
               onChange={(e) => { setSearch(e.target.value); if (e.target.value.trim()) setDropdown(true); }}
@@ -316,7 +316,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
               role="listbox"
             >
               {filteredEntries.length === 0 ? (
-                <p className="px-4 py-3 text-sm text-gray-600">No tacticians match.</p>
+                <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
               ) : (
                 <ul role="list">
                   {filteredEntries.map((entry) => (

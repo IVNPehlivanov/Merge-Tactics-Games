@@ -16,6 +16,15 @@
 }
 
 .font-game { font-family: var(--font-game); }
+
+.guess-grid {
+  grid-template-columns: 56px repeat(6, 56px);
+}
+@media (min-width: 640px) {
+  .guess-grid {
+    grid-template-columns: 96px repeat(6, 110px);
+  }
+}
 .font-supercell { font-family: var(--font-supercell); }
 .homepage-text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.8); }
 

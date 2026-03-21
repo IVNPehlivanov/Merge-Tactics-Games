@@ -68,8 +68,8 @@ function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuess
 function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" | "md" | "lg" | "xl" }) {
   const [failed, setFailed] = useState(false);
   const src = cardImagePath(cardKey);
-  const dim = size === "xl" ? "h-24 w-24" : size === "lg" ? "h-16 w-16" : size === "md" ? "h-14 w-14" : "h-10 w-10";
-  const px  = size === "xl" ? 96 : size === "lg" ? 64 : size === "md" ? 56 : 40;
+  const dim = size === "xl" ? "h-24 w-24" : size === "lg" ? "h-16 w-16" : size === "md" ? "h-14 w-14 sm:h-20 sm:w-20" : "h-10 w-10";
+  const px  = size === "xl" ? 96 : size === "lg" ? 64 : size === "md" ? 80 : 40;
   if (failed) {
     return (
       <div
@@ -92,32 +92,24 @@ function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" 
 }
 
 function AttributeCell({ value, result }: { value: string | number | boolean; result: AttributeResult["result"] }) {
-  const isCorrect = result === "correct";
-  const isHigher  = result === "higher";
-  const isLower   = result === "lower";
-  const bg = isCorrect ? "bg-green-600" : "bg-red-600";
-  const displayValue = typeof value === "boolean" ? (value ? "Yes" : "No") : String(value);
-  const showBigArrow = !isCorrect && (isHigher || isLower);
+  const bg =
+    result === "correct" ? "bg-green-600" :
+    result === "wrong"   ? "bg-red-600" :
+                           "bg-red-600";
+  const arrow = result === "higher" ? "↑" : result === "lower" ? "↓" : null;
+  const display = typeof value === "boolean" ? (value ? "Yes" : "No") : String(value);
 
   return (
-    <div
-      className={`relative flex h-[5rem] w-full min-w-0 flex-wrap items-center justify-center overflow-hidden rounded-sm px-1 py-1.5 text-center text-xs font-sans font-bold leading-tight text-white sm:px-1.5 sm:py-2 sm:text-sm ${bg}`}
-    >
-      {showBigArrow ? (
-        <span className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
-          <span className="relative inline-block">
-            <span className="inline-block text-[5.5rem] font-bold leading-none text-black opacity-40 sm:text-[6rem] [transform:translateX(0.04em)]">
-              {isHigher ? "↑" : "↓"}
-            </span>
-            <span className="absolute inset-0 flex items-center justify-center leading-none text-white drop-shadow-md [transform:translate(0.04em,0.12em)]">
-              {displayValue}
-            </span>
+    <div className={`relative flex h-14 w-full items-center justify-center overflow-hidden rounded text-center text-[11px] font-bold text-white sm:h-24 sm:text-sm sm:rounded-lg ${bg}`}>
+      {arrow ? (
+        <>
+          <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[3.5rem] font-black text-black/60 leading-none sm:text-[5rem]">
+            {arrow}
           </span>
-        </span>
+          <span className="relative z-10 leading-tight px-0.5 break-words text-center">{display}</span>
+        </>
       ) : (
-        <span className="relative z-10 min-w-0 break-words text-center drop-shadow-sm whitespace-nowrap">
-          {displayValue}
-        </span>
+        <span className="px-0.5 leading-tight break-words text-center">{display}</span>
       )}
     </div>
   );
@@ -259,7 +251,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder="Search any tactician..."
+              placeholder="Search any card..."
               value={search}
               autoComplete="off"
               onChange={(e) => {
@@ -304,7 +296,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
               role="listbox"
             >
               {filteredKeys.filter((k) => !alreadyGuessed.has(k)).length === 0 ? (
-                <p className="px-4 py-3 text-sm text-gray-600">No tacticians match.</p>
+                <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
               ) : (
                 <ul role="list">
                   {filteredKeys
@@ -330,73 +322,47 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
       {/* ── Guess table ── */}
       {guesses.length > 0 && (
-        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
-          <h3 className="mb-3 text-center text-sm font-semibold uppercase tracking-wide text-white/90">
-            Your guesses
-          </h3>
+        <section className="mx-auto w-fit rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
+          <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">YOUR GUESSES</h3>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[824px] table-fixed border-collapse">
-              <colgroup>
-                <col style={{ width: "104px" }} />
-                <col style={{ width: "120px" }} />
-                <col style={{ width: "120px" }} />
-                <col style={{ width: "120px" }} />
-                <col style={{ width: "120px" }} />
-                <col style={{ width: "120px" }} />
-                <col style={{ width: "100px" }} />
-              </colgroup>
-              <thead>
-                <tr className="border-b border-white/20">
-                  <th className="px-1 py-3 text-center text-sm font-semibold text-white sm:px-2 sm:py-4 sm:text-base">Card</th>
-                  {ATTR_LABELS.map((label) => (
-                    <th
-                      key={label}
-                      className="min-w-0 break-words px-1 py-3 text-center text-sm font-semibold leading-tight text-white sm:px-2 sm:py-4 sm:text-base"
-                    >
-                      {label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {guesses.map((g, rowIndex) => {
-                  const isNewRow = rowIndex === 0;
-                  return (
-                    <tr key={g.cardKey} className="border-b border-white/10">
-                      <td className="px-2 py-4 align-top">
-                        <div
-                          className={`flex flex-col items-center gap-1 ${isNewRow ? "animate-attribute-reveal" : ""}`}
-                          style={isNewRow ? { animationDelay: "0ms", animationFillMode: "both" } : undefined}
-                        >
-                          <div className="-mt-3 h-24 w-24">
-                            <CardThumbnail cardKey={g.cardKey} size="xl" />
-                          </div>
-                        </div>
-                      </td>
-                      {ATTR_KEYS.map((key, colIndex) => (
-                        <td key={key} className="min-w-0 px-2 py-4 align-top">
-                          <div
-                            className={isNewRow ? "animate-attribute-reveal" : ""}
-                            style={
-                              isNewRow
-                                ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" }
-                                : undefined
-                            }
-                          >
-                            <AttributeCell
-                              value={g.attributes[key].value}
-                              result={g.attributes[key].result}
-                            />
-                          </div>
-                        </td>
-                      ))}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="overflow-x-auto sm:overflow-visible">
+          {/* Column headers */}
+          <div className="guess-grid mb-1 grid gap-2 font-game text-[10px] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
+            <div className="text-center">Card</div>
+            {ATTR_LABELS.map((label) => (
+              <div key={label} className="text-center leading-tight">{label}</div>
+            ))}
           </div>
+
+          {/* Rows */}
+          <div className="space-y-2">
+            {guesses.map((g, rowIndex) => {
+              const isNewRow = rowIndex === 0;
+              return (
+                <div
+                  key={g.cardKey}
+                  className={`guess-grid grid items-stretch gap-2 ${isNewRow ? "animate-wrong-in" : ""}`}
+                >
+                  <div className="flex h-14 w-full items-center justify-center sm:h-24">
+                    <CardThumbnail cardKey={g.cardKey} size="md" />
+                  </div>
+                  {ATTR_KEYS.map((key, colIndex) => (
+                    <div
+                      key={key}
+                      className={isNewRow ? "animate-attribute-reveal" : ""}
+                      style={isNewRow ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" } : undefined}
+                    >
+                      <AttributeCell
+                        value={g.attributes[key].value}
+                        result={g.attributes[key].result}
+                      />
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+          </div>{/* end overflow-x-auto */}
         </section>
       )}
 
