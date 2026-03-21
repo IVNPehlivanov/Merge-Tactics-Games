@@ -1,7 +1,7 @@
 "use client";
 
-export type DailyGameSlug = "classic" | "pixel" | "skin" | "description";
-export const DAILY_GAME_SLUGS: DailyGameSlug[] = ["classic", "pixel", "skin", "description"];
+export type DailyGameSlug = "classic" | "pixel" | "skin";
+export const DAILY_GAME_SLUGS: DailyGameSlug[] = ["classic", "pixel", "skin"];
 export const DAILY_PROGRESS_UPDATE_EVENT = "mergedle-daily-progress-update";
 
 export function getUTCDateString(date?: Date): string {

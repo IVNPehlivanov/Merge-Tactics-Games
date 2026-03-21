@@ -45,6 +45,7 @@ export const GAME_META: GameMetaItem[] = [
     description: "Read the card description and guess which card it is",
     shortDesc: "Description clue",
     mode: "daily",
+    comingSoon: true,
     seoHowItWorks: "A card's in-game description is shown. Guess which Merge Tactics card matches it.",
   },
   {
@@ -59,10 +60,10 @@ export const GAME_META: GameMetaItem[] = [
 ];
 
 // Only real game slugs (no coming-soon) — used for daily progress tracking
-export const DAILY_ACTIVE_SLUGS = ["classic", "pixel", "skin", "description"] as const;
+export const DAILY_ACTIVE_SLUGS = ["classic", "pixel", "skin"] as const;
 
 // Flow order for NextModeLink
-export const GAME_FLOW_SLUGS = ["classic", "pixel", "skin", "description"];
+export const GAME_FLOW_SLUGS = ["classic", "pixel", "skin"];
 
 export function getGameMetaBySlug(slug: string): GameMetaItem | undefined {
   return GAME_META.find((g) => g.slug === slug);

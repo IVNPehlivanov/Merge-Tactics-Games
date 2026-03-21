@@ -38,6 +38,31 @@ export default function HomePage() {
         {/* Game cards */}
         <HomeInfographic />
 
+        {/* More Games */}
+        <div className="mt-8 mb-6 w-full px-4 text-center">
+          <div className="w-full rounded-2xl border-2 border-yellow-500/60 bg-black/70 p-5">
+            <p className="text-green-400 font-game text-base mb-1">Want more?</p>
+            <p className="text-white font-game text-sm mb-5">Play our other games:</p>
+            <div className="flex justify-start gap-6">
+              <a
+                href="https://royaledly.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 transition-transform hover:scale-110"
+              >
+                <Image
+                  src="/homepage/royaledlyLogo.webp"
+                  alt="Royaledly"
+                  width={72}
+                  height={72}
+                  className="h-[72px] w-[72px] rounded-full object-contain drop-shadow-lg"
+                />
+                <span className="text-white/80 font-game text-[11px]">Royaledly</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   );

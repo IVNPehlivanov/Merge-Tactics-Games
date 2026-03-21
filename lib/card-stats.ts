@@ -139,7 +139,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   musketeer: {
     name: "Musketeer",
     rarity: "Rare",
-    elixirCost: 4,
+    elixirCost: 3,
     primaryTrait: "marksman",
     secondaryTrait: "none",
     cardType: "Troop",
@@ -150,7 +150,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   giant: {
     name: "Giant",
     rarity: "Rare",
-    elixirCost: 5,
+    elixirCost: 3,
     primaryTrait: "giant",
     secondaryTrait: "titan",
     cardType: "Troop",
@@ -161,7 +161,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   valkyrie: {
     name: "Valkyrie",
     rarity: "Rare",
-    elixirCost: 4,
+    elixirCost: 3,
     primaryTrait: "warrior",
     secondaryTrait: "none",
     cardType: "Troop",
@@ -172,7 +172,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   wizard: {
     name: "Wizard",
     rarity: "Rare",
-    elixirCost: 5,
+    elixirCost: 2,
     primaryTrait: "mage",
     secondaryTrait: "fire",
     cardType: "Troop",
@@ -183,7 +183,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   dart_goblin: {
     name: "Dart Goblin",
     rarity: "Rare",
-    elixirCost: 3,
+    elixirCost: 2,
     primaryTrait: "goblin",
     secondaryTrait: "marksman",
     cardType: "Troop",
@@ -194,7 +194,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   goblin_demolisher: {
     name: "Goblin Demolisher",
     rarity: "Rare",
-    elixirCost: 5,
+    elixirCost: 3,
     primaryTrait: "goblin",
     secondaryTrait: "thrower",
     cardType: "Troop",
@@ -217,7 +217,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   witch: {
     name: "Witch",
     rarity: "Epic",
-    elixirCost: 5,
+    elixirCost: 4,
     primaryTrait: "undead",
     secondaryTrait: "mage",
     cardType: "Troop",
@@ -228,7 +228,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   pekka: {
     name: "P.E.K.K.A.",
     rarity: "Epic",
-    elixirCost: 3,
+    elixirCost: 4,
     primaryTrait: "pekka",
     secondaryTrait: "brawler",
     cardType: "Troop",
@@ -239,7 +239,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   prince: {
     name: "Prince",
     rarity: "Epic",
-    elixirCost: 5,
+    elixirCost: 4,
     primaryTrait: "noble",
     secondaryTrait: "warrior",
     cardType: "Troop",
@@ -250,7 +250,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   giant_skeleton: {
     name: "Giant Skeleton",
     rarity: "Epic",
-    elixirCost: 6,
+    elixirCost: 3,
     primaryTrait: "undead",
     secondaryTrait: "titan",
     cardType: "Troop",
@@ -261,7 +261,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   electro_giant: {
     name: "Electro Giant",
     rarity: "Epic",
-    elixirCost: 7,
+    elixirCost: 3,
     primaryTrait: "electric",
     secondaryTrait: "giant",
     cardType: "Troop",
@@ -272,7 +272,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   executioner: {
     name: "Executioner",
     rarity: "Epic",
-    elixirCost: 5,
+    elixirCost: 3,
     primaryTrait: "warrior",
     secondaryTrait: "thrower",
     cardType: "Troop",
@@ -284,7 +284,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   mega_knight: {
     name: "Mega Knight",
     rarity: "Legendary",
-    elixirCost: 7,
+    elixirCost: 4,
     primaryTrait: "noble",
     secondaryTrait: "juggernaut",
     cardType: "Troop",
@@ -306,7 +306,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   princess: {
     name: "Princess",
     rarity: "Legendary",
-    elixirCost: 3,
+    elixirCost: 4,
     primaryTrait: "noble",
     secondaryTrait: "marksman",
     cardType: "Troop",
@@ -317,7 +317,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   royal_ghost: {
     name: "Royal Ghost",
     rarity: "Legendary",
-    elixirCost: 3,
+    elixirCost: 4,
     primaryTrait: "noble",
     secondaryTrait: "assassin",
     cardType: "Troop",
@@ -328,7 +328,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   bandit: {
     name: "Bandit",
     rarity: "Legendary",
-    elixirCost: 3,
+    elixirCost: 4,
     primaryTrait: "assassin",
     secondaryTrait: "none",
     cardType: "Troop",
@@ -351,7 +351,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   golden_knight: {
     name: "Golden Knight",
     rarity: "Champion",
-    elixirCost: 4,
+    elixirCost: 5,
     primaryTrait: "noble",
     secondaryTrait: "warrior",
     cardType: "Troop",
@@ -362,7 +362,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   skeleton_king: {
     name: "Skeleton King",
     rarity: "Champion",
-    elixirCost: 4,
+    elixirCost: 5,
     primaryTrait: "undead",
     secondaryTrait: "noble",
     cardType: "Troop",
@@ -396,7 +396,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   mortar: {
     name: "Mortar",
     rarity: "Common",
-    elixirCost: 4,
+    elixirCost: 0,
     primaryTrait: "blaster",
     secondaryTrait: "none",
     cardType: "Building",
@@ -407,7 +407,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   tesla: {
     name: "Tesla",
     rarity: "Common",
-    elixirCost: 4,
+    elixirCost: 0,
     primaryTrait: "electric",
     secondaryTrait: "none",
     cardType: "Building",
@@ -418,7 +418,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   inferno_tower: {
     name: "Inferno Tower",
     rarity: "Rare",
-    elixirCost: 5,
+    elixirCost: 0,
     primaryTrait: "fire",
     secondaryTrait: "none",
     cardType: "Building",
@@ -429,7 +429,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   elixir_collector: {
     name: "Elixir Collector",
     rarity: "Rare",
-    elixirCost: 6,
+    elixirCost: 0,
     primaryTrait: "none",
     secondaryTrait: "none",
     cardType: "Building",
@@ -440,7 +440,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   x_bow: {
     name: "X-Bow",
     rarity: "Epic",
-    elixirCost: 6,
+    elixirCost: 0,
     primaryTrait: "marksman",
     secondaryTrait: "none",
     cardType: "Building",

@@ -11,7 +11,6 @@ import {
   getDailySecretFromPool,
 } from "@/lib/daily";
 import { getCardDisplayName, cardImagePath } from "@/lib/card-stats";
-import { getRulerByKey, rulerImagePath } from "@/lib/ruler-stats";
 import { getValidSkinPool } from "@/lib/skin-cards";
 import type { SkinEntry } from "@/lib/skin-cards";
 import DailyResetTimer from "@/components/DailyResetTimer";
@@ -21,7 +20,6 @@ import dynamic from "next/dynamic";
 const ClassicGame = dynamic(() => import("@/app/classic/ClassicGame"));
 const PixelGame = dynamic(() => import("@/app/pixel/PixelGame"));
 const SkinGame = dynamic(() => import("@/app/skin/SkinGame"));
-const DescriptionGame = dynamic(() => import("@/app/description/DescriptionGame"));
 
 interface Props {
   slug: string;
@@ -72,28 +70,30 @@ export default function DailyGameGuard({ slug }: Props) {
     const displayName = isSkin ? (skinName ?? null)      : cardKey ? getCardDisplayName(cardKey) : null;
 
     return (
-      <div className="text-center py-8 animate-fade-up">
-        <p className="text-indigo-400 font-game text-2xl mb-2">Already played today!</p>
-        {imgSrc && displayName && (
-          <div className="my-4">
-            <Image
-              src={imgSrc}
-              alt={displayName}
-              width={120}
-              height={120}
-              className="mx-auto rounded-xl border border-white/10"
-              unoptimized
-            />
-            <p className="mt-2 text-white/70 font-semibold">{displayName}</p>
-            {guessCount > 0 && (
-              <p className="text-white/50 text-sm">Solved in {guessCount} {guessCount === 1 ? "guess" : "guesses"}</p>
-            )}
+      <div className="flex flex-col items-center py-8 animate-fade-up">
+        <div className="mx-auto max-w-xs w-full rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
+          <p className="text-yellow-400 font-game text-2xl mb-4 [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">Already played today!</p>
+          {imgSrc && displayName && (
+            <>
+              <Image
+                src={imgSrc}
+                alt={displayName}
+                width={128}
+                height={128}
+                className="mx-auto rounded-lg object-contain"
+                unoptimized
+              />
+              <p className="mt-3 text-xl font-game text-white">{displayName}</p>
+              {guessCount > 0 && (
+                <p className="mt-1 text-white/60 text-sm font-game">Solved in {guessCount} {guessCount === 1 ? "guess" : "guesses"}</p>
+              )}
+            </>
+          )}
+          <div className="mt-4">
+            <DailyResetTimer />
           </div>
-        )}
-        <div className="mt-4">
-          <DailyResetTimer />
+          <NextModeLink currentSlug={slug} />
         </div>
-        <NextModeLink currentSlug={slug} />
 
         {isDev && (
           <div className="mt-8 p-3 border border-indigo-400/30 rounded-xl bg-indigo-400/5 space-y-2">
@@ -157,8 +157,6 @@ export default function DailyGameGuard({ slug }: Props) {
       const secretEntry: SkinEntry = getDailySecretFromPool(skinPool, "skin", dayKey);
       return <SkinGame secretEntry={secretEntry} dayKey={dayKey} onSolved={onSolved} />;
     }
-    case "description":
-      return <DescriptionGame dayKey={dayKey} onSolved={onSolved} />;
     default:
       return <p className="text-white/50 text-center">Unknown game mode.</p>;
   }
