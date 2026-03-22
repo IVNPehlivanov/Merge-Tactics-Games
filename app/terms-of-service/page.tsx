@@ -18,10 +18,9 @@ export default function TermsOfServicePage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Terms of Service</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 21.03.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 22.03.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
-
         <section>
           <p>
             Welcome to {SITE.name} (&quot;Website,&quot; &quot;we,&quot; &quot;us,&quot; or
@@ -32,37 +31,13 @@ export default function TermsOfServicePage() {
             By accessing or using the Website, you agree to be bound by these Terms. If you do
             not agree to these Terms, you must discontinue use immediately.
           </p>
-
-          <div
-            className="mt-6 rounded-lg border border-indigo-500/50 bg-indigo-500/10 px-4 py-3"
-            role="note"
-            aria-label="Supercell Fan Content Policy"
-          >
-            <p className="font-semibold text-indigo-400">Supercell Fan Content Policy</p>
-            <p className="mt-2 text-sm text-white/70">
-              {SITE.name} is an unofficial fan site and complies with the{" "}
-              <a
-                href="https://supercell.com/en/fan-content-policy/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-indigo-400 underline hover:text-indigo-300"
-              >
-                Supercell Fan Content Policy
-              </a>
-              . We are not affiliated with, endorsed, sponsored, or approved by Supercell Oy.
-              Merge Tactics and all related trademarks, logos, and intellectual property are the
-              property of Supercell Oy. Any content displayed remains the property of its
-              respective owners.
-            </p>
-          </div>
         </section>
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">1. Description of Service</h2>
           <p>
-            The Website provides free-to-play, browser-based puzzle games for entertainment
-            purposes. Games are based on Merge Tactics card knowledge and reset daily at midnight
-            UTC.
+            The Website provides free-to-play, browser-based games for entertainment purposes.
+            These may include word-based games, puzzle games, and other casual games.
           </p>
           <p className="mt-3">
             We reserve the right to modify, suspend, or discontinue any part of the Website at
@@ -71,7 +46,9 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">2. Unofficial Fan Content Disclaimer</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            2. Unofficial Fan Content Disclaimer
+          </h2>
           <p>
             {SITE.name} is not affiliated with, endorsed, sponsored, or approved by Supercell Oy.
             Merge Tactics and all related trademarks, logos, and intellectual property are the
@@ -84,7 +61,10 @@ export default function TermsOfServicePage() {
           <h2 className="text-white font-semibold text-base mb-3">3. Eligibility</h2>
           <p>
             You must be at least 13 years old (or the minimum legal age in your jurisdiction) to
-            use this Website. By using the Website, you represent that you meet this requirement.
+            use this Website.
+          </p>
+          <p className="mt-3">
+            By using the Website, you represent that you meet this requirement.
           </p>
         </section>
 
@@ -115,21 +95,16 @@ export default function TermsOfServicePage() {
             content without prior written permission.
           </p>
           <p className="mt-3">
-            Third-party trademarks and content (including all Merge Tactics assets) remain the
-            property of their respective owners.
+            Third-party trademarks and content remain the property of their respective owners.
           </p>
         </section>
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">6. Privacy</h2>
-          <p>
-            We do not require registration or collect personal information directly. Game state
-            is stored locally in your browser via localStorage and is never sent to our servers.
-            The Website uses Vercel Analytics for anonymized performance data. For full details,
-            see our{" "}
-            <a href="/privacy-policy" className="text-indigo-400 hover:text-indigo-300 underline">
-              Privacy Policy
-            </a>.
+          <p>We do not require user registration.</p>
+          <p className="mt-3">
+            However, certain technical data (such as IP address, browser type, and server logs)
+            may be automatically processed for security and operational purposes.
           </p>
         </section>
 
@@ -144,8 +119,11 @@ export default function TermsOfServicePage() {
             <li>The Website will be uninterrupted or error-free.</li>
             <li>Games will function without bugs or defects.</li>
             <li>The Website will be secure or free from harmful components.</li>
+            <li>
+              Game progress, scores, or data will be preserved. Such data may be lost or reset at
+              any time.
+            </li>
           </ul>
-          <p className="mt-3">Use of the Website is at your own risk.</p>
         </section>
 
         <section>
@@ -153,8 +131,9 @@ export default function TermsOfServicePage() {
           <p>
             To the maximum extent permitted by law, we shall not be liable for any indirect,
             incidental, special, consequential, or punitive damages arising out of or related to
-            your use of the Website. This includes, but is not limited to:
+            your use of the Website.
           </p>
+          <p className="mt-3">This includes, but is not limited to:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>Loss of data</li>
             <li>Loss of access</li>
@@ -166,9 +145,8 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="text-white font-semibold text-base mb-3">9. Changes to These Terms</h2>
           <p>
-            We may update these Terms at any time. Updated versions will be posted on this page
-            with a revised &quot;Last Updated&quot; date. Your continued use of the Website after
-            changes are posted constitutes acceptance of the revised Terms.
+            We may update these Terms at any time. Continued use of the Website constitutes
+            acceptance of changes.
           </p>
         </section>
 
@@ -183,8 +161,9 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="text-white font-semibold text-base mb-3">11. Governing Law</h2>
           <p>
-            These Terms shall be governed by and interpreted in accordance with the laws of the
-            European Union, without regard to conflict of law principles.
+            These Terms shall be governed by and construed in accordance with the laws of the
+            jurisdiction in which the Website operator is established, without regard to conflict
+            of law principles.
           </p>
         </section>
 
@@ -200,15 +179,11 @@ export default function TermsOfServicePage() {
               {SITE.contactEmail}
             </a>
           </p>
-          <p className="mt-8 text-white/40 text-xs">
+          <p className="mt-8">
             By using this Website, you acknowledge that you have read, understood, and agree to
             these Terms of Service.
           </p>
         </section>
-
-        <div className="pt-6 border-t border-white/10 text-xs text-white/30">
-          <p>Mergedle is not affiliated with, endorsed, sponsored, or approved by Supercell Oy.</p>
-        </div>
       </div>
     </main>
   );

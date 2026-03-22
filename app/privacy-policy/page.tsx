@@ -18,10 +18,9 @@ export default function PrivacyPolicyPage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Privacy Policy</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 21.03.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 22.03.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
-
         <section>
           <p>
             This Privacy Policy explains how {SITE.name} (&quot;Website,&quot; &quot;we,&quot;
@@ -31,15 +30,16 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">1. Data Collection</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            1. Data Collection and Analytics
+          </h2>
           <p>
-            We do not require account registration and we do not intentionally collect personal
-            information such as names, email addresses, or user profiles.
+            The Website does not require account registration and does not intentionally collect
+            personal information such as names, email addresses, or user profiles.
           </p>
           <p className="mt-3">
-            However, when you access the Website, certain technical information may be
-            automatically processed by our hosting provider or server infrastructure. This may
-            include:
+            When you access the Website, certain technical information may be automatically
+            processed by our servers or by third-party analytics services. This may include:
           </p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>IP address</li>
@@ -50,72 +50,52 @@ export default function PrivacyPolicyPage() {
             <li>Basic request and error logs</li>
           </ul>
           <p className="mt-3">
-            This information is processed for security, maintenance, and operational purposes.
+            This information is processed for security, maintenance, operational purposes, and to
+            analyze anonymized site usage and performance metrics. It is used solely to maintain
+            website functionality, monitor security, and diagnose technical issues. No personally
+            identifiable information is collected. The Website does not sell, rent, or trade user
+            information.
+          </p>
+          <p className="mt-3">
+            Some information may be processed by third-party services that assist with site
+            analytics or performance monitoring. These services operate under their own privacy
+            policies.
           </p>
         </section>
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">2. Local Storage</h2>
           <p>
-            Game progress, statistics, and preferences are stored locally in your browser via
-            localStorage. This data never leaves your device and is not sent to our servers.
-            You can clear it at any time through your browser settings.
+            Game progress, statistics, and preferences (such as sound settings) may be stored
+            locally in your browser via local storage or similar mechanisms. This data never
+            leaves your device and is not sent to our servers. Clearing your browser data may
+            delete game progress, statistics, and preferences. You can clear it at any time through
+            your browser settings.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">3. Analytics</h2>
-          <p>
-            The Website uses Vercel Analytics and Vercel Speed Insights to collect anonymized
-            page view data and Core Web Vitals performance metrics. This data is processed by
-            Vercel Inc. under their Privacy Policy. No personally identifiable information is
-            collected through these services.
-          </p>
-          <p className="mt-3">
-            The Website does not use advertising or tracking cookies.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white font-semibold text-base mb-3">4. How Information Is Used</h2>
-          <p>Any technical information processed is used solely to:</p>
-          <ul className="mt-2 list-disc pl-6 space-y-1">
-            <li>Maintain website functionality</li>
-            <li>Monitor security and prevent abuse</li>
-            <li>Diagnose technical issues</li>
-          </ul>
-          <p className="mt-3">We do not sell, rent, or trade user information.</p>
-        </section>
-
-        <section>
-          <h2 className="text-white font-semibold text-base mb-3">5. Third-Party Infrastructure</h2>
-          <p>
-            The Website is hosted on Vercel. Vercel Analytics and Vercel Speed Insights are used
-            to collect anonymized performance data. We do not integrate advertising networks or
-            third-party tracking systems beyond this.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white font-semibold text-base mb-3">6. Data Retention</h2>
+          <h2 className="text-white font-semibold text-base mb-3">3. Data Retention</h2>
           <p>
             We do not maintain user accounts and therefore do not store personal user profiles.
-            Server logs and technical records may be retained for limited periods as required for
-            security and operational purposes by our hosting provider.
+          </p>
+          <p className="mt-3">
+            Server logs and technical records may be retained for up to 30 days, or as required,
+            for security and operational purposes.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">7. Children&apos;s Privacy</h2>
+          <h2 className="text-white font-semibold text-base mb-3">4. Children&apos;s Privacy</h2>
           <p>
-            We do not knowingly collect personal information from children under the age of 13
-            (or the minimum age required by applicable law). If you believe a child has provided
+            We do not knowingly collect personal information from children under the age of 13 (or
+            the minimum age required by applicable law). If you believe a child has provided
             personal information, please contact us so appropriate steps can be taken.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">8. Changes to This Policy</h2>
+          <h2 className="text-white font-semibold text-base mb-3">5. Changes to This Policy</h2>
           <p>
             We may update this Privacy Policy from time to time. Updates will be posted on this
             page with a revised &quot;Last Updated&quot; date.
@@ -123,7 +103,7 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">9. Contact</h2>
+          <h2 className="text-white font-semibold text-base mb-3">6. Contact</h2>
           <p>If you have questions about this Privacy Policy, you may contact us at:</p>
           <p className="mt-3">
             Email:{" "}
@@ -135,10 +115,6 @@ export default function PrivacyPolicyPage() {
             </a>
           </p>
         </section>
-
-        <div className="pt-6 border-t border-white/10 text-xs text-white/30">
-          <p>Mergedle is not affiliated with, endorsed, sponsored, or approved by Supercell Oy.</p>
-        </div>
       </div>
     </main>
   );
