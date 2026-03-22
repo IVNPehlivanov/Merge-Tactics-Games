@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
+import path from "path";
+import { fileURLToPath } from "url";
+
+/** Force app root when another lockfile exists higher on disk (e.g. C:\\Users\\…\\package-lock.json). */
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   webpack: (config, { dev }) => {
     if (dev) config.cache = false;
     return config;

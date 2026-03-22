@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@source "./**/*.{tsx,ts,jsx,js}";
+@source "../components/**/*.{tsx,ts,jsx,js}";
+@source "../lib/**/*.{ts,tsx}";
+
 @font-face {
   font-family: "Supercell Magic";
   src: url("/fonts/Supercell-Magic.woff2") format("woff2");

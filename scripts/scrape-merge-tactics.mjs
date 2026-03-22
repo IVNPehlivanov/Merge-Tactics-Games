@@ -67,12 +67,16 @@ function rulerImageFileUrl(name) {
   return `https://clashroyale.fandom.com/wiki/Special:FilePath/${encodeURIComponent(fname)}`;
 }
 
-// Card image basename — must match lib/card-stats.ts cardImagePath (key → Title_Snake)
-function cardImageBasename(card) {
-  return card.key
+// Card image basename — must match lib/card-stats.ts cardImagePath (public/Cards/*.webp)
+const CARD_IMAGE_STEM_OVERRIDES = { mini_pekka: "Mini_Pekka", x_bow: "X_Bow" };
+function cardImageStemFromKey(key) {
+  return key
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join("_");
+}
+function cardImageBasename(card) {
+  return CARD_IMAGE_STEM_OVERRIDES[card.key] ?? cardImageStemFromKey(card.key);
 }
 
 // Ruler portrait: snake_case → Title-Dash

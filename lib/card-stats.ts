@@ -503,7 +503,13 @@ export function compareReleaseYear(
   return gy > sy ? "higher" : "lower";
 }
 
-/** Matches public/Cards/*.webp: snake_case key → Title_Snake (underscores preserved). */
+/** Must match files in public/Cards/ exactly (Linux/Vercel is case-sensitive). */
+const CARD_IMAGE_STEM_OVERRIDES: Partial<Record<string, string>> = {
+  mini_pekka: "Mini_Pekka",
+  x_bow: "X_Bow",
+};
+
+/** Default: snake_case key → Title_Snake (underscores preserved). */
 function cardImageStemFromKey(key: string): string {
   return key
     .split("_")
@@ -512,5 +518,6 @@ function cardImageStemFromKey(key: string): string {
 }
 
 export function cardImagePath(key: string): string {
-  return `/Cards/${cardImageStemFromKey(key)}.webp`;
+  const stem = CARD_IMAGE_STEM_OVERRIDES[key] ?? cardImageStemFromKey(key);
+  return `/Cards/${stem}.webp`;
 }
