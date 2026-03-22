@@ -21,8 +21,7 @@ export const RARITY_ORDER: CardRarity[] = [
   "Common", "Rare", "Epic", "Legendary", "Champion",
 ];
 
-// Key: lowercase snake_case slug — art in public/Cards/{Title-Dash}.webp (see cardImagePath)
-// e.g. "inferno_tower" → "/Cards/Inferno-Tower.webp"
+// Key: lowercase snake_case slug — art in public/Cards/ (see cardImagePath; basename = Title per segment, underscores kept)
 export const CARD_STATS: Record<string, CardStats> = {
   // ─── Common Troops ──────────────────────────────────────────────────────────
   archers: {
@@ -504,11 +503,14 @@ export function compareReleaseYear(
   return gy > sy ? "higher" : "lower";
 }
 
-// Card art: public/Cards/{Title-Dash}.webp (capital C — required on Linux/Vercel)
-export function cardImagePath(key: string): string {
-  const fileStem = key
+/** Matches public/Cards/*.webp: snake_case key → Title_Snake (underscores preserved). */
+function cardImageStemFromKey(key: string): string {
+  return key
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join("-");
-  return `/Cards/${fileStem}.webp`;
+    .join("_");
+}
+
+export function cardImagePath(key: string): string {
+  return `/Cards/${cardImageStemFromKey(key)}.webp`;
 }

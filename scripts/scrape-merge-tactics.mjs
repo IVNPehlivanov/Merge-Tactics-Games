@@ -67,7 +67,15 @@ function rulerImageFileUrl(name) {
   return `https://clashroyale.fandom.com/wiki/Special:FilePath/${encodeURIComponent(fname)}`;
 }
 
-// Card + ruler: snake_case key → Title-Dash (must match lib/card-stats.ts cardImagePath)
+// Card image basename — must match lib/card-stats.ts cardImagePath (key → Title_Snake)
+function cardImageBasename(card) {
+  return card.key
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join("_");
+}
+
+// Ruler portrait: snake_case → Title-Dash
 function keyToFilename(key) {
   return key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("-");
 }
@@ -498,7 +506,7 @@ async function main() {
   let cardCount = 0;
   for (const card of CARDS) {
     const cached = scrapedCards[card.key];
-    const imgDest = path.join(ROOT, "public", "Cards", keyToFilename(card.key) + ".webp");
+    const imgDest = path.join(ROOT, "public", "Cards", cardImageBasename(card) + ".webp");
     const imgExists = fs.existsSync(imgDest);
 
     // Re-scrape if not cached or if data fields are all null
@@ -533,12 +541,12 @@ async function main() {
       for (const url of urls) {
         const ok = await downloadFile(url, imgDest);
         if (ok) {
-          console.log(`    [img: ${keyToFilename(card.key)}.webp ✓ from ${url.includes("Special") ? "Special:FilePath" : "infobox"}]`);
+          console.log(`    [img: ${cardImageBasename(card)}.webp ✓ from ${url.includes("Special") ? "Special:FilePath" : "infobox"}]`);
           downloaded = true;
           break;
         }
       }
-      if (!downloaded) console.log(`    [img: ${keyToFilename(card.key)}.webp ✗ — not found on wiki yet]`);
+      if (!downloaded) console.log(`    [img: ${cardImageBasename(card)}.webp ✗ — not found on wiki yet]`);
     }
   }
 
