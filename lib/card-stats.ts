@@ -21,8 +21,8 @@ export const RARITY_ORDER: CardRarity[] = [
   "Common", "Rare", "Epic", "Legendary", "Champion",
 ];
 
-// Key: lowercase snake_case slug — card art basename = display name with spaces removed (see cardImagePath)
-// e.g. "mega_knight" → "/Cards/MegaKnight.webp"
+// Key: lowercase snake_case slug — art in public/Cards/{Title-Dash}.webp (see cardImagePath)
+// e.g. "inferno_tower" → "/Cards/Inferno-Tower.webp"
 export const CARD_STATS: Record<string, CardStats> = {
   // ─── Common Troops ──────────────────────────────────────────────────────────
   archers: {
@@ -504,22 +504,11 @@ export function compareReleaseYear(
   return gy > sy ? "higher" : "lower";
 }
 
-// Wiki / Fandom card art uses names with spaces removed (e.g. "Mega Knight" → MegaKnightCardMergeTactics.png).
-// Deployed files often match that basename — not Title-Title dashes (Mega-Knight).
-const CARD_IMAGE_BASENAME_OVERRIDE: Partial<Record<string, string>> = {
-  mini_pekka: "MiniPEKKA",
-  pekka: "PEKKA",
-};
-
+// Card art: public/Cards/{Title-Dash}.webp (capital C — required on Linux/Vercel)
 export function cardImagePath(key: string): string {
-  const stat = CARD_STATS[key];
-  const fromName = stat?.name.replace(/\s+/g, "") ?? "";
-  const base =
-    CARD_IMAGE_BASENAME_OVERRIDE[key] ??
-    (fromName ||
-      key
-        .split("_")
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(""));
-  return `/Cards/${base}.webp`;
+  const fileStem = key
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join("-");
+  return `/Cards/${fileStem}.webp`;
 }
