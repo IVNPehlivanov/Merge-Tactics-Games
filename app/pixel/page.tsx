@@ -76,7 +76,7 @@ export default function PixelPage() {
 
       <DailyProgress currentSlug="pixel" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Pixel Card</h1>
-      <h2 className="text-center text-white/70 mb-6 text-lg">Guess the card or ruler from its pixelated image</h2>
+      <h2 className="font-game text-center text-white/70 mb-6 text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Guess the card or ruler from its pixelated image</h2>
       <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );

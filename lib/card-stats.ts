@@ -461,15 +461,39 @@ export function getCardDisplayName(key: string): string {
     .replace("Pekka", "P.E.K.K.A.");
 }
 
+/** Lowercase alphanumerics only — so "pekka" matches "P.E.K.K.A." and "Mini P.E.K.K.A." */
+function normalizeCardSearchText(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+/**
+ * Prefix match on normalized text (case/punctuation-insensitive).
+ * Matches if the full name or any whitespace-separated word starts with the query
+ * (e.g. "a" → Archers, not Spear Goblins; "pekka" → P.E.K.K.A. and Mini P.E.K.K.A.).
+ */
+export function nameMatchesSearch(displayName: string, query: string): boolean {
+  const q = normalizeCardSearchText(query);
+  if (!q) return false;
+  const full = normalizeCardSearchText(displayName);
+  if (full.startsWith(q)) return true;
+  return displayName
+    .split(/\s+/)
+    .map((w) => normalizeCardSearchText(w))
+    .some((w) => w.length > 0 && w.startsWith(q));
+}
+
 export function cardMatchesSearch(key: string, query: string): boolean {
-  return getCardDisplayName(key).toLowerCase().includes(query.toLowerCase());
+  return nameMatchesSearch(getCardDisplayName(key), query);
 }
 
 export function findExactMatchKey(query: string): string | null {
-  const q = query.toLowerCase().trim();
-  return getCardKeys().find(
-    (k) => getCardDisplayName(k).toLowerCase() === q
-  ) ?? null;
+  const qNorm = normalizeCardSearchText(query);
+  if (!qNorm) return null;
+  return (
+    getCardKeys().find(
+      (k) => normalizeCardSearchText(getCardDisplayName(k)) === qNorm
+    ) ?? null
+  );
 }
 
 // Numeric compare — returns "correct" | "higher" | "lower"

@@ -17,6 +17,7 @@ import {
   setPersistedGameState,
   getPersistedGameState,
 } from "@/lib/daily";
+import { getTraitDisplayName } from "@/lib/traits";
 import type { ClassicGuess, ClassicGuessAttributes, AttributeResult } from "@/types/game";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
@@ -91,13 +92,30 @@ function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" 
   );
 }
 
-function AttributeCell({ value, result }: { value: string | number | boolean; result: AttributeResult["result"] }) {
+function AttributeCell({
+  attrKey,
+  value,
+  result,
+}: {
+  attrKey: keyof ClassicGuessAttributes;
+  value: string | number | boolean;
+  result: AttributeResult["result"];
+}) {
   const bg =
     result === "correct" ? "bg-green-600" :
     result === "wrong"   ? "bg-red-600" :
                            "bg-red-600";
   const arrow = result === "higher" ? "↑" : result === "lower" ? "↓" : null;
-  const display = typeof value === "boolean" ? (value ? "Yes" : "No") : String(value);
+  const display =
+    typeof value === "boolean"
+      ? value
+        ? "Yes"
+        : "No"
+      : attrKey === "primaryTrait" || attrKey === "secondaryTrait"
+        ? getTraitDisplayName(String(value))
+        : String(value);
+  const isTraitCol = attrKey === "primaryTrait" || attrKey === "secondaryTrait";
+  const textClass = isTraitCol ? "normal-case" : "";
 
   return (
     <div className={`relative flex h-14 w-full items-center justify-center overflow-hidden rounded text-center text-[11px] font-bold text-white sm:h-24 sm:text-sm sm:rounded-lg ${bg}`}>
@@ -106,10 +124,10 @@ function AttributeCell({ value, result }: { value: string | number | boolean; re
           <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[3.5rem] font-black text-black/60 leading-none sm:text-[5rem]">
             {arrow}
           </span>
-          <span className="relative z-10 leading-tight px-0.5 break-words text-center">{display}</span>
+          <span className={`relative z-10 leading-tight px-0.5 break-words text-center ${textClass}`}>{display}</span>
         </>
       ) : (
-        <span className="px-0.5 leading-tight break-words text-center">{display}</span>
+        <span className={`px-0.5 leading-tight break-words text-center ${textClass}`}>{display}</span>
       )}
     </div>
   );
@@ -346,18 +364,22 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                   <div className="flex h-14 w-full items-center justify-center sm:h-24">
                     <CardThumbnail cardKey={g.cardKey} size="md" />
                   </div>
-                  {ATTR_KEYS.map((key, colIndex) => (
+                  {ATTR_KEYS.map((key, colIndex) => {
+                    const cell = g.attributes[key];
+                    return (
                     <div
                       key={key}
                       className={isNewRow ? "animate-attribute-reveal" : ""}
                       style={isNewRow ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" } : undefined}
                     >
                       <AttributeCell
-                        value={g.attributes[key].value}
-                        result={g.attributes[key].result}
+                        attrKey={key}
+                        value={cell.value}
+                        result={cell.result}
                       />
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               );
             })}

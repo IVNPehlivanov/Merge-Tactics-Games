@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
-import { getCardKeys, getCardDisplayName, cardImagePath } from "@/lib/card-stats";
+import { getCardKeys, getCardDisplayName, cardImagePath, nameMatchesSearch } from "@/lib/card-stats";
 import { getRulerKeys, getRulerByKey, defaultRulerImagePath } from "@/lib/ruler-stats";
 import {
   getDailySecretFromPool,
@@ -193,8 +193,9 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
   const alreadyGuessed  = useMemo(() => new Set(wrongGuesses), [wrongGuesses]);
   const filteredEntries = useMemo(() => {
     if (!search.trim()) return [];
-    const q = search.trim().toLowerCase();
-    return pool.filter((e) => !alreadyGuessed.has(e.key) && e.name.toLowerCase().includes(q));
+    return pool.filter(
+      (e) => !alreadyGuessed.has(e.key) && nameMatchesSearch(e.name, search)
+    );
   }, [pool, search, alreadyGuessed]);
 
   const [pixelWidth, pixelHeight] = getPixelGrid(wrongGuesses.length);

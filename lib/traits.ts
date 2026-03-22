@@ -255,6 +255,16 @@ export function getTraitByKey(key: string): Trait | undefined {
   return TRAITS[key];
 }
 
+/** Human-readable trait label for UI (Classic grid, etc.). */
+export function getTraitDisplayName(key: string): string {
+  const raw = String(key).trim();
+  if (!raw) return "";
+  const lookup = raw.toLowerCase();
+  const t = TRAITS[lookup];
+  if (t) return t.name;
+  return lookup.charAt(0).toUpperCase() + lookup.slice(1);
+}
+
 export function getActiveTraits(): Trait[] {
   return Object.values(TRAITS).filter((t) => t.currentlyActive && t.key !== "none");
 }
