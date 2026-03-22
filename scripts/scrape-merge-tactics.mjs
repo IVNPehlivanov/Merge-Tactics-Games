@@ -67,7 +67,17 @@ function rulerImageFileUrl(name) {
   return `https://clashroyale.fandom.com/wiki/Special:FilePath/${encodeURIComponent(fname)}`;
 }
 
-// ── Key → local image filename (Title-Cased, dash-separated) ─────────────────
+// Card image basename — must match lib/card-stats.ts cardImagePath()
+const CARD_IMAGE_BASENAME_OVERRIDES = {
+  mini_pekka: "MiniPEKKA",
+  pekka: "PEKKA",
+};
+function cardImageBasename(card) {
+  if (CARD_IMAGE_BASENAME_OVERRIDES[card.key]) return CARD_IMAGE_BASENAME_OVERRIDES[card.key];
+  return card.name.replace(/\s+/g, "");
+}
+
+// Ruler portrait: Title-Dash (unchanged)
 function keyToFilename(key) {
   return key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("-");
 }
@@ -498,7 +508,7 @@ async function main() {
   let cardCount = 0;
   for (const card of CARDS) {
     const cached = scrapedCards[card.key];
-    const imgDest = path.join(ROOT, "public", "Cards", keyToFilename(card.key) + ".webp");
+    const imgDest = path.join(ROOT, "public", "Cards", cardImageBasename(card) + ".webp");
     const imgExists = fs.existsSync(imgDest);
 
     // Re-scrape if not cached or if data fields are all null
@@ -533,12 +543,12 @@ async function main() {
       for (const url of urls) {
         const ok = await downloadFile(url, imgDest);
         if (ok) {
-          console.log(`    [img: ${keyToFilename(card.key)}.webp ✓ from ${url.includes("Special") ? "Special:FilePath" : "infobox"}]`);
+          console.log(`    [img: ${cardImageBasename(card)}.webp ✓ from ${url.includes("Special") ? "Special:FilePath" : "infobox"}]`);
           downloaded = true;
           break;
         }
       }
-      if (!downloaded) console.log(`    [img: ${keyToFilename(card.key)}.webp ✗ — not found on wiki yet]`);
+      if (!downloaded) console.log(`    [img: ${cardImageBasename(card)}.webp ✗ — not found on wiki yet]`);
     }
   }
 
