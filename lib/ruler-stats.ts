@@ -78,5 +78,5 @@ export function rulerImagePath(key: string): string {
 /** Path to the default (base) ruler skin image used for pixel/display purposes. */
 export function defaultRulerImagePath(key: string): string {
   const folder = key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("_");
-  return `/rulers/${folder}/Default_${folder}.png`;
+  return `/Rulers/${folder}/Default_${folder}.png`;
 }

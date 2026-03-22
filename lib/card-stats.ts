@@ -21,7 +21,7 @@ export const RARITY_ORDER: CardRarity[] = [
   "Common", "Rare", "Epic", "Legendary", "Champion",
 ];
 
-// Key: lowercase snake_case slug — Title-Case-Dashes for image paths
+// Key: lowercase snake_case slug — Title-Case-Dashes for image paths (must match public/Cards/*.webp)
 // e.g. "mini_pekka" → "/Cards/Mini-Pekka.webp"
 export const CARD_STATS: Record<string, CardStats> = {
   // ─── Common Troops ──────────────────────────────────────────────────────────
@@ -504,15 +504,12 @@ export function compareReleaseYear(
   return gy > sy ? "higher" : "lower";
 }
 
-// Image path helper: "mini_pekka" → "/Cards/Mini-Pekka.webp"
+// Image path helper — same rules as scripts/scrape-merge-tactics.mjs keyToFilename()
 export function cardImagePath(key: string): string {
   const fileName = key
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join("_");
-  // Filenames that use dashes instead of underscores
-  const dashNames: Record<string, string> = {
-    Mini_Pekka: "Mini-Pekka",
-  };
-  return `/cards/${dashNames[fileName] ?? fileName}.webp`;
+    .join("-");
+  // Capital C in /Cards/ — required on case-sensitive hosts (e.g. Vercel)
+  return `/Cards/${fileName}.webp`;
 }

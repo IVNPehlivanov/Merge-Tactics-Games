@@ -114,10 +114,6 @@ export default function AboutPage() {
             </a>.
           </p>
         </section>
-
-        <div className="pt-6 border-t border-white/10 text-xs text-white/30">
-          <p>Merge Tactics content and materials are trademarks and copyrights of Supercell Oy.</p>
-        </div>
       </div>
     </main>
   );

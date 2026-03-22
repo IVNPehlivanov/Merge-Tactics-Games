@@ -16,6 +16,14 @@ const nextConfig: NextConfig = {
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {
+        source: "/Cards/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
+      },
+      {
+        source: "/Rulers/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
+      },
+      {
         source: "/Tacticians/(.*)",
         headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
       },
