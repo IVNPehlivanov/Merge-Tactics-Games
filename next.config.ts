@@ -14,30 +14,33 @@ const nextConfig: NextConfig = {
   },
   images: {
     formats: ["image/avif", "image/webp"],
-    minimumCacheTTL: 2592000,
+    minimumCacheTTL: 86400, // 1 day
   },
   async headers() {
+    const isDev = process.env.NODE_ENV === "development";
+    if (isDev) {
+      return [{ source: "/(.*)", headers: [{ key: "Cache-Control", value: "no-store" }] }];
+    }
     return [
+      // /_next/static IS content-hashed by Next.js — immutable is safe here
       {
         source: "/_next/static/(.*)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
+      // Game images use stable filenames — no immutable, revalidate after 7 days
       {
-        source: "/Cards/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
+        source: "/cards/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, must-revalidate" }],
       },
       {
-        source: "/Rulers/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
+        source: "/rulers/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, must-revalidate" }],
       },
       {
-        source: "/Tacticians/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
+        source: "/skins/(.*)",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, must-revalidate" }],
       },
-      {
-        source: "/Skins/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, immutable" }],
-      },
+      // Fonts truly never change — immutable is correct
       {
         source: "/fonts/(.*)",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
