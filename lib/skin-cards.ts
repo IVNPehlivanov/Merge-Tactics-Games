@@ -8,10 +8,10 @@ export interface SkinEntry {
 
 export const SKIN_POOL: SkinEntry[] = [
   // Royal King
-  { rulerKey: "royale_king",    skinName: "Marble King",       imagePath: "/Rulers/Royal_King/Marble_Royal_King.png" },
-  { rulerKey: "royale_king",    skinName: "Velvet King",       imagePath: "/Rulers/Royal_King/Velvet_Royal_King.png" },
-  { rulerKey: "royale_king",    skinName: "Ghoul King",        imagePath: "/Rulers/Royal_King/Ghoul_Royal_King.png" },
-  { rulerKey: "royale_king",    skinName: "Santa King",        imagePath: "/Rulers/Royal_King/Santa_Royal_King.png" },
+  { rulerKey: "royale_king",    skinName: "Marble King",       imagePath: "/Rulers/Royale_King/Marble_Royale_King.png" },
+  { rulerKey: "royale_king",    skinName: "Velvet King",       imagePath: "/Rulers/Royale_King/Velvet_Royale_King.png" },
+  { rulerKey: "royale_king",    skinName: "Ghoul King",        imagePath: "/Rulers/Royale_King/Ghoul_Royale_King.png" },
+  { rulerKey: "royale_king",    skinName: "Santa King",        imagePath: "/Rulers/Royale_King/Santa_Royale_King.png" },
   // Spirit Empress
   { rulerKey: "spirit_empress", skinName: "Ivy Empress",       imagePath: "/Rulers/Spirit_Empress/Ivy_Spirit_Empress.png" },
   { rulerKey: "spirit_empress", skinName: "Auric Empress",     imagePath: "/Rulers/Spirit_Empress/Auric_Spirit_Empress.png" },

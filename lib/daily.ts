@@ -54,10 +54,14 @@ export function getDailySecretFromPool<T>(pool: T[], gameSlug: string, dayKey: s
 const PLAYED_KEY = "mergedle_daily_played";
 
 export function hasPlayedToday(gameSlug: string): boolean {
+  return hasPlayedOnDay(gameSlug, getDayKey());
+}
+
+export function hasPlayedOnDay(gameSlug: string, dayKey: string): boolean {
   try {
     const raw = localStorage.getItem(PLAYED_KEY);
     const data: Record<string, string[]> = raw ? JSON.parse(raw) : {};
-    return (data[getDayKey()] ?? []).includes(gameSlug);
+    return (data[dayKey] ?? []).includes(gameSlug);
   } catch { return false; }
 }
 

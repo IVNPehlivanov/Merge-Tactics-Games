@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   getDayKey,
-  hasPlayedToday,
+  hasPlayedOnDay,
   getPersistedGameState,
   clearPersistedGameState,
   setDevDayKey,
@@ -43,7 +43,7 @@ export default function DailyGameGuard({ slug }: Props) {
   useEffect(() => {
     const key = getDayKey();
     setDayKey(key);
-    const played = hasPlayedToday(slug);
+    const played = hasPlayedOnDay(slug, key);
     setHasPlayed(played);
     if (played) {
       const state = getPersistedGameState<PersistedState>(slug, key);
@@ -52,7 +52,7 @@ export default function DailyGameGuard({ slug }: Props) {
     setMounted(true);
   }, [slug]);
 
-  if (!mounted) {
+  if (!mounted || !dayKey) {
     return (
       <div className="flex justify-center items-center py-20">
         <div className="w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />

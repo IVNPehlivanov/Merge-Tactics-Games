@@ -1,25 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-function QuestionIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <path d="M12 17h.01" />
-    </svg>
-  );
-}
-
 /**
  * Always in the DOM so search engines crawl the content.
  * Visibility is toggled via CSS opacity/pointer-events.
@@ -59,10 +40,13 @@ export default function HowToPlayModal({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="shrink-0 rounded-full border-2 border-white/30 bg-white/10 p-2 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+        className="group relative inline-flex size-12 shrink-0 items-center justify-center rounded-full border border-slate-400/80 bg-gradient-to-b from-slate-100 to-slate-300 p-1 shadow-[0_2px_8px_rgba(0,0,0,0.35)] transition-transform hover:scale-105"
         aria-label={triggerAriaLabel}
       >
-        <QuestionIcon className="size-5" />
+        <span className="absolute inset-[3px] rounded-full bg-gradient-to-b from-white/90 to-slate-200/80" aria-hidden />
+        <span className="relative inline-flex size-8 items-center justify-center rounded-full border border-slate-900/80 bg-slate-700 text-[18px] font-extrabold leading-none text-slate-100 shadow-inner">
+          ?
+        </span>
       </button>
 
       {/* Modal — always in DOM for SEO; hidden via CSS when closed */}

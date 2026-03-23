@@ -100,3 +100,10 @@ mergedle/
 ## Completed Tasks
 - [x] Initial scaffold created (mergdle_scaffold.md)
 - [x] Full project scaffolded — all files created
+- [x] Removed "Coming Soon" slots from homepage game list (HomeInfographic now shows active games only)
+- [x] Removed Pixel helper text line under the image/search area
+- [x] Removed Skin helper text line under the image/search area
+- [x] Fixed Pixel blank-image days by restricting rulers to keys with shipped local ruler art
+- [x] Restyled game-page question-mark help button to match requested icon design
+- [x] Fixed Royale King skin asset paths for Marble/Santa/Velvet/Ghoul in skin pool
+- [x] Fixed Pixel mode persistence so wrong-guess progress restores after leaving and returning

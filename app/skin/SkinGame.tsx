@@ -162,13 +162,6 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
             }}
           />
         </div>
-        {!won && (
-          <p className="text-white/50 text-xs">
-            {wrongGuesses.length === 0
-              ? "Zoomed in — guess to reveal more"
-              : `${wrongGuesses.length} wrong guess${wrongGuesses.length !== 1 ? "es" : ""} — zooming out`}
-          </p>
-        )}
         {won && (
           <p className="text-white/70 text-sm italic">"{secretEntry.skinName}"</p>
         )}

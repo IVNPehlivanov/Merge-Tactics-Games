@@ -6,6 +6,7 @@ import { getCardKeys, getCardDisplayName, cardImagePath, nameMatchesSearch } fro
 import { getRulerKeys, getRulerByKey, defaultRulerImagePath } from "@/lib/ruler-stats";
 import {
   getDailySecretFromPool,
+  getDayKey,
   markPlayedToday,
   setPersistedGameState,
   getPersistedGameState,
@@ -115,23 +116,37 @@ function EntryThumbnail({ imagePath }: { imagePath: string }) {
 // ── Combined pool (cards + rulers) ───────────────────────────────────────────
 interface PoolEntry { key: string; name: string; imagePath: string; }
 
+// Keep ruler entries limited to keys that have shipped image assets.
+const PIXEL_ENABLED_RULER_KEYS = new Set<string>(["royale_king"]);
+
 function buildPool(): PoolEntry[] {
   const cards = getCardKeys().map((k) => ({
     key: k,
     name: getCardDisplayName(k),
     imagePath: cardImagePath(k),
   }));
-  const rulers = getRulerKeys().map((k) => ({
-    key: `ruler__${k}`,
-    name: getRulerByKey(k)?.name ?? k,
-    imagePath: defaultRulerImagePath(k),
-  }));
+  const rulers = getRulerKeys()
+    .filter((k) => PIXEL_ENABLED_RULER_KEYS.has(k))
+    .map((k) => ({
+      key: `ruler__${k}`,
+      name: getRulerByKey(k)?.name ?? k,
+      imagePath: defaultRulerImagePath(k),
+    }));
   return [...cards, ...rulers];
 }
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Props { dayKey: string; onSolved: () => void; }
 interface PersistedState { wrongGuesses: string[]; won: boolean; secretKey: string; }
+
+function pickBestPersistedState(
+  primary: PersistedState | null,
+  fallback: PersistedState | null
+): PersistedState | null {
+  if (!primary) return fallback;
+  if (!fallback) return primary;
+  return (fallback.wrongGuesses?.length ?? 0) > (primary.wrongGuesses?.length ?? 0) ? fallback : primary;
+}
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function PixelGame({ dayKey, onSolved }: Props) {
@@ -149,15 +164,28 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
   const searchSectionRef = useRef<HTMLDivElement>(null);
   const winBoxRef        = useRef<HTMLElement | null>(null);
   const justWonRef       = useRef(false);
+  const wrongGuessesRef  = useRef<string[]>([]);
 
   // Restore persisted state
   useEffect(() => {
-    const saved = getPersistedGameState<PersistedState>("pixel", dayKey);
-    if (saved && saved.secretKey === secretKey) {
-      setWrongGuesses(saved.wrongGuesses ?? []);
-      if (saved.won) setWon(true);
+    const liveDayKey = getDayKey();
+    const savedPrimary = getPersistedGameState<PersistedState>("pixel", dayKey);
+    const savedFallback = liveDayKey === dayKey
+      ? null
+      : getPersistedGameState<PersistedState>("pixel", liveDayKey);
+    const saved = pickBestPersistedState(savedPrimary, savedFallback);
+    if (saved) {
+      const restoredWrong = Array.isArray(saved.wrongGuesses)
+        ? saved.wrongGuesses.filter((k) => poolKeys.includes(k))
+        : [];
+      setWrongGuesses(restoredWrong);
+      setWon(Boolean(saved.won && saved.secretKey === secretKey));
     }
-  }, [dayKey, secretKey]);
+  }, [dayKey, secretKey, poolKeys]);
+
+  useEffect(() => {
+    wrongGuessesRef.current = wrongGuesses;
+  }, [wrongGuesses]);
 
   // Confetti on win
   useEffect(() => {
@@ -210,14 +238,25 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
       justWonRef.current = true;
       setWon(true);
       markPlayedToday("pixel");
-      setPersistedGameState("pixel", dayKey, { wrongGuesses, won: true, secretKey });
+      const solvedState = { wrongGuesses: wrongGuessesRef.current, won: true, secretKey };
+      setPersistedGameState("pixel", dayKey, solvedState);
+      const liveDayKey = getDayKey();
+      if (liveDayKey !== dayKey) {
+        setPersistedGameState("pixel", liveDayKey, solvedState);
+      }
       onSolved();
       return;
     }
 
-    const newWrong = [...wrongGuesses, key];
+    const newWrong = [...wrongGuessesRef.current, key];
+    wrongGuessesRef.current = newWrong;
+    const inProgressState = { wrongGuesses: newWrong, won: false, secretKey };
+    setPersistedGameState("pixel", dayKey, inProgressState);
+    const liveDayKey = getDayKey();
+    if (liveDayKey !== dayKey) {
+      setPersistedGameState("pixel", liveDayKey, inProgressState);
+    }
     setWrongGuesses(newWrong);
-    setPersistedGameState("pixel", dayKey, { wrongGuesses: newWrong, won: false, secretKey });
   }
 
   function submitFromSearch() {
@@ -266,11 +305,6 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
       {/* ── Search input ── */}
       {!won && (
         <section ref={searchSectionRef} className="relative mx-auto max-w-md">
-          <p className="text-center text-white/50 text-xs mb-3">
-            {wrongGuesses.length === 0
-              ? "Guess to reveal more pixels"
-              : `${wrongGuesses.length} wrong guess${wrongGuesses.length !== 1 ? "es" : ""} — image getting clearer`}
-          </p>
           <div className="relative">
             <input
               ref={searchInputRef}

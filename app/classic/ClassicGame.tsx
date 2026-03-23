@@ -340,10 +340,10 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
       {/* ── Guess table ── */}
       {guesses.length > 0 && (
-        <section className="mx-auto w-fit rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
+        <section className="mx-auto w-full max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
           <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">YOUR GUESSES</h3>
 
-          <div className="overflow-x-auto sm:overflow-visible">
+          <div className="w-full overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible">
           {/* Column headers */}
           <div className="guess-grid mb-1 grid gap-2 font-game text-[10px] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
             <div className="text-center">Card</div>
