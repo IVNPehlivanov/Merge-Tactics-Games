@@ -107,3 +107,4 @@ mergedle/
 - [x] Restyled game-page question-mark help button to match requested icon design
 - [x] Fixed Royale King skin asset paths for Marble/Santa/Velvet/Ghoul in skin pool
 - [x] Fixed Pixel mode persistence so wrong-guess progress restores after leaving and returning
+- [x] Added the "Want more?" Royaledly box to all game pages via shared GamePageBackground
