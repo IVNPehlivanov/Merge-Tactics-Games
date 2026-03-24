@@ -17,6 +17,7 @@ import {
 } from "@/lib/daily";
 import NextModeLink from "@/components/NextModeLink";
 import Image from "next/image";
+import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
 
 interface Props {
   dayKey: string;
@@ -63,6 +64,11 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
         .slice(0, 8)
     );
   };
+
+  useFocusSearchOnTyping(inputRef, {
+    enabled: !won,
+    commit: handleInput,
+  });
 
   const submitGuess = (key: string) => {
     setInput("");

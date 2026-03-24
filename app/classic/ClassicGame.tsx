@@ -21,6 +21,8 @@ import { getTraitDisplayName } from "@/lib/traits";
 import type { ClassicGuess, ClassicGuessAttributes, AttributeResult } from "@/types/game";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
+import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
+import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 
 interface Props {
   dayKey: string;
@@ -222,12 +224,35 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     };
   }, []);
 
+  useFocusSearchOnTyping(searchInputRef, {
+    enabled: !won,
+    commit: (next) => {
+      setSearch(next);
+      if (next.trim()) setDropdown(true);
+    },
+  });
+
   const filteredKeys   = useMemo(() => {
     if (!search.trim()) return [];
     return cardKeys.filter((k) => cardMatchesSearch(k, search));
   }, [cardKeys, search]);
 
   const alreadyGuessed = useMemo(() => new Set(guesses.map((g) => g.cardKey)), [guesses]);
+
+  const availableKeys = useMemo(
+    () => filteredKeys.filter((k) => !alreadyGuessed.has(k)),
+    [filteredKeys, alreadyGuessed],
+  );
+
+  const dropdownListCount =
+    !won && dropdownOpen && search.trim() ? availableKeys.length : 0;
+
+  const { highlightIndex, dropdownRef, handleArrowKeys, optionPointerHandlers, onDropdownPointerLeave } =
+    useSearchDropdownHighlight({
+      enabled: !won,
+      itemCount: dropdownListCount,
+      resetKey: search,
+    });
 
   function handleGuess(key: string) {
     if (alreadyGuessed.has(key)) return;
@@ -253,10 +278,13 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   }
 
   function submitFromSearch() {
-    const available = filteredKeys.filter((k) => !alreadyGuessed.has(k));
-    if (available.length === 0) return;
+    if (availableKeys.length === 0) return;
+    if (highlightIndex >= 0 && highlightIndex < availableKeys.length) {
+      handleGuess(availableKeys[highlightIndex]);
+      return;
+    }
     const exact = findExactMatchKey(search);
-    handleGuess((exact && available.includes(exact)) ? exact : available[0]);
+    handleGuess((exact && availableKeys.includes(exact)) ? exact : availableKeys[0]);
   }
 
   return (
@@ -278,6 +306,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
               }}
               onFocus={() => { if (search.trim()) setDropdown(true); }}
               onKeyDown={(e) => {
+                handleArrowKeys(e);
                 if (e.key !== "Enter") return;
                 e.preventDefault();
                 submitFromSearch();
@@ -310,19 +339,23 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
           {dropdownOpen && search.trim() && (
             <div
+              ref={dropdownRef}
               className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
               role="listbox"
+              data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
+              onPointerLeave={onDropdownPointerLeave}
             >
-              {filteredKeys.filter((k) => !alreadyGuessed.has(k)).length === 0 ? (
+              {availableKeys.length === 0 ? (
                 <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
               ) : (
                 <ul role="list">
-                  {filteredKeys
-                    .filter((k) => !alreadyGuessed.has(k))
-                    .map((key) => (
+                  {availableKeys.map((key, optionIndex) => (
                       <li key={key} role="option">
                         <button
                           type="button"
+                          data-search-option-index={optionIndex}
+                          data-search-active={highlightIndex === optionIndex ? "true" : undefined}
+                          {...optionPointerHandlers(optionIndex)}
                           onClick={() => { handleGuess(key); }}
                           className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >

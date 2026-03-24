@@ -13,6 +13,8 @@ import {
 import type { SkinEntry } from "@/lib/skin-cards";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
+import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
+import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 
 // ── Zoom config ───────────────────────────────────────────────────────────────
 // Scale at each wrong-guess count: 0 wrong = 4×, 1 = 3×, 2 = 2×, 3 = 1.5×, 4+ = 1×
@@ -105,6 +107,14 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     };
   }, []);
 
+  useFocusSearchOnTyping(searchInputRef, {
+    enabled: !won,
+    commit: (next) => {
+      setSearch(next);
+      if (next.trim()) setDropdown(true);
+    },
+  });
+
   const alreadyGuessed = useMemo(() => new Set(wrongGuesses), [wrongGuesses]);
   const filteredSkins = useMemo(() => {
     if (!search.trim()) return [];
@@ -113,6 +123,16 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
       (s) => !alreadyGuessed.has(s.skinName) && s.skinName.toLowerCase().includes(q)
     );
   }, [skinPool, search, alreadyGuessed]);
+
+  const dropdownListCount =
+    !won && dropdownOpen && search.trim() ? filteredSkins.length : 0;
+
+  const { highlightIndex, dropdownRef, handleArrowKeys, optionPointerHandlers, onDropdownPointerLeave } =
+    useSearchDropdownHighlight({
+      enabled: !won,
+      itemCount: dropdownListCount,
+      resetKey: search,
+    });
 
   // Current zoom scale
   const scale = won ? 1 : ZOOM_LEVELS[Math.min(wrongGuesses.length, ZOOM_LEVELS.length - 1)];
@@ -137,6 +157,15 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
   }
 
   const rulerName = getRulerByKey(secretEntry.rulerKey)?.name ?? secretEntry.rulerKey;
+
+  function submitSkinFromSearch() {
+    if (filteredSkins.length === 0) return;
+    if (highlightIndex >= 0 && highlightIndex < filteredSkins.length) {
+      handleGuess(filteredSkins[highlightIndex].skinName);
+      return;
+    }
+    handleGuess(filteredSkins[0].skinName);
+  }
 
   return (
     <div className="space-y-6">
@@ -196,17 +225,16 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
               onChange={(e) => { setSearch(e.target.value); if (e.target.value.trim()) setDropdown(true); }}
               onFocus={() => { if (search.trim()) setDropdown(true); }}
               onKeyDown={(e) => {
+                handleArrowKeys(e);
                 if (e.key !== "Enter") return;
                 e.preventDefault();
-                if (filteredSkins.length > 0) handleGuess(filteredSkins[0].skinName);
+                submitSkinFromSearch();
               }}
               className="w-full rounded-xl border-2 border-gray-300 bg-white py-3 pl-4 pr-20 text-base text-gray-900 placeholder:text-sm placeholder:text-gray-500 focus:outline-none"
             />
             <button
               type="button"
-              onClick={() => {
-                if (filteredSkins.length > 0) handleGuess(filteredSkins[0].skinName);
-              }}
+              onClick={submitSkinFromSearch}
               className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
               aria-label="Submit guess"
             >
@@ -230,17 +258,23 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
 
           {dropdownOpen && search.trim() && (
             <div
+              ref={dropdownRef}
               className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
               role="listbox"
+              data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
+              onPointerLeave={onDropdownPointerLeave}
             >
               {filteredSkins.length === 0 ? (
                 <p className="px-4 py-3 text-sm text-gray-600">No skins match.</p>
               ) : (
                 <ul role="list">
-                  {filteredSkins.map((s) => (
+                  {filteredSkins.map((s, optionIndex) => (
                     <li key={s.skinName} role="option">
                       <button
                         type="button"
+                        data-search-option-index={optionIndex}
+                        data-search-active={highlightIndex === optionIndex ? "true" : undefined}
+                        {...optionPointerHandlers(optionIndex)}
                         onClick={() => handleGuess(s.skinName)}
                         className="flex w-full items-center gap-3 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                       >

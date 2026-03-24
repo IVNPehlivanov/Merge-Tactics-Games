@@ -97,8 +97,22 @@ html.dark { scrollbar-color: #4b5563 #111827; }
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 .card-search-dropdown [role="option"] button:hover,
-.card-search-dropdown [role="option"] button:focus {
+.card-search-dropdown [role="option"] button:focus,
+.card-search-dropdown [role="option"] button[data-search-active="true"] {
   transform: translateX(4px);
+}
+.card-search-dropdown [role="option"] button[data-search-active="true"] {
+  background-color: #f3f4f6;
+}
+/* Arrow-key highlight: single row only; hover/focus must not stack on another row */
+.card-search-dropdown[data-keyboard-nav="true"] [role="option"] button:hover,
+.card-search-dropdown[data-keyboard-nav="true"] [role="option"] button:focus {
+  transform: none !important;
+  background-color: #ffffff !important;
+}
+.card-search-dropdown[data-keyboard-nav="true"] [role="option"] button[data-search-active="true"] {
+  transform: translateX(4px) !important;
+  background-color: #f3f4f6 !important;
 }
 .card-search-dropdown::-webkit-scrollbar       { width: 10px; }
 .card-search-dropdown::-webkit-scrollbar-track { background: #ffffff; border-radius: 0 10px 10px 0; }

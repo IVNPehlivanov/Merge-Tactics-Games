@@ -13,6 +13,8 @@ import {
 } from "@/lib/daily";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
+import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
+import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 
 // ── Canvas pixel config (copied from wrdle) ──────────────────────────────────
 const DISPLAY_WIDTH  = 200;
@@ -218,6 +220,14 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
     };
   }, []);
 
+  useFocusSearchOnTyping(searchInputRef, {
+    enabled: !won,
+    commit: (next) => {
+      setSearch(next);
+      if (next.trim()) setDropdown(true);
+    },
+  });
+
   const alreadyGuessed  = useMemo(() => new Set(wrongGuesses), [wrongGuesses]);
   const filteredEntries = useMemo(() => {
     if (!search.trim()) return [];
@@ -225,6 +235,16 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
       (e) => !alreadyGuessed.has(e.key) && nameMatchesSearch(e.name, search)
     );
   }, [pool, search, alreadyGuessed]);
+
+  const dropdownListCount =
+    !won && dropdownOpen && search.trim() ? filteredEntries.length : 0;
+
+  const { highlightIndex, dropdownRef, handleArrowKeys, optionPointerHandlers, onDropdownPointerLeave } =
+    useSearchDropdownHighlight({
+      enabled: !won,
+      itemCount: dropdownListCount,
+      resetKey: search,
+    });
 
   const [pixelWidth, pixelHeight] = getPixelGrid(wrongGuesses.length);
   const src = secretEntry.imagePath;
@@ -261,6 +281,10 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
 
   function submitFromSearch() {
     if (filteredEntries.length === 0) return;
+    if (highlightIndex >= 0 && highlightIndex < filteredEntries.length) {
+      handleGuess(filteredEntries[highlightIndex].key);
+      return;
+    }
     const q = search.trim().toLowerCase();
     const exact = filteredEntries.find((e) => e.name.toLowerCase() === q);
     handleGuess(exact ? exact.key : filteredEntries[0].key);
@@ -315,6 +339,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
               onChange={(e) => { setSearch(e.target.value); if (e.target.value.trim()) setDropdown(true); }}
               onFocus={() => { if (search.trim()) setDropdown(true); }}
               onKeyDown={(e) => {
+                handleArrowKeys(e);
                 if (e.key !== "Enter") return;
                 e.preventDefault();
                 submitFromSearch();
@@ -347,17 +372,23 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
 
           {dropdownOpen && search.trim() && (
             <div
+              ref={dropdownRef}
               className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
               role="listbox"
+              data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
+              onPointerLeave={onDropdownPointerLeave}
             >
               {filteredEntries.length === 0 ? (
                 <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
               ) : (
                 <ul role="list">
-                  {filteredEntries.map((entry) => (
+                  {filteredEntries.map((entry, optionIndex) => (
                     <li key={entry.key} role="option">
                       <button
                         type="button"
+                        data-search-option-index={optionIndex}
+                        data-search-active={highlightIndex === optionIndex ? "true" : undefined}
+                        {...optionPointerHandlers(optionIndex)}
                         onClick={() => handleGuess(entry.key)}
                         className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                       >
