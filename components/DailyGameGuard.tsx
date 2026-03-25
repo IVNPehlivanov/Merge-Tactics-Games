@@ -15,6 +15,7 @@ import { getValidSkinPool } from "@/lib/skin-cards";
 import type { SkinEntry } from "@/lib/skin-cards";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import NextModeLink from "@/components/NextModeLink";
+import ClassicShareBox from "@/components/ClassicShareBox";
 import dynamic from "next/dynamic";
 
 const ClassicGame = dynamic(() => import("@/app/classic/ClassicGame"));
@@ -30,6 +31,7 @@ interface PersistedState {
   secretCardKey?: string;
   secretRulerKey?: string;
   guesses?: unknown[];
+  wrongGuesses?: string[];
   won?: boolean;
 }
 
@@ -63,7 +65,12 @@ export default function DailyGameGuard({ slug }: Props) {
   if (hasPlayed) {
     const cardKey = persistedState?.secretKey ?? persistedState?.secretCardKey ?? "";
     const isSkin = slug === "skin";
-    const guessCount = (persistedState?.guesses ?? []).length;
+    const guessCount =
+      slug === "classic"
+        ? (persistedState?.guesses ?? []).length
+        : slug === "pixel" || slug === "skin"
+          ? (persistedState?.wrongGuesses?.length ?? 0) + 1
+          : 0;
     const skinImagePath = (persistedState as Record<string, unknown>)?.secretSkinImagePath as string | undefined;
     const skinName     = (persistedState as Record<string, unknown>)?.secretSkinName     as string | undefined;
     const imgSrc      = isSkin ? (skinImagePath ?? null) : cardKey ? cardImagePath(cardKey) : null;
@@ -71,10 +78,11 @@ export default function DailyGameGuard({ slug }: Props) {
 
     return (
       <div className="flex flex-col items-center py-8 animate-fade-up">
-        <div className="mx-auto max-w-xs w-full rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
-          <p className="text-yellow-400 font-game text-2xl mb-4 [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">Already played today!</p>
+        <div className="mx-auto w-full max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
+          <p className="text-green-400 font-game text-2xl mb-4 [text-shadow:0_2px_8px_rgba(0,0,0,0.8)]">You guessed correctly!</p>
           {imgSrc && displayName && (
             <>
+              <p className="mb-3 text-xl font-game text-white">{displayName}</p>
               <Image
                 src={imgSrc}
                 alt={displayName}
@@ -83,12 +91,12 @@ export default function DailyGameGuard({ slug }: Props) {
                 className="mx-auto rounded-lg object-contain"
                 unoptimized
               />
-              <p className="mt-3 text-xl font-game text-white">{displayName}</p>
               {guessCount > 0 && (
-                <p className="mt-1 text-white/60 text-sm font-game">Solved in {guessCount} {guessCount === 1 ? "guess" : "guesses"}</p>
+                <p className="mt-3 text-sm font-game text-white">Number of tries: {guessCount}</p>
               )}
             </>
           )}
+          <ClassicShareBox dayKey={dayKey} />
           <div className="mt-4">
             <DailyResetTimer />
           </div>

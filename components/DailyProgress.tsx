@@ -43,7 +43,9 @@ export default function DailyProgress({ currentSlug }: { currentSlug?: string })
                   </span>
                 )}
               </div>
-              <span className={`text-xs font-semibold text-center leading-tight ${isCurrent ? "text-amber-300" : "text-white/80"}`}>
+              <span
+                className={`text-center text-xs font-semibold leading-tight text-white ${isCurrent ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.65)]" : ""}`}
+              >
                 {title.replace(" Wordle", "")}
               </span>
             </Link>
@@ -62,7 +64,7 @@ export default function DailyProgress({ currentSlug }: { currentSlug?: string })
             }}
           />
         </div>
-        <p className="text-center text-xs text-white/50 font-semibold">
+        <p className="text-center text-xs font-semibold text-white">
           {doneCount} / {total} completed
         </p>
       </div>

@@ -75,7 +75,7 @@ export default function SkinPage() {
 
       <DailyProgress currentSlug="skin" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Guess the Skin</h1>
-      <h2 className="font-game text-center text-white/70 mb-6 text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Identify the skin from a zoomed grayscale image</h2>
+      <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Identify the skin from a zoomed grayscale image</h2>
       <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );

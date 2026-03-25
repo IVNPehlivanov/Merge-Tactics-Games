@@ -19,5 +19,5 @@ export default function DailyResetTimer() {
     return () => clearInterval(id);
   }, []);
 
-  return <span className="text-white/50 text-sm font-game">Next puzzle in {timeLeft}</span>;
+  return <span className="text-white text-sm font-game">Next puzzle in {timeLeft}</span>;
 }

@@ -429,8 +429,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
           <p className="text-green-400 font-bold text-2xl mb-1">
             {getCardDisplayName(secretKey)}!
           </p>
-          <p className="text-white/60 text-sm mb-4">
-            Solved in {guesses.length} {guesses.length === 1 ? "guess" : "guesses"}
+          <p className="mb-4 text-sm text-white">
+            Number of tries: {guesses.length}
           </p>
           <NextModeLink currentSlug="classic" />
         </section>

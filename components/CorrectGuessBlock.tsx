@@ -18,7 +18,7 @@ export default function CorrectGuessBlock({ cardKey, guessCount }: Props) {
         unoptimized
       />
       <p className="text-green-400 font-bold text-xl">{getCardDisplayName(cardKey)}!</p>
-      <p className="text-white/60 text-sm mt-1">Solved in {guessCount} {guessCount === 1 ? "guess" : "guesses"}</p>
+      <p className="mt-1 text-sm text-white">Number of tries: {guessCount}</p>
     </div>
   );
 }

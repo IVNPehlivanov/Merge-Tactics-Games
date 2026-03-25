@@ -56,6 +56,57 @@
 .animate-wrong-glow  { animation: wrong-glow 0.6s ease-out; }
 .animate-fade-up     { animation: fade-up 0.4s ease-out; }
 
+@keyframes next-mode-logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.animate-next-mode-logo-float {
+  animation: next-mode-logo-float 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-next-mode-logo-float {
+    animation: none;
+  }
+}
+
+/* ── Share results: chunky 3D Copy / Post on X ── */
+.share-btn-3d-copy {
+  background: linear-gradient(180deg, #4ade80 0%, #22c55e 42%, #16a34a 100%);
+  box-shadow:
+    0 4px 0 0 #14532d,
+    0 8px 18px rgba(0, 0, 0, 0.42);
+}
+.share-btn-3d-copy:hover {
+  filter: brightness(1.07);
+}
+.share-btn-3d-copy:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 0 #14532d,
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.share-btn-3d-x {
+  background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 45%, #0284c7 100%);
+  box-shadow:
+    0 4px 0 0 #0c4a6e,
+    0 8px 18px rgba(0, 0, 0, 0.42);
+}
+.share-btn-3d-x:hover {
+  filter: brightness(1.07);
+}
+.share-btn-3d-x:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 0 #0c4a6e,
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
 html      { scrollbar-color: #9ca3af #e5e7eb; scrollbar-gutter: stable; }
 html.dark { scrollbar-color: #4b5563 #111827; }
 
