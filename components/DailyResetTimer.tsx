@@ -8,7 +8,10 @@ export default function DailyResetTimer() {
   useEffect(() => {
     const tick = () => {
       const diff = getNextMidnightUTC().getTime() - Date.now();
-      if (diff <= 0) { setTimeLeft("Resetting…"); return; }
+      if (diff <= 0) {
+        setTimeLeft("Resetting…");
+        return;
+      }
       const h = Math.floor(diff / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
@@ -19,5 +22,12 @@ export default function DailyResetTimer() {
     return () => clearInterval(id);
   }, []);
 
-  return <span className="text-white text-sm font-game">Next puzzle in {timeLeft}</span>;
+  return (
+    <div className="flex flex-col items-center gap-1 text-center font-game text-white">
+      <span className="text-base leading-tight sm:text-lg">Next puzzle in</span>
+      <span className="text-xl font-bold tabular-nums leading-tight tracking-wide sm:text-2xl">
+        {timeLeft}
+      </span>
+    </div>
+  );
 }
