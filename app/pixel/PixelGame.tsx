@@ -14,6 +14,7 @@ import {
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
+import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 
 // ── Canvas pixel config (copied from wrdle) ──────────────────────────────────
@@ -206,19 +207,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
     });
   }, [won]);
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    function onOutside(e: MouseEvent | TouchEvent) {
-      if (searchSectionRef.current?.contains(e.target as Node)) return;
-      setDropdown(false);
-    }
-    document.addEventListener("mousedown", onOutside);
-    document.addEventListener("touchstart", onOutside, { passive: true });
-    return () => {
-      document.removeEventListener("mousedown", onOutside);
-      document.removeEventListener("touchstart", onOutside);
-    };
-  }, []);
+  useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
 
   useFocusSearchOnTyping(searchInputRef, {
     enabled: !won,

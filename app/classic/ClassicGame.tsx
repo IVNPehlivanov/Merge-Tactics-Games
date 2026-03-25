@@ -22,6 +22,7 @@ import type { ClassicGuess, ClassicGuessAttributes, AttributeResult } from "@/ty
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
+import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 
 interface Props {
@@ -210,19 +211,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     return () => cancelAnimationFrame(id);
   }, [won, showWinMsg]);
 
-  // Close dropdown on outside click
-  useEffect(() => {
-    function onOutside(e: MouseEvent | TouchEvent) {
-      if (searchSectionRef.current?.contains(e.target as Node)) return;
-      setDropdown(false);
-    }
-    document.addEventListener("mousedown", onOutside);
-    document.addEventListener("touchstart", onOutside, { passive: true });
-    return () => {
-      document.removeEventListener("mousedown", onOutside);
-      document.removeEventListener("touchstart", onOutside);
-    };
-  }, []);
+  useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
 
   useFocusSearchOnTyping(searchInputRef, {
     enabled: !won,
