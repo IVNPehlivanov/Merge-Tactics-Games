@@ -1,17 +1,12 @@
 import type { NextConfig } from "next";
 import path from "path";
-import { fileURLToPath } from "url";
 
-/** Force app root when another lockfile exists higher on disk (e.g. C:\\Users\\…\\package-lock.json). */
-const projectRoot = path.dirname(fileURLToPath(import.meta.url));
-
+/**
+ * Prefer cwd so tracing matches `npm run build` from this repo (avoids chunk path bugs seen when
+ * combining fileURL-based root with multiple parent lockfiles).
+ */
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: projectRoot,
-  turbopack: { root: projectRoot },
-  webpack: (config, { dev }) => {
-    if (dev) config.cache = false;
-    return config;
-  },
+  outputFileTracingRoot: path.resolve(process.cwd()),
   images: {
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 86400, // 1 day
@@ -19,7 +14,10 @@ const nextConfig: NextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === "development";
     if (isDev) {
-      return [{ source: "/(.*)", headers: [{ key: "Cache-Control", value: "no-store" }] }];
+      // Only tag hashed dev chunks — avoid a catch-all here (can interact oddly with dev routing).
+      return [
+        { source: "/_next/static/:path*", headers: [{ key: "Cache-Control", value: "no-store, must-revalidate" }] },
+      ];
     }
     return [
       // /_next/static IS content-hashed by Next.js — immutable is safe here

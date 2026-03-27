@@ -49,7 +49,7 @@ All content on this site and in this document must use hyphens (-) or colons (:)
 | L1 | WebApplication missing inLanguage | GameSchema.tsx | FIXED |
 | L2 | OG image URLs relative not absolute | all page.tsx | FIXED |
 | L3 | robots.ts missing GoogleOther | app/robots.ts | FIXED |
-| C1 | OG image missing | public/og/ | PARTIAL - file added as ogimage.png (was defaultogimage.webp in docs) |
+| C1 | OG image missing | public/og/ | PARTIAL - file added as ogimage.webp (was defaultogimage.webp in docs) |
 
 ---
 
@@ -71,7 +71,7 @@ All content on this site and in this document must use hyphens (-) or colons (:)
 | H2 | About Us page is ~95 words - below E-E-A-T minimum | app/about-us/page.tsx | Expand to 300+ words: who built it, how long playing Merge Tactics, game descriptions, what coming-soon modes will be |
 | H3 | Expand llms.txt with prose blocks + create llms-full.txt | public/llms.txt | Current file is 23 lines with no quotable prose. Add About Mergedle block (150 words), About Merge Tactics block, per-game descriptions, Contact/License footer |
 | H4 | All game pages share one OG image | classic/page.tsx, pixel/page.tsx, skin/page.tsx | Create game-specific OG images at public/og/classic.png, pixel.png, skin.png. Improves social shares and AI crawl previews. |
-| H5 | Root layout OG image uses relative path /og/ogimage.png | app/layout.tsx:18 | Change to `${SITE.url}/og/ogimage.png` - inconsistent with per-page which use absolute URL |
+| H5 | Root layout OG image uses relative path /og/ogimage.webp | app/layout.tsx:18 | Change to `${SITE.url}/og/ogimage.webp` - inconsistent with per-page which use absolute URL |
 | H6 | og:title missing from homepage openGraph block | app/page.tsx | Add title: "Mergedle - Daily Merge Tactics Wordle Games" to openGraph object |
 | H7 | Twitter card has no description or title fallback | app/layout.tsx:20 | Add description and title to twitter object. Add site/creator once handle exists. |
 | H8 | Background images bypass next/image - direct LCP risk on mobile | app/page.tsx:34, GamePageBackground.tsx | Convert to <Image fill priority /> component so Next.js serves AVIF at correct viewport size |

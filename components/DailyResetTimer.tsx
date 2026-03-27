@@ -23,7 +23,7 @@ export default function DailyResetTimer() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center gap-1 text-center font-game text-white">
+    <div className="flex flex-col items-center gap-1 text-center font-supercell text-white">
       <span className="text-base leading-tight sm:text-lg">Next puzzle in</span>
       <span className="text-xl font-bold tabular-nums leading-tight tracking-wide sm:text-2xl">
         {timeLeft}

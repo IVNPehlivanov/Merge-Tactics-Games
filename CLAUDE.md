@@ -1,7 +1,7 @@
 # Mergedle — Claude Context
 
 ## What This Project Is
-Mergedle (mergedle.com) is an unofficial Merge Tactics fan site with 3 active + 2 coming-soon Wordle-style daily puzzle games. No accounts, no server — all game state lives in localStorage. Daily cards are seeded deterministically by UTC date + game slug.
+Mergedle (mergedle.com) is an unofficial Merge Tactics fan site with 4 active + 1 coming-soon Wordle-style daily puzzle games. No accounts, no server — all game state lives in localStorage. Daily cards are seeded deterministically by UTC date + game slug.
 
 ## Tech Stack
 | Layer | Technology |
@@ -51,7 +51,6 @@ mergedle/
 ```
 
 ## Working Rules
-- **Always update `TODO.md`** after completing any task — mark items `[x]` as soon as done
 - **Always update "Completed Tasks"** at the bottom of this file when a task is finished
 - **Always update "What's Being Worked On"** if focus shifts
 - At the start of any SEO-related session, read `.claude/skills/SEO_SKILL.md` first
@@ -88,10 +87,10 @@ mergedle/
 - Top 3 open SEO tasks: add `og:image`, use `GameSchema` on all game pages, add `llms.txt`
 
 ## What's Being Worked On
-**Primary goal: launch Mergedle with 3 working daily game modes.**
+**Primary goal: launch Mergedle with 4 working daily game modes.**
 
 **Active focus areas:**
-1. Initial project setup — all 3 game pages rendering with real data
+1. Initial project setup — all 4 game pages rendering with real data
 2. Fill card data in `lib/card-stats.ts` (all fields required)
 3. Fill trait data in `lib/traits.ts`
 4. Fill skin pool in `lib/skin-cards.ts` (only cards where hasSkins: true)
@@ -108,3 +107,10 @@ mergedle/
 - [x] Fixed Royale King skin asset paths for Marble/Santa/Velvet/Ghoul in skin pool
 - [x] Fixed Pixel mode persistence so wrong-guess progress restores after leaving and returning
 - [x] Added the "Want more?" Royaledly box to all game pages via shared GamePageBackground
+- [x] Restored Description mode as active (route, DailyGameGuard rendering, progress flow, and internal game links)
+- [x] Matched Description “Your guesses” panel styling to Pixel wrong-guess rows (frosted panel, red/green glass rows, thumbnails)
+- [x] Description mode: word reveal follows left-to-right reading order for all players (replaces seeded shuffle)
+- [x] Updated `card-stats` descriptions for Spear Goblins, Bomber, Mini P.E.K.K.A., Electro Giant, Executioner, Mega Knight, Electro Wizard, Princess, Royal Ghost, Bandit
+- [x] Share results UI (`ClassicShareBox`) aligned with Royaledly `DailyResultsShareBox` layout (Mergedle copy text + `buildMergedleDailyShareText` unchanged)
+- [x] Win confetti from card center: `lib/win-confetti.ts` + `DailyGameGuard` summary (Royaledly-style); removed per-game confetti that never ran after instant `onSolved` unmount
+- [x] Dev reliability: static imports in `DailyGameGuard`; `next.config` dev `Cache-Control` on `/_next/static` only; shell/layout fallbacks; `npm run dev:fresh` kills port 3000 + `npm run clean` + `next dev` (fixes 404 on `webpack.js` / `layout.css` when a zombie/stale `next dev` serves HTML whose `?v=` chunks no longer exist)

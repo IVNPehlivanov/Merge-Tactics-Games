@@ -16,7 +16,7 @@ export function generateMetadata(): Metadata {
     description: "A Merge Tactics skin is shown — can you name which card it belongs to? Daily Wordle-style game, free, no login.",
     keywords: ["merge tactics skin wordle", "guess the skin", "mergedle skin"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Guess the Skin | Mergedle", description: "A ruler's skin is shown zoomed in and grayscale. Guess which skin it is - each wrong answer zooms out further. Free, no login.", images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }] },
+    openGraph: { title: "Guess the Skin | Mergedle", description: "A ruler's skin is shown zoomed in and grayscale. Guess which skin it is - each wrong answer zooms out further. Free, no login.", images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }] },
   };
 }
 
@@ -69,6 +69,7 @@ export default function SkinPage() {
           <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle — guess from stat clues</Link></li>
             <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Card — guess from a blurred image</Link></li>
+            <li><Link href="/description" className="text-indigo-400 hover:underline">Description — guess from the card text</Link></li>
           </ul>
         </HowToPlayModal>
       </div>

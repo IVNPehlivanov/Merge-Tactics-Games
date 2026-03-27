@@ -30,7 +30,42 @@
   }
 }
 .font-supercell { font-family: var(--font-supercell); }
-.homepage-text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.9), 0 1px 2px rgba(0,0,0,0.8); }
+
+/* Royaledly / Clash-Royale-Games — readable white text on photo backgrounds */
+.homepage-text-shadow,
+.homepage-text-shadow h2,
+.homepage-text-shadow h3,
+.homepage-text-shadow p,
+.homepage-text-shadow li,
+.homepage-text-shadow span,
+.homepage-text-shadow summary,
+.homepage-text-shadow strong,
+.homepage-text-shadow a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.06em;
+}
+
+.homepage-text-shadow h1 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 4px 8px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.06em;
+}
+
+/* White panels: no inherited halo */
+.card-search-dropdown,
+.card-search-dropdown *,
+.card-search-dropdown span,
+.card-search-dropdown strong,
+.card-search-dropdown a,
+.card-search-dropdown p {
+  text-shadow: none !important;
+  letter-spacing: normal;
+}
+
+/* Monospace share body: flat text inside dark panel (Royaledly pre inherits; we reset for clarity) */
+.share-results-panel pre {
+  text-shadow: none !important;
+  letter-spacing: normal;
+}
 
 @keyframes wrong-guess-in {
   from { opacity: 0; transform: translateY(-8px); }
@@ -51,10 +86,20 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Transform-only: opacity animation breaks backdrop-filter compositing (blur “pops in” late). */
+@keyframes slide-up-soft {
+  from { transform: translateY(16px); }
+  to   { transform: translateY(0); }
+}
+
 .animate-wrong-in    { animation: wrong-guess-in 0.25s ease-out; }
 .animate-correct-glow{ animation: correct-glow 0.6s ease-out; }
 .animate-wrong-glow  { animation: wrong-glow 0.6s ease-out; }
 .animate-fade-up     { animation: fade-up 0.4s ease-out; }
+.animate-slide-up-soft { animation: slide-up-soft 0.4s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-up-soft { animation: none; }
+}
 
 @keyframes next-mode-logo-float {
   0%,
@@ -72,39 +117,6 @@
   .animate-next-mode-logo-float {
     animation: none;
   }
-}
-
-/* ── Share results: chunky 3D Copy / Post on X ── */
-.share-btn-3d-copy {
-  background: linear-gradient(180deg, #4ade80 0%, #22c55e 42%, #16a34a 100%);
-  box-shadow:
-    0 4px 0 0 #14532d,
-    0 8px 18px rgba(0, 0, 0, 0.42);
-}
-.share-btn-3d-copy:hover {
-  filter: brightness(1.07);
-}
-.share-btn-3d-copy:active {
-  transform: translateY(3px);
-  box-shadow:
-    0 1px 0 0 #14532d,
-    0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-.share-btn-3d-x {
-  background: linear-gradient(180deg, #38bdf8 0%, #0ea5e9 45%, #0284c7 100%);
-  box-shadow:
-    0 4px 0 0 #0c4a6e,
-    0 8px 18px rgba(0, 0, 0, 0.42);
-}
-.share-btn-3d-x:hover {
-  filter: brightness(1.07);
-}
-.share-btn-3d-x:active {
-  transform: translateY(3px);
-  box-shadow:
-    0 1px 0 0 #0c4a6e,
-    0 4px 12px rgba(0, 0, 0, 0.35);
 }
 
 html      { scrollbar-color: #9ca3af #e5e7eb; scrollbar-gutter: stable; }
@@ -127,13 +139,16 @@ html.dark { scrollbar-color: #4b5563 #111827; }
   animation: attribute-reveal 0.5s ease-out forwards;
 }
 
-/* ── Classic game: win message slide-in ── */
+/* ── Win panels: slide only (no opacity — same backdrop-filter issue as slide-up-soft) ── */
 @keyframes win-message-in {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(12px); }
+  to   { transform: translateY(0); }
 }
 .animate-win-message {
-  animation: win-message-in 0.6s ease-out forwards;
+  animation: win-message-in 0.35s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-win-message { animation: none; }
 }
 
 /* ── Card search dropdown ── */

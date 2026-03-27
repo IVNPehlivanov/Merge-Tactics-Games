@@ -10,8 +10,22 @@ export default function GamePageBackground({ children }: { children: React.React
       />
       <div className="fixed inset-0 bg-black/30" />
 
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-4 py-6">
+      {/* Content — Royaledly: homepage-text-shadow on game column for readable overlays */}
+      <div
+        className="relative z-10 mx-auto max-w-4xl px-4 py-6 homepage-text-shadow"
+        style={{
+          position: "relative",
+          zIndex: 10,
+          maxWidth: "56rem",
+          marginLeft: "auto",
+          marginRight: "auto",
+          paddingLeft: "1rem",
+          paddingRight: "1rem",
+          paddingTop: "1.5rem",
+          paddingBottom: "1.5rem",
+          color: "#fff",
+        }}
+      >
         {children}
         <div className="mt-8 mb-6 w-full max-w-md mx-auto px-4 text-center">
           <div className="w-full rounded-2xl border-2 border-yellow-500/60 bg-black/70 px-5 py-4">

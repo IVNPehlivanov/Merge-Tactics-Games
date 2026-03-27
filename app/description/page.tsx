@@ -14,8 +14,11 @@ export function generateMetadata(): Metadata {
     description: "Read the in-game description and guess which Merge Tactics card it belongs to. Daily Wordle-style game — free, no login.",
     keywords: ["merge tactics wordle", "guess the card", "mergedle description"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    robots: { index: false, follow: false },
-    openGraph: { title: "Guess the Card by Description", images: [{ url: "/og/ogimage.png" }] },
+    openGraph: {
+      title: "Guess the Card by Description | Mergedle",
+      description: "Read the in-game description and guess which Merge Tactics card it belongs to. Free, no login.",
+      images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }],
+    },
   };
 }
 
@@ -32,7 +35,7 @@ export default function DescriptionPage() {
       <BackToAllGames />
       <DailyProgress currentSlug="description" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Description</h1>
-      <h2 className="font-game mb-4 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Guess the Card</h2>
+      <h2 className="font-game mb-4 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Guess the card or ruler by its cut-off description?</h2>
       <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );

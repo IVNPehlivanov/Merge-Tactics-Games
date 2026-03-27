@@ -16,7 +16,7 @@ export function generateMetadata(): Metadata {
     description: "Guess today's mystery Merge Tactics Card from stat clues. Daily Wordle-style game — free, no login.",
     keywords: ["merge tactics wordle", "guess the card", "mergedle"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Merge Tactics Wordle", description: "Guess the daily Merge Tactics card from stat clues. Rarity, Elixir Cost, Traits, Type, and Release Year - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }] },
+    openGraph: { title: "Merge Tactics Wordle", description: "Guess the daily Merge Tactics card from stat clues. Rarity, Elixir Cost, Traits, Type, and Release Year - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }] },
   };
 }
 
@@ -70,6 +70,7 @@ export default function ClassicPage() {
           <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Card — guess from a blurred image</Link></li>
             <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the card from a skin</Link></li>
+            <li><Link href="/description" className="text-indigo-400 hover:underline">Description — guess from the card text</Link></li>
           </ul>
         </HowToPlayModal>
       </div>

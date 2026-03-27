@@ -16,7 +16,7 @@ export function generateMetadata(): Metadata {
     description: "Guess today's Merge Tactics card/ruler from a pixelated card image. Each wrong guess reveals more — how many tries will you need?",
     keywords: ["merge tactics pixel", "guess the card or ruler image", "mergedle pixel"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Pixel Card | Mergedle", description: "Identify the daily Merge Tactics card or ruler from its pixelated image. Each wrong guess reveals more detail - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }] },
+    openGraph: { title: "Pixel Card | Mergedle", description: "Identify the daily Merge Tactics card or ruler from its pixelated image. Each wrong guess reveals more detail - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }] },
   };
 }
 
@@ -70,6 +70,7 @@ export default function PixelPage() {
           <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle — guess from stat clues</Link></li>
             <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the card from a skin</Link></li>
+            <li><Link href="/description" className="text-indigo-400 hover:underline">Description — guess from the card text</Link></li>
           </ul>
         </HowToPlayModal>
       </div>

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE, GAME_META } from "@/lib/content";
+import { SITE, DAILY_ACTIVE_SLUGS } from "@/lib/content";
 
 // Update these dates when static page content changes
 const STATIC_DATES = {
@@ -11,11 +11,10 @@ const STATIC_DATES = {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const today = new Date();
-  const activeGames = GAME_META.filter((g) => !g.comingSoon);
   return [
     { url: SITE.url,                            lastModified: STATIC_DATES.home },
-    ...activeGames.map((g) => ({
-      url: `${SITE.url}/${g.slug}`,
+    ...DAILY_ACTIVE_SLUGS.map((slug) => ({
+      url: `${SITE.url}/${slug}`,
       lastModified: today,
     })),
     { url: `${SITE.url}/about-us`,          lastModified: STATIC_DATES.aboutUs },

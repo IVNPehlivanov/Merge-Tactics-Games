@@ -58,7 +58,11 @@ export default function HowToPlayModal({
         className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 transition-opacity duration-200 ${
           isOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
-        style={{ overscrollBehavior: "contain" }}
+        style={{
+          overscrollBehavior: "contain",
+          // If Tailwind/CSS fails to load, class-based hiding does nothing — keep help content off-canvas.
+          ...(!isOpen ? { opacity: 0, pointerEvents: "none", visibility: "hidden" as const } : {}),
+        }}
       >
         {/* Backdrop */}
         <div

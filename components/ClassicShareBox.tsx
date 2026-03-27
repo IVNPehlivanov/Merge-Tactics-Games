@@ -25,17 +25,19 @@ function copyToClipboard(text: string): Promise<void> {
   });
 }
 
-/** Chunky 3D-style action button (green or blue) */
-function shareActionButtonClass(tone: "copy" | "x") {
-  const base =
-    "font-game relative flex min-h-[3rem] flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-black/25 px-3 py-2.5 text-sm font-bold text-white no-underline transition-[transform,filter,box-shadow] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40";
-  if (tone === "copy") {
-    return `${base} share-btn-3d-copy`;
-  }
-  return `${base} share-btn-3d-x`;
-}
-
-export default function ClassicShareBox({ dayKey }: { dayKey: string }) {
+/**
+ * Daily results share UI — layout/classes aligned with Royaledly (Clash-Royale-Games DailyResultsShareBox).
+ * Copy / Post on X behavior and share text stay Mergedle-specific.
+ */
+export default function ClassicShareBox({
+  dayKey,
+  className = "mt-6",
+  celebrate = true,
+}: {
+  dayKey: string;
+  className?: string;
+  celebrate?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
   const [rev, setRev] = useState(0);
 
@@ -47,34 +49,56 @@ export default function ClassicShareBox({ dayKey }: { dayKey: string }) {
 
   const text = useMemo(() => buildMergedleDailyShareText(dayKey), [dayKey, rev]);
 
-  const tweetHref = useMemo(
-    () => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
-    [text],
-  );
+  const handleCopy = useCallback(async () => {
+    try {
+      await copyToClipboard(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* Clipboard may be denied */
+    }
+  }, [text]);
 
-  const onCopy = useCallback(() => {
-    void copyToClipboard(text).then(
-      () => {
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 2000);
-      },
-      () => {
-        /* ignore */
-      },
-    );
+  const postOnX = useCallback(() => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
   }, [text]);
 
   return (
-    <div className="mt-4 w-full text-left">
-      <div className="whitespace-pre-wrap rounded-xl border border-white/15 bg-black px-4 py-3 font-mono text-[13px] leading-relaxed text-white sm:text-sm">
-        {text}
+    <div className={`w-full space-y-4 text-center ${className}`}>
+      {/* Verbatim header block from Clash-Royale-Games DailyResultsShareBox (+ .homepage-text-shadow on GamePageBackground) */}
+      <div className="space-y-1">
+        {celebrate ? (
+          <>
+            <p className="text-2xl" aria-hidden>
+              🎉
+            </p>
+            <p className="font-supercell text-2xl font-bold tracking-wide text-yellow-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)]">
+              GREAT JOB!
+            </p>
+          </>
+        ) : null}
+        <p className="font-supercell text-sm font-semibold uppercase tracking-wider text-white/90">
+          Share your results
+        </p>
       </div>
-      <div className="mt-3 flex gap-3">
-        <button type="button" onClick={onCopy} className={shareActionButtonClass("copy")}>
+
+      <div className="share-results-panel rounded-xl border border-white/25 bg-black/60 p-4 text-left shadow-inner backdrop-blur-sm">
+        <pre className="whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-white">
+          {text}
+        </pre>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <button
+          type="button"
+          onClick={handleCopy}
+          className="inline-flex items-center justify-center gap-2 rounded-xl border-b-4 border-green-800 bg-green-600 px-8 py-3 font-supercell text-sm font-bold text-white shadow-md transition-colors hover:bg-green-500 active:border-b-0 active:translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width={18}
-            height={18}
+            width={20}
+            height={20}
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -82,22 +106,20 @@ export default function ClassicShareBox({ dayKey }: { dayKey: string }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             aria-hidden
-            className="shrink-0"
           >
             <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
             <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
           </svg>
           {copied ? "Copied!" : "Copy"}
         </button>
-        <a
-          href={tweetHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={shareActionButtonClass("x")}
+        <button
+          type="button"
+          onClick={postOnX}
+          className="inline-flex items-center justify-center rounded-xl border-b-4 border-sky-900 bg-sky-500 px-8 py-3 font-supercell text-sm font-bold text-white shadow-md transition-colors hover:bg-sky-400 active:border-b-0 active:translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           aria-label="Post results on X"
         >
           Post on X
-        </a>
+        </button>
       </div>
     </div>
   );

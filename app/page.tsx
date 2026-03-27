@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: SITE.url },
   openGraph: {
     description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
-    images: [{ url: `${SITE.url}/og/ogimage.png`, width: 1200, height: 630 }],
+    images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }],
   },
 };
 

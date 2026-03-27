@@ -13,7 +13,7 @@ export const RULERS: Record<string, Ruler> = {
   royale_king: {
     key: "royale_king",
     name: "Royale King",
-    description: "After nearly a decade in the Arena, the King is nothing if not flexible with his battle strategies. The madness of Merge Tactics will prove to be his greatest feat yet!",
+    description: "After nearly a decade in the Arena, the King is nothing if not flexible with his battle strategies.\n\nThe madness of Merge Tactics will prove to be his greatest feat yet!",
     modifierName: "Royal Commission",
     modifierDescription: "Losing grants you +4-8 Elixir",
     skins: ["Marble King", "Velvet King", "Ghoul King", "Santa King"],
@@ -21,7 +21,7 @@ export const RULERS: Record<string, Ruler> = {
   spirit_empress: {
     key: "spirit_empress",
     name: "Spirit Empress",
-    description: "Who needs to heal when you can wield spirits with sheer force of will? This sly little rebel oozes intellect, battling boldly in hopes of discovering the true nature of her power.",
+    description: "Who needs to heal when you can wield spirits with sheer force of will?\n\nThis sly little rebel oozes intellect, battling boldly in hopes of discovering the true nature of her power.",
     modifierName: "Fusion Foresight",
     modifierDescription: "Every merge grants you +1 bonus Elixir",
     skins: ["Ivy Empress", "Auric Empress", "Wushi Empress", "Astral Empress"],
@@ -29,7 +29,7 @@ export const RULERS: Record<string, Ruler> = {
   goblin_queen: {
     key: "goblin_queen",
     name: "Goblin Queen",
-    description: "She has travelled across the Emerald Sea to wreak havoc in the Arena. The only thing that calms her wrath are the Baby Goblins, but they're not here...",
+    description: "She has travelled across the Emerald Sea to wreak havoc in the Arena.\n\nThe only thing that calms her wrath are the Baby Goblins, but they're not here...",
     modifierName: "Greener Grin",
     modifierDescription: "Defeating an enemy results in a 33% chance of gaining a Goblin",
     skins: ["Jade Queen", "Chaos Queen", "Malevolent Queen", "Serpentine Queen"],
@@ -53,7 +53,7 @@ export const RULERS: Record<string, Ruler> = {
   echo_sage: {
     key: "echo_sage",
     name: "Echo Sage",
-    description: "The ability to echo oneself must be cultivated over centuries of less triumph than defeat. Only one has ever studied under this being and, even as a Champion, he only managed to scrape the surface",
+    description: "The ability to echo oneself must be cultivated over centuries of less triumph than defeat.\nOnly one has ever studied under this being and, even as a Champion, he only managed to scrape the surface",
     modifierName: "Striking Clone",
     modifierDescription: "Summons The Echo who knocks out the nearest enemy, or enemies, after charging",
     skins: ["Echo Sage", "Sunlight Sage", "Starborn Sage", "Spectral Sage"],
@@ -61,7 +61,7 @@ export const RULERS: Record<string, Ruler> = {
   dagger_duchess: {
     key: "dagger_duchess",
     name: "Dagger Duchess",
-    description: "This dedicated dame does nothing but sharpen her daggers and prepare for victory. Any troop that dares to approach her finds themselves fleeing the tower in fear. Princess practices, but Duchess dominates.",
+    description: "This dedicated dame does nothing but sharpen her daggers and prepare for victory. Any troop that dares to approach her finds themselves fleeing the tower in fear.\nPrincess practices, but Duchess dominates.",
     modifierName: "Dagger Donation",
     modifierDescription: "Leaves you a Dagger to equip to any troop",
     skins: ["Disguised Duchess", "Duchess of Hearts", "Crystalline Duchess"],
@@ -78,5 +78,11 @@ export function rulerImagePath(key: string): string {
 /** Path to the default (base) ruler skin image used for pixel/display purposes. */
 export function defaultRulerImagePath(key: string): string {
   const folder = key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("_");
-  return `/Rulers/${folder}/Default_${folder}.png`;
+  return `/Rulers/${folder}/Default_${folder}.webp`;
+}
+
+/** Ruler card art in `/public/Cards` for Pixel mode (e.g. `royale_king` → `/Cards/Royale_King.webp`). */
+export function pixelRulerCardImagePath(key: string): string {
+  const file = key.split("_").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join("_");
+  return `/Cards/${file}.webp`;
 }

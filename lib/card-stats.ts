@@ -33,7 +33,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2025-30-06",
-    description: "A pair of lightly clad elven archers. They may be small, but their bows pack a punch!",
+    description: "Who needs all that armor when you've got wicked range and hot pink hair?",
   },
   knight: {
     name: "Knight",
@@ -44,7 +44,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
-    description: "The Knight was a card that belonged to the Noble and Juggernaut traits. It spawned a single-target melee troop with high hitpoints, very low damage, and moderate attack speed. The Knight took the appearance of a man who has brown eyes, a blond-colored mustache and eyebrows, and wears chain mail and a chestplate, a blue strap and belt, and brown shoes with metal plates on them, while wielding a saber as his weapon. A Knight card costed 2  to deploy.",
+    description: "One of the toughest melee fighters in the kingdom",
   },
   spear_goblins: {
     name: "Spear Goblins",
@@ -55,7 +55,8 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2025-06-30",
-    description: "The Spear Goblin is a card that belongs in the Goblin and Blaster traits. It spawns a single-target ranged troop with very low hitpoints, very high damage, and moderate attack speed. The Spear Goblin takes the appearance of a Goblin, but is taller and thinner, has sharper elven ears and side hair, wears a blue bandana and belt, has a blue spear case tied to his back with a rope, and has a wooden spear in his hand with a blue rope tied on top. A Spear Goblin card costs 2  to deploy.",
+    description:
+      "Spears that slice through wind at such a wide range that he doesn't even need armor",
   },
   goblins: {
     name: "Goblins",
@@ -66,7 +67,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
-    description: "The Goblin is a card that belongs in the Goblin and Assassin traits. It spawns a single-target melee troop with very low hitpoints, moderate damage, and very high attack speed. The Goblin takes the appearance of a small, green creature with pointy ears, green eyes, dark green eyebrows, amber sclerae, and a large peach nose, while carrying a dagger and wearing red suspenders and wristbands, brown pants, and shoes. A Goblin card costs 2  to deploy.",
+    description: "Goblin speed and melee skills eliminate the need for that pesky armor",
   },
   bomber: {
     name: "Bomber",
@@ -77,7 +78,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2025-06-30",
-    description: "The Bomber was a card that belonged to the Undead and Blaster traits. It spawned an area-damage ranged troop with very low hitpoints, low damage, and moderate attack speed. The Bomber took the appearance of a Wall Breaker that carried a black bomb and wore a brown aviator hat with gold-rimmed aviation goggles and gloves. A Bomber card costed 2  to deploy.",
+    description: "Throws a bomb at the nearest enemy, dealing Damage in a 2-Hex Radius",
   },
   skeletons: {
     name: "Skeletons",
@@ -88,7 +89,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Spawn/Swarm",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
-    description: "The Skeleton is a troop able to be spawned by Witch and Skeleton King, belonging to the Undead trait. It is a single-target melee troop with very low or low hitpoints, very low damage, and moderate attack speed. The Skeleton takes the appearance of a small undead creature with a skull that lacks a lower jaw and wields a short sword.",
+    description: "A small melee fighter who won't stop until he's been defeated...again",
   },
   barbarians: {
     name: "Barbarians",
@@ -99,7 +100,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
-    description: "The Barbarian is a card that belongs in the Clan and Brawler traits. It spawns a single-target melee troop with moderate hitpoints, moderate damage, and very high attack speed. The Barbarian takes the appearance of a bare-chested man who wields a sword, has blue eyes, blond eyebrows, close-cropped hair and a horseshoe moustache, while wearing a brown kilt, a brown belt with a shield buckle, and spiked wristbands. A Barbarian card costs 2  to deploy.",
+    description: "An all-around melee attacker with a mean mustache",
   },
   skeleton_dragons: {
     name: "Skeleton Dragons",
@@ -110,7 +111,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Flying",
     releaseDate: "2025-09-29",
-    description: "The Skeleton Dragon is a card that belongs in the Undead and Ranger traits. It spawns a single-target ranged troop with very low hitpoints, moderate damage, and high attack speed. Every few attacks, the Skeleton Dragon creates a clone of himself with the same hitpoints and damage. His clones also have that ability, meaning that they can also generate clones of themselves with the same hitpoints and damage. The cloner Skeleton Dragon loses 30% of his hitpoints when he clones himself. The Skeleton Dragon takes the appearance of a smaller, skeletal version of the Baby Dragon with brown wings, horns, and back spikes. The cloned Skeleton Dragon has a color palette similar to that of a troop created by Clone. A Skeleton Dragon card costs 2  to deploy.",
+    description: "Splits to create a new Skeleton Dragon after every few attacks",
   },
   royal_giant: {
     name: "Royal Giant",
@@ -121,7 +122,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Tank",
     releaseDate: "2025-11-24",
-    description: "The Royal Giant is a card that belongs in the Giant and Ranger traits. It spawns a single-target ranged troop with high hitpoints, moderate damage, and moderate attack speed. The Royal Giant takes the appearance of a Giant, except that he sports a dark navy coat with red cuffs, has a mustache and bigger mutton chops, wears a crown and a chainmail, wields a Cannon with two gold ridges in the middle in one hand, and carries a cannonball in the other. A Royal Giant card costs 2  to deploy.",
+    description: "A slow, tanky ranger whose crown is heavier than his cannon",
   },
   // ─── Rare Troops ────────────────────────────────────────────────────────────
   mini_pekka: {
@@ -133,7 +134,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2025-11-24",
-    description: "The Mini P.E.K.K.A. is a card that belongs in the P.E.K.K.A and Brutalist traits. It spawns a single-target melee troop with low hitpoints, very high damage, and moderate attack speed. The Mini P.E.K.K.A. takes the appearance of a robot-looking troop smaller than the P.E.K.K.A. who wears a dark steel blue armor with two sky blue horns, spikes on his arms, and a single eye, while wielding a smaller version of the P.E.K.K.A.'s metal sword as his weapon. A Mini P.E.K.K.A. card costs 2  to deploy.",
+    description: "A lightly armored heavy hitter with a soft spot for pancakes",
   },
   musketeer: {
     name: "Musketeer",
@@ -144,7 +145,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-01-01",
-    description: "Don't be fooled by her delicate appearance; the Musketeer's rifle packs a powerful shot!",
+    description: "A tanky gunner who pushes 3 enemies back every few hits",
   },
   giant: {
     name: "Giant",
@@ -155,7 +156,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Tank",
     releaseDate: "2024-01-01",
-    description: "Massive in size and strength, the Giant crushes all in his path.",
+    description: "Throws the nearest enemy every few seconds, dealing damage based on target's max HP.",
   },
   valkyrie: {
     name: "Valkyrie",
@@ -166,7 +167,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "Fierce and wild, she hates Goblins. Carries a huge axe.",
+    description: "A melee master who channels her rage into area Damage",
   },
   wizard: {
     name: "Wizard",
@@ -177,7 +178,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Magic",
     releaseDate: "2024-01-01",
-    description: "The most awesome Wizard ever! Shoots a powerful fireball.",
+    description: "Throws a fireball at enemies in the area",
   },
   dart_goblin: {
     name: "Dart Goblin",
@@ -188,7 +189,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-01-01",
-    description: "Runs fast, shoots far, gets killed dead. Undergoes extensive cardboard target practice daily.",
+    description: "An unarmored ranged attacker who runs fast, shoots far, and chews gum?",
   },
   goblin_demolisher: {
     name: "Goblin Demolisher",
@@ -199,7 +200,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-03-01",
-    description: "Launches a massive barrel of goblins to a targeted area.",
+    description: "Rushes to lowest HP enemy and detonates below 50% HP with AoE damage",
   },
   // ─── Epic Troops ────────────────────────────────────────────────────────────
   baby_dragon: {
@@ -211,7 +212,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Flying",
     releaseDate: "2024-01-01",
-    description: "Hatch a Baby Dragon! Breathes fire dealing splash damage.",
+    description: "Burps big fireballs that deal damage in a wide area",
   },
   witch: {
     name: "Witch",
@@ -222,7 +223,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Magic",
     releaseDate: "2024-01-01",
-    description: "Summons Skeletons, shoots destructive bolts of energy.",
+    description: "Every few seconds, she summons Skeletons with 20% of her max HP and Attack Damage",
   },
   pekka: {
     name: "P.E.K.K.A.",
@@ -233,7 +234,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2025-06-30",
-    description: "A slow, but heavily armored melee fighter. Nothing gets past her.",
+    description: "A slow, but heavily armored melee fighter. Nothing gets past her…",
   },
   prince: {
     name: "Prince",
@@ -244,7 +245,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "Don't let his fancy armour fool you; this Prince is no pushover!",
+    description: "Combat Start: Charges at the nearest target, dealing double Damage, pushing back enemies and stunning them for 2s",
   },
   giant_skeleton: {
     name: "Giant Skeleton",
@@ -255,7 +256,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Tank",
     releaseDate: "2024-01-01",
-    description: "The Giant Skeleton's massive bomb is not a welcomed addition to any battle.",
+    description: "Upon defeat, he drops a bomb that explodes after 1.5s, dealing Damage and stunning enemies in his Hex Radius for 2s",
   },
   electro_giant: {
     name: "Electro Giant",
@@ -266,7 +267,8 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Tank",
     releaseDate: "2024-01-01",
-    description: "He zaps nearby enemies with bolts of electricity whenever he takes damage.",
+    description:
+      "Summons an electric field around himself, dealing damage and stunning nearby enemies every second",
   },
   executioner: {
     name: "Executioner",
@@ -277,7 +279,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-01-01",
-    description: "He throws his axe like a boomerang, striking multiple enemies at once.",
+    description: "Throws his boomerang axe at the nearest target across several Hexes",
   },
   // ─── Legendary Troops ───────────────────────────────────────────────────────
   mega_knight: {
@@ -289,7 +291,8 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Tank",
     releaseDate: "2024-01-01",
-    description: "He lands with the force of 1,000 mustaches, then jumps from one foe to the next.",
+    description:
+      "Jumps and strikes the largest group of enemies every few seconds, dealing damage and stunning enemies in its Hex Radius for 2s",
   },
   electro_wizard: {
     name: "Electro Wizard",
@@ -300,7 +303,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Magic",
     releaseDate: "2024-01-01",
-    description: "He lands with a mighty Zap! Shoots lightning bolts at two targets.",
+    description: "Shoots lightning with his hands, stunning multiple enemies every few seconds",
   },
   princess: {
     name: "Princess",
@@ -311,7 +314,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-01-01",
-    description: "This stunning Princess shoots flaming arrows. Don't miss!",
+    description: "Fires flaming arrows at the farthest enemy, dealing Damage in a 2-Hex Radius",
   },
   royal_ghost: {
     name: "Royal Ghost",
@@ -322,7 +325,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "Dances invisibly until attacking or targeted. Who's next?",
+    description: "Becomes invisible for 3s every few seconds",
   },
   bandit: {
     name: "Bandit",
@@ -333,7 +336,8 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "The Bandit dashes to her target, becoming temporarily unstoppable.",
+    description:
+      "Dashes to the farthest enemy in 3 Hexes after certain hits, dealing bonus Damage and stunning all in her path for 1s",
   },
   goblin_machine: {
     name: "Goblin Machine",
@@ -344,7 +348,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-03-01",
-    description: "A mechanical contraption piloted by a Goblin. Fires a powerful laser beam.",
+    description: "Combat Start: Fires a rocket at the farthest enemy after certain hits, dealing 100% bonus Damage",
   },
   // ─── Champion Troops ────────────────────────────────────────────────────────
   golden_knight: {
@@ -356,7 +360,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "The Golden Knight dashes to enemies, chaining a lightning bolt to nearby foes.",
+    description: "Dashes to the lowest HP enemy after defeating an enemy and deals bonus Damage",
   },
   skeleton_king: {
     name: "Skeleton King",
@@ -367,7 +371,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "The Skeleton King summons Skeletons and wields a mighty sword.",
+    description: "Deals Damage to enemies in a cone radius and summons a Skeleton for every enemy he defeats",
   },
   archer_queen: {
     name: "Archer Queen",
@@ -378,7 +382,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Ranged",
     releaseDate: "2024-01-01",
-    description: "The Archer Queen turns invisible to dodge damage and gain attack speed.",
+    description: "Fires multiple arrows at her closest enemies. When her HP drops below 50%, she'll turn invisible and deal bonus Damage",
   },
   monk: {
     name: "Monk",
@@ -389,7 +393,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Troop",
     troopRole: "Melee",
     releaseDate: "2024-01-01",
-    description: "The Monk deflects projectiles with a powerful push and deals area damage.",
+    description: "Creates a Shield that deflects damage onto the offender and heals Monk for a few seconds every few hits",
   },
   // ─── Buildings ──────────────────────────────────────────────────────────────
   mortar: {
@@ -401,7 +405,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Building",
     troopRole: null,
     releaseDate: "2024-01-01",
-    description: "Lobs massive boulders that deal significant area damage.",
+    description: "Long-range building that deals damage to the furthest enemy, shooting boulders that go boom!",
   },
   tesla: {
     name: "Tesla",
@@ -412,7 +416,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Building",
     troopRole: null,
     releaseDate: "2024-01-01",
-    description: "Pops out of the ground, shocks nearby enemies with lightning.",
+    description: "Deals damage to nearby enemies, only popping up when one's in range… or if it needs little stretch",
   },
   inferno_tower: {
     name: "Inferno Tower",
@@ -423,7 +427,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Building",
     troopRole: null,
     releaseDate: "2024-01-01",
-    description: "Shoots a focused beam of fire that increases in damage over time.",
+    description: "Damage increases over time when attacking the same target. It may only attack one enemy, but it sees them all.",
   },
   elixir_collector: {
     name: "Elixir Collector",
@@ -434,7 +438,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Building",
     troopRole: null,
     releaseDate: "2024-01-01",
-    description: "Steadily pumps out Elixir throughout the match.",
+    description: "Generates Elixir over time, pumped from deep below the Arena",
   },
   x_bow: {
     name: "X-Bow",
@@ -445,7 +449,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     cardType: "Building",
     troopRole: null,
     releaseDate: "2024-01-01",
-    description: "Locks on to and shoot bolts at nearby enemies.",
+    description: "It may take a while to charge, but the rapid-fire payoff on the lowest HP enemy is worth the wait!",
   },
 };
 

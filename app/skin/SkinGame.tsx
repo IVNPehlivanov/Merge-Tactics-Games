@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import confetti from "canvas-confetti";
 import { getRulerByKey } from "@/lib/ruler-stats";
-import { getValidSkinPool } from "@/lib/skin-cards";
+import { getValidSkinPool, skinEntryMatchesSearch } from "@/lib/skin-cards";
 import {
   markPlayedToday,
   setPersistedGameState,
@@ -13,6 +12,7 @@ import {
 import type { SkinEntry } from "@/lib/skin-cards";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
+import ClassicShareBox from "@/components/ClassicShareBox";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
 import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
@@ -41,7 +41,7 @@ interface PersistedState {
 function WrongGuessRow({ skinName, rulerKey, imagePath }: { skinName: string; rulerKey?: string; imagePath?: string }) {
   const rulerName = rulerKey ? (getRulerByKey(rulerKey)?.name ?? rulerKey) : undefined;
   return (
-    <div className="flex items-center gap-3 rounded-xl border-2 border-red-400/80 bg-white/10 px-4 py-3 backdrop-blur-sm">
+    <div className="flex items-center gap-3 rounded-xl border-2 border-red-400/80 bg-white/10 px-4 py-3 backdrop-blur-sm font-game">
       {imagePath && (
         <img src={imagePath} alt={skinName} className="h-12 w-12 flex-shrink-0 rounded-lg object-cover" />
       )}
@@ -62,9 +62,6 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
 
   const searchInputRef   = useRef<HTMLInputElement>(null);
   const searchSectionRef = useRef<HTMLDivElement>(null);
-  const winBoxRef        = useRef<HTMLElement | null>(null);
-  const justWonRef       = useRef(false);
-
   // Seed the zoom quadrant from dayKey so all players see the same corner
   const quadrantOrigin = QUADRANT_ORIGINS[seededIndex(dayKey + "_skin_q", 4)];
 
@@ -76,23 +73,6 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
       if (saved.won) setWon(true);
     }
   }, [dayKey, secretEntry.skinName]);
-
-  // Confetti on win
-  useEffect(() => {
-    if (!won || !justWonRef.current || !winBoxRef.current) return;
-    const el = winBoxRef.current;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const x = (rect.left + rect.width  / 2) / window.innerWidth;
-        const y = (rect.top  + rect.height / 2) / window.innerHeight;
-        const opts = { particleCount: 120, origin: { x, y }, spread: 100, startVelocity: 65, scalar: 1.8 };
-        confetti({ ...opts, angle: 60 });
-        confetti({ ...opts, angle: 120 });
-        justWonRef.current = false;
-      });
-    });
-  }, [won]);
 
   useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
 
@@ -107,9 +87,8 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
   const alreadyGuessed = useMemo(() => new Set(wrongGuesses), [wrongGuesses]);
   const filteredSkins = useMemo(() => {
     if (!search.trim()) return [];
-    const q = search.toLowerCase();
     return skinPool.filter(
-      (s) => !alreadyGuessed.has(s.skinName) && s.skinName.toLowerCase().includes(q)
+      (s) => !alreadyGuessed.has(s.skinName) && skinEntryMatchesSearch(s, search)
     );
   }, [skinPool, search, alreadyGuessed]);
 
@@ -132,7 +111,6 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     setDropdown(false);
 
     if (skinName === secretEntry.skinName) {
-      justWonRef.current = true;
       setWon(true);
       markPlayedToday("skin");
       setPersistedGameState("skin", dayKey, { wrongGuesses, won: true, secretSkinName: secretEntry.skinName, secretSkinImagePath: secretEntry.imagePath });
@@ -157,54 +135,67 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
 
-      {/* ── Zoomed skin image ── */}
-      <section className="flex flex-col items-center gap-3">
-        <div
-          className="relative overflow-hidden rounded-xl shadow-2xl border-2 border-white/20"
-          style={{ width: 320, height: 320 }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={secretEntry.imagePath}
-            alt={won ? secretEntry.skinName : "Mystery skin"}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              transform: `scale(${scale})`,
-              transformOrigin: won ? "center center" : quadrantOrigin,
-              filter: won ? "grayscale(0%)" : "grayscale(100%)",
-              transition: "transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 1.2s ease",
-            }}
-          />
-        </div>
-        {won && (
-          <p className="text-white/70 text-sm italic">"{secretEntry.skinName}"</p>
-        )}
-      </section>
+      {/* ── Zoomed skin image (in play only — full art lives in win panel) ── */}
+      {!won && (
+        <section className="flex flex-col items-center gap-3">
+          <div
+            className="relative overflow-hidden rounded-xl shadow-2xl border-2 border-white/20"
+            style={{ width: 320, height: 320 }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={secretEntry.imagePath}
+              alt="Mystery skin"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                transform: `scale(${scale})`,
+                transformOrigin: quadrantOrigin,
+                filter: "grayscale(100%)",
+                transition: "transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 1.2s ease",
+              }}
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── Win box ── */}
       {won && (
-        <section
-          ref={winBoxRef}
-          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
-        >
-          <DailyResetTimer />
-          <p className="mt-3 text-green-400 font-bold text-2xl mb-1">{secretEntry.skinName}!</p>
-          <p className="text-white/50 text-sm">{rulerName}</p>
-          <p className="mb-4 text-sm text-white">
+        <section className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
+          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
+            You guessed correctly!
+          </p>
+          <p className="mt-3 font-game text-2xl font-bold text-white">{secretEntry.skinName}!</p>
+          <p className="mt-1 font-game text-sm text-white/60">{rulerName}</p>
+          <div className="mt-4 flex justify-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={secretEntry.imagePath}
+              alt={secretEntry.skinName}
+              width={168}
+              height={168}
+              className="rounded-xl border border-white/20 shadow-lg object-cover"
+              style={{ width: 168, height: 168 }}
+            />
+          </div>
+          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
             Number of tries: {wrongGuesses.length + 1}
           </p>
+          <ClassicShareBox dayKey={dayKey} className="mt-6" />
+          <div className="mt-6">
+            <DailyResetTimer />
+          </div>
           <NextModeLink currentSlug="skin" />
         </section>
       )}
 
       {/* ── Search input ── */}
       {!won && (
-        <section ref={searchSectionRef} className="relative mx-auto max-w-md">
-          <div className="relative">
+        <section ref={searchSectionRef} className="relative mx-auto w-full max-w-md px-4">
+          <div className="relative w-full min-w-0">
             <input
               ref={searchInputRef}
               type="text"
@@ -243,50 +234,50 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
                 </svg>
               </button>
             )}
-          </div>
 
-          {dropdownOpen && search.trim() && (
-            <div
-              ref={dropdownRef}
-              className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
-              role="listbox"
-              data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
-              onPointerLeave={onDropdownPointerLeave}
-            >
-              {filteredSkins.length === 0 ? (
-                <p className="px-4 py-3 text-sm text-gray-600">No skins match.</p>
-              ) : (
-                <ul role="list">
-                  {filteredSkins.map((s, optionIndex) => (
-                    <li key={s.skinName} role="option">
-                      <button
-                        type="button"
-                        data-search-option-index={optionIndex}
-                        data-search-active={highlightIndex === optionIndex ? "true" : undefined}
-                        {...optionPointerHandlers(optionIndex)}
-                        onClick={() => handleGuess(s.skinName)}
-                        className="flex w-full items-center gap-3 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                      >
-                        <img
-                          src={s.imagePath}
-                          alt={s.skinName}
-                          className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
-                        />
-                        <span className="flex-1 text-base font-medium">{s.skinName}</span>
-                        <span className="text-sm text-gray-400">{getRulerByKey(s.rulerKey)?.name}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
+            {dropdownOpen && search.trim() && (
+              <div
+                ref={dropdownRef}
+                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
+                role="listbox"
+                data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
+                onPointerLeave={onDropdownPointerLeave}
+              >
+                {filteredSkins.length === 0 ? (
+                  <p className="px-4 py-3 text-sm text-gray-600">No skins match.</p>
+                ) : (
+                  <ul role="list">
+                    {filteredSkins.map((s, optionIndex) => (
+                      <li key={s.skinName} role="option">
+                        <button
+                          type="button"
+                          data-search-option-index={optionIndex}
+                          data-search-active={highlightIndex === optionIndex ? "true" : undefined}
+                          {...optionPointerHandlers(optionIndex)}
+                          onClick={() => handleGuess(s.skinName)}
+                          className="flex w-full items-center gap-3 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                        >
+                          <img
+                            src={s.imagePath}
+                            alt={s.skinName}
+                            className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
+                          />
+                          <span className="flex-1 text-base font-medium">{s.skinName}</span>
+                          <span className="text-sm text-gray-400">{getRulerByKey(s.rulerKey)?.name}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
         </section>
       )}
 
       {/* ── Wrong guesses ── */}
       {wrongGuesses.length > 0 && (
-        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm">
+        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm font-game">
           <h3 className="mb-3 text-center text-sm font-semibold uppercase tracking-wide text-white/90">
             Wrong guesses
           </h3>

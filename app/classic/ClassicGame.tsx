@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useMemo, useState, useRef } from "react";
-import confetti from "canvas-confetti";
 import {
   CARD_STATS,
   getCardKeys,
@@ -21,9 +20,11 @@ import { getTraitDisplayName } from "@/lib/traits";
 import type { ClassicGuess, ClassicGuessAttributes, AttributeResult } from "@/types/game";
 import NextModeLink from "@/components/NextModeLink";
 import DailyResetTimer from "@/components/DailyResetTimer";
+import ClassicShareBox from "@/components/ClassicShareBox";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
 import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
+import { fireWinConfettiFromRect } from "@/lib/win-confetti";
 
 interface Props {
   dayKey: string;
@@ -162,8 +163,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   const justWonRef       = useRef(false);
   const searchInputRef   = useRef<HTMLInputElement>(null);
   const searchSectionRef = useRef<HTMLDivElement>(null);
-  const winBoxRef        = useRef<HTMLElement | null>(null);
-
+  const winPanelRef      = useRef<HTMLElement | null>(null);
+  /** True only for a win in this session (not restored from localStorage) — gates confetti once. */
+  const confettiPendingRef = useRef(false);
   // Restore persisted state
   useEffect(() => {
     const saved = getPersistedGameState<PersistedState>("classic", dayKey);
@@ -187,29 +189,18 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     return () => clearTimeout(t);
   }, [won]);
 
-  // Fire confetti from the win box
+  // Confetti from the green win panel (not viewport center while the attribute row is animating).
   useEffect(() => {
-    if (!won || !showWinMsg || !winBoxRef.current) return;
-    const el = winBoxRef.current;
+    if (!showWinMsg || !won || !confettiPendingRef.current) return;
+    confettiPendingRef.current = false;
     const id = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const x = (rect.left + rect.width  / 2) / window.innerWidth;
-        const y = (rect.top  + rect.height / 2) / window.innerHeight;
-        const opts = {
-          particleCount: 120,
-          origin: { x, y },
-          spread: 100,
-          startVelocity: 65,
-          scalar: 1.8,
-          colors: ["#818cf8", "#34d399", "#60a5fa", "#f59e0b"],
-        };
-        confetti({ ...opts, angle: 60 });
-        confetti({ ...opts, angle: 120 });
+        const el = winPanelRef.current;
+        if (el) fireWinConfettiFromRect(el.getBoundingClientRect());
       });
     });
     return () => cancelAnimationFrame(id);
-  }, [won, showWinMsg]);
+  }, [showWinMsg, won]);
 
   useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
 
@@ -236,6 +227,14 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   const dropdownListCount =
     !won && dropdownOpen && search.trim() ? availableKeys.length : 0;
 
+  /** After a win: correct row first, then wrong guesses (same order as stored for wrongs). */
+  const guessesToShow = useMemo(() => {
+    if (!won) return guesses;
+    const wrongs = guesses.filter((g) => g.cardKey !== secretKey);
+    const correctRow = guesses.find((g) => g.cardKey === secretKey);
+    return correctRow ? [correctRow, ...wrongs] : wrongs;
+  }, [won, guesses, secretKey]);
+
   const { highlightIndex, dropdownRef, handleArrowKeys, optionPointerHandlers, onDropdownPointerLeave } =
     useSearchDropdownHighlight({
       enabled: !won,
@@ -259,6 +258,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     setPersistedGameState("classic", dayKey, { guesses: newGuesses, won: isWon, secretKey });
 
     if (isWon) {
+      confettiPendingRef.current = true;
       justWonRef.current = true;
       setWon(true);
       markPlayedToday("classic");
@@ -277,12 +277,12 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
 
       {/* ── Search input ── */}
       {!won && (
-        <section ref={searchSectionRef} className="relative mx-auto max-w-md">
-          <div className="relative">
+        <section ref={searchSectionRef} className="relative mx-auto w-full max-w-md px-4">
+          <div className="relative w-full min-w-0">
             <input
               ref={searchInputRef}
               type="text"
@@ -324,48 +324,82 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                 </svg>
               </button>
             )}
-          </div>
 
-          {dropdownOpen && search.trim() && (
-            <div
-              ref={dropdownRef}
-              className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
-              role="listbox"
-              data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
-              onPointerLeave={onDropdownPointerLeave}
-            >
-              {availableKeys.length === 0 ? (
-                <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
-              ) : (
-                <ul role="list">
-                  {availableKeys.map((key, optionIndex) => (
-                      <li key={key} role="option">
-                        <button
-                          type="button"
-                          data-search-option-index={optionIndex}
-                          data-search-active={highlightIndex === optionIndex ? "true" : undefined}
-                          {...optionPointerHandlers(optionIndex)}
-                          onClick={() => { handleGuess(key); }}
-                          className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
-                        >
-                          <CardThumbnail cardKey={key} size="md" />
-                          <span className="text-base font-medium">{getCardDisplayName(key)}</span>
-                        </button>
-                      </li>
-                    ))}
-                </ul>
-              )}
-            </div>
-          )}
+            {dropdownOpen && search.trim() && (
+              <div
+                ref={dropdownRef}
+                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
+                role="listbox"
+                data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
+                onPointerLeave={onDropdownPointerLeave}
+              >
+                {availableKeys.length === 0 ? (
+                  <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
+                ) : (
+                  <ul role="list">
+                    {availableKeys.map((key, optionIndex) => (
+                        <li key={key} role="option">
+                          <button
+                            type="button"
+                            data-search-option-index={optionIndex}
+                            data-search-active={highlightIndex === optionIndex ? "true" : undefined}
+                            {...optionPointerHandlers(optionIndex)}
+                            onClick={() => { handleGuess(key); }}
+                            className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                          >
+                            <CardThumbnail cardKey={key} size="md" />
+                            <span className="text-base font-medium">{getCardDisplayName(key)}</span>
+                          </button>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
         </section>
       )}
 
-      {/* ── Guess table ── */}
-      {guesses.length > 0 && (
-        <section className="mx-auto w-full max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
-          <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">YOUR GUESSES</h3>
+      {/* ── Win message (above wrong-guess rows) ── */}
+      {won && showWinMsg && (
+        <section
+          ref={winPanelRef}
+          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
+        >
+          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
+            You guessed correctly!
+          </p>
+          <p className="mt-3 font-game text-2xl font-bold text-white">
+            {getCardDisplayName(secretKey)}!
+          </p>
+          <div className="mt-2">
+            <img
+              src={cardImagePath(secretKey)}
+              alt={getCardDisplayName(secretKey)}
+              width={120}
+              height={120}
+              className="mx-auto rounded-xl border border-white/20"
+            />
+          </div>
+          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
+            Number of tries: {guesses.length}
+          </p>
+          <ClassicShareBox dayKey={dayKey} className="mt-6" />
+          <div className="mt-6">
+            <DailyResetTimer />
+          </div>
+          <NextModeLink currentSlug="classic" />
+        </section>
+      )}
 
-          <div className="w-full overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible">
+      {/* ── Guess table (in progress: all rows; after win: wrong rows then correct row with attributes) ── */}
+      {guessesToShow.length > 0 && (
+        <section className="mx-auto w-full max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
+          <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">
+            YOUR GUESSES
+          </h3>
+
+          <div className="w-full overflow-x-auto overscroll-x-contain pb-4 [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible sm:pb-0">
           {/* Column headers */}
           <div className="guess-grid mb-1 grid gap-2 font-game text-[10px] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
             <div className="text-center">Card</div>
@@ -376,8 +410,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
           {/* Rows */}
           <div className="space-y-2">
-            {guesses.map((g, rowIndex) => {
-              const isNewRow = rowIndex === 0;
+            {guessesToShow.map((g, rowIndex) => {
+              const isNewRow = !won && rowIndex === 0;
               return (
                 <div
                   key={g.cardKey}
@@ -407,32 +441,6 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
             })}
           </div>
           </div>{/* end overflow-x-auto */}
-        </section>
-      )}
-
-      {/* ── Win message ── */}
-      {won && showWinMsg && (
-        <section
-          ref={winBoxRef}
-          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
-        >
-          <DailyResetTimer />
-          <div className="my-4">
-            <img
-              src={cardImagePath(secretKey)}
-              alt={getCardDisplayName(secretKey)}
-              width={120}
-              height={120}
-              className="mx-auto rounded-xl border border-white/20"
-            />
-          </div>
-          <p className="text-green-400 font-bold text-2xl mb-1">
-            {getCardDisplayName(secretKey)}!
-          </p>
-          <p className="mb-4 text-sm text-white">
-            Number of tries: {guesses.length}
-          </p>
-          <NextModeLink currentSlug="classic" />
         </section>
       )}
     </div>
