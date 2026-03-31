@@ -1,22 +1,23 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
 import {
-  CARD_STATS,
-  getCardKeys,
-  getCardDisplayName,
-  cardMatchesSearch,
-  findExactMatchKey,
-  cardImagePath,
-} from "@/lib/card-stats";
+  getDescriptionGameKeys,
+  getDescriptionDisplayName,
+  descriptionMatchesSearch,
+  findExactDescriptionMatchKey,
+  descriptionImagePath,
+  getDescriptionTextForKey,
+} from "@/lib/description-game";
 import {
   getDailySecretFromPool,
+  getDescriptionRevealOrderSeed,
   markPlayedToday,
   setPersistedGameState,
   getPersistedGameState,
 } from "@/lib/daily";
 import {
   tokenizeDescription,
-  wordRevealOrderReadingOrder,
+  wordRevealOrderSeeded,
   revealedWordIndexSet,
   type DescriptionToken,
 } from "@/lib/description-reveal";
@@ -59,9 +60,8 @@ interface PersistedState {
 }
 
 export default function DescriptionGame({ dayKey, onSolved }: Props) {
-  const cardKeys = useMemo(() => getCardKeys().filter((k) => CARD_STATS[k]?.description), []);
+  const cardKeys = useMemo(() => getDescriptionGameKeys(), []);
   const secretKey = useMemo(() => getDailySecretFromPool(cardKeys, "description", dayKey), [cardKeys, dayKey]);
-  const secret = CARD_STATS[secretKey];
 
   const [guesses, setGuesses] = useState<string[]>([]);
   const [won, setWon] = useState(false);
@@ -87,7 +87,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
   const suggestions = useMemo(() => {
     if (!search.trim()) return [];
     return cardKeys
-      .filter((k) => cardMatchesSearch(k, search) && !guesses.includes(k))
+      .filter((k) => descriptionMatchesSearch(k, search) && !guesses.includes(k))
       .slice(0, 8);
   }, [cardKeys, search, guesses]);
 
@@ -112,13 +112,16 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
     },
   });
 
-  const descriptionText = secret?.description ?? "";
+  const descriptionText = useMemo(() => getDescriptionTextForKey(secretKey), [secretKey]);
   const descTokens = useMemo(() => tokenizeDescription(descriptionText), [descriptionText]);
   const wordCount = useMemo(
     () => descTokens.filter((t): t is Extract<DescriptionToken, { type: "word" }> => t.type === "word").length,
     [descTokens],
   );
-  const revealOrder = useMemo(() => wordRevealOrderReadingOrder(wordCount), [wordCount]);
+  const revealOrder = useMemo(
+    () => wordRevealOrderSeeded(wordCount, getDescriptionRevealOrderSeed(dayKey, secretKey)),
+    [wordCount, dayKey, secretKey],
+  );
   const wrongGuessCount = guesses.filter((g) => g !== secretKey).length;
 
   /** After a win, only list incorrect guesses under the success message. */
@@ -152,20 +155,20 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
       submitGuess(suggestions[highlightIndex]);
       return;
     }
-    const key = findExactMatchKey(search);
+    const key = findExactDescriptionMatchKey(search);
     if (key && suggestions.includes(key)) {
       submitGuess(key);
       return;
     }
     const q = search.trim().toLowerCase();
-    const exact = suggestions.find((k) => getCardDisplayName(k).toLowerCase() === q);
+    const exact = suggestions.find((k) => getDescriptionDisplayName(k).toLowerCase() === q);
     submitGuess(exact ?? suggestions[0]);
   }
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const key = findExactMatchKey(search);
-    if (key && !guesses.includes(key) && cardMatchesSearch(key, search)) {
+    const key = findExactDescriptionMatchKey(search);
+    if (key && !guesses.includes(key) && descriptionMatchesSearch(key, search)) {
       submitGuess(key);
       return;
     }
@@ -220,7 +223,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search any card..."
+                placeholder="Search any card or ruler..."
                 value={search}
                 autoComplete="off"
                 onChange={(e) => {
@@ -277,7 +280,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                 onPointerLeave={onDropdownPointerLeave}
               >
                 {suggestions.length === 0 ? (
-                  <p className="px-4 py-3 text-sm text-gray-600">No cards match.</p>
+                  <p className="px-4 py-3 text-sm text-gray-600">No cards or rulers match.</p>
                 ) : (
                   <ul role="list">
                     {suggestions.map((k, optionIndex) => (
@@ -290,8 +293,8 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                           onClick={() => submitGuess(k)}
                           className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
-                          <Image src={cardImagePath(k)} alt="" width={40} height={40} className="h-10 w-10 rounded object-contain" unoptimized />
-                          <span className="text-base font-medium">{getCardDisplayName(k)}</span>
+                          <Image src={descriptionImagePath(k)} alt="" width={40} height={40} className="h-10 w-10 rounded object-contain" unoptimized />
+                          <span className="text-base font-medium">{getDescriptionDisplayName(k)}</span>
                         </button>
                       </li>
                     ))}
@@ -310,9 +313,9 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
           <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
             You guessed correctly!
           </p>
-          <p className="mt-3 font-game text-2xl font-bold text-white">{getCardDisplayName(secretKey)}!</p>
+          <p className="mt-3 font-game text-2xl font-bold text-white">{getDescriptionDisplayName(secretKey)}!</p>
           <div className="mt-2 flex justify-center">
-            <Image src={cardImagePath(secretKey)} alt={getCardDisplayName(secretKey)} width={80} height={80} className="rounded-xl" unoptimized />
+            <Image src={descriptionImagePath(secretKey)} alt={getDescriptionDisplayName(secretKey)} width={80} height={80} className="rounded-xl" unoptimized />
           </div>
           <p className="mt-4 font-supercell text-sm text-white sm:text-base">
             Number of tries: {guesses.length}
@@ -343,7 +346,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                   }`}
                 >
                   <Image
-                    src={cardImagePath(k)}
+                    src={descriptionImagePath(k)}
                     alt=""
                     width={56}
                     height={56}
@@ -351,7 +354,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                     unoptimized
                   />
                   <span className={`text-base font-medium ${correct ? "text-green-300" : "text-white"}`}>
-                    {getCardDisplayName(k)}
+                    {getDescriptionDisplayName(k)}
                   </span>
                 </div>
               );

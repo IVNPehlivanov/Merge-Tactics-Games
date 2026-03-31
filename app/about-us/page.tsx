@@ -62,12 +62,12 @@ export default function AboutPage() {
               numeric fields. Unlimited guesses, one new card per day.
             </li>
             <li>
-              <strong className="text-white">Pixel Card:</strong> Identify the card from its
+              <strong className="text-white">Merge Tactics Pixel Quiz:</strong> Identify the card from its
               pixelated artwork. The image starts heavily blurred and gets clearer with each
               wrong guess. The earlier you get it, the better your score.
             </li>
             <li>
-              <strong className="text-white">Guess the Skin:</strong> A Merge Tactics skin is
+              <strong className="text-white">Skin Quiz:</strong> A Merge Tactics skin is
               shown — your job is to name which card owns it. Pure cosmetic knowledge, no stat
               clues, no blur. Either you know it or you don&apos;t.
             </li>

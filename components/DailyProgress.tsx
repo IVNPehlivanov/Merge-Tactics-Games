@@ -53,7 +53,10 @@ export default function DailyProgress({ currentSlug }: { currentSlug?: string })
         {DAILY_GAME_SLUGS.map((slug) => {
           const isDone = played.includes(slug);
           const isCurrent = slug === currentSlug;
-          const title = getGameMetaBySlug(slug)?.title ?? slug;
+          const meta = getGameMetaBySlug(slug);
+          const title = meta?.title ?? slug;
+          const displayName = meta?.progressTitle ?? meta?.homeTitle ?? title;
+          const tagline = meta?.progressTitle || meta?.homeTitle ? undefined : meta?.tagline;
           return (
             <Link
               key={slug}
@@ -72,7 +75,7 @@ export default function DailyProgress({ currentSlug }: { currentSlug?: string })
               <div className={`relative rounded-lg p-0.5 transition-all ${isCurrent ? "drop-shadow-[0_0_10px_rgba(251,191,36,0.9)]" : ""}`}>
                 <img
                   src={getGameLogoPath(slug)}
-                  alt={title}
+                  alt={displayName}
                   className="h-16 w-auto object-contain"
                   style={{ maxHeight: 64, width: "auto", maxWidth: "100%", objectFit: "contain", display: "block" }}
                 />
@@ -83,10 +86,22 @@ export default function DailyProgress({ currentSlug }: { currentSlug?: string })
                 )}
               </div>
               <span
-                className={`break-words text-center text-xs font-semibold leading-tight text-white ${isCurrent ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.65)]" : ""}`}
+                className={`flex min-w-0 w-full flex-col items-center gap-0.5 break-words text-center text-xs font-semibold leading-tight text-white ${isCurrent ? "drop-shadow-[0_0_8px_rgba(251,191,36,0.65)]" : ""}`}
                 style={{ textAlign: "center", fontSize: "0.75rem", color: "#fff", lineHeight: 1.25, overflowWrap: "anywhere" }}
               >
-                {title.replace(" Wordle", "")}
+                {slug === "classic" ? (
+                  <span className="flex flex-col items-center leading-tight">
+                    <span>Classic</span>
+                    <span>Wordle</span>
+                  </span>
+                ) : (
+                  <span>{displayName}</span>
+                )}
+                {tagline ? (
+                  <span className="block max-w-full font-normal text-[0.55rem] leading-tight text-white/85">
+                    {tagline}
+                  </span>
+                ) : null}
               </span>
             </Link>
           );

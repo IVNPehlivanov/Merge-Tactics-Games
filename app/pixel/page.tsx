@@ -12,11 +12,11 @@ const SLUG = "pixel";
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Pixel Card | Guess the Pixelated Card Image",
+    title: "Merge Tactics Pixel Quiz | Guess the Pixelated Card Image",
     description: "Guess today's Merge Tactics card/ruler from a pixelated card image. Each wrong guess reveals more — how many tries will you need?",
     keywords: ["merge tactics pixel", "guess the card or ruler image", "mergedle pixel"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
-    openGraph: { title: "Pixel Card | Mergedle", description: "Identify the daily Merge Tactics card or ruler from its pixelated image. Each wrong guess reveals more detail - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }] },
+    openGraph: { title: "Merge Tactics Pixel Quiz | Mergedle", description: "Identify the daily Merge Tactics card or ruler from its pixelated image. Each wrong guess reveals more detail - free, no login.", images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }] },
   };
 }
 
@@ -30,14 +30,14 @@ const FAQS = [
 export default function PixelPage() {
   return (
     <GamePageBackground>
-      <GameSchema slug={SLUG} title="Pixel Card" description="Guess the daily Merge Tactics card from a pixelated card image" faqs={FAQS} />
+      <GameSchema slug={SLUG} title="Merge Tactics Pixel Quiz" description="Guess the daily Merge Tactics card from a pixelated card image" faqs={FAQS} />
 
       {/* Nav row */}
       <div className="mb-6 flex items-center justify-between gap-3">
         <BackToAllGames />
-        <HowToPlayModal triggerAriaLabel="How to Play Pixel Card">
+        <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Pixel Quiz">
           <h2 id="how-to-play-title" className="mb-4 text-xl font-bold text-white">
-            How to Play Pixel Card
+            How to Play Merge Tactics Pixel Quiz
           </h2>
           <p className="text-sm text-slate-300">
             A card is shown blurred. Guess the name before the image fully reveals itself!
@@ -69,15 +69,15 @@ export default function PixelPage() {
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
           <ul className="space-y-1 text-sm text-slate-300">
             <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle — guess from stat clues</Link></li>
-            <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the card from a skin</Link></li>
+            <li><Link href="/skin" className="text-indigo-400 hover:underline">Skin Quiz — identify the card from a skin</Link></li>
             <li><Link href="/description" className="text-indigo-400 hover:underline">Description — guess from the card text</Link></li>
           </ul>
         </HowToPlayModal>
       </div>
 
       <DailyProgress currentSlug="pixel" />
-      <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Pixel Card</h1>
-      <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Guess the card or ruler from its pixelated image</h2>
+      <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Merge Tactics Pixel Quiz</h1>
+      <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Can you guess the card or ruler from its pixelated version?</h2>
       <DailyGameGuard slug={SLUG} />
     </GamePageBackground>
   );

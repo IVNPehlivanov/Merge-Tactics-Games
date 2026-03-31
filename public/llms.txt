@@ -7,7 +7,7 @@ All games are free and require no login. Game state is stored in your browser on
 
 - https://mergedle.com/classic — Classic Wordle: guess the daily Merge Tactics card from stat clues (elixir cost, traits, type, release year)
 - https://mergedle.com/pixel — Pixel Card: guess the card from a pixelated card image that gets clearer with each wrong guess
-- https://mergedle.com/skin — Guess the Skin: identify which card owns the daily skin image
+- https://mergedle.com/skin — Skin Quiz: identify which card owns the daily skin image
 
 ## Site Pages
 

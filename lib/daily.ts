@@ -32,15 +32,9 @@ export function getNextMidnightUTC(): Date {
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));
 }
 
-function simpleHash(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  return Math.abs(hash);
-}
+import { simpleHash } from "./seed-hash";
+
+export { simpleHash, getDescriptionRevealOrderSeed } from "./seed-hash";
 
 export function seededIndex(seed: string, max: number): number {
   return simpleHash(seed) % max;

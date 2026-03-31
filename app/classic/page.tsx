@@ -68,8 +68,8 @@ export default function ClassicPage() {
 
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
           <ul className="space-y-1 text-sm text-slate-300">
-            <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Card — guess from a blurred image</Link></li>
-            <li><Link href="/skin" className="text-indigo-400 hover:underline">Guess the Skin — identify the card from a skin</Link></li>
+            <li><Link href="/pixel" className="text-indigo-400 hover:underline">Merge Tactics Pixel Quiz — guess from a blurred image</Link></li>
+            <li><Link href="/skin" className="text-indigo-400 hover:underline">Skin Quiz — identify the card from a skin</Link></li>
             <li><Link href="/description" className="text-indigo-400 hover:underline">Description — guess from the card text</Link></li>
           </ul>
         </HowToPlayModal>

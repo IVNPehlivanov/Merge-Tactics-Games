@@ -1,3 +1,5 @@
+import { simpleHash } from "@/lib/seed-hash";
+
 export type DescriptionToken =
   | { type: "word"; wordIndex: number; word: string }
   | { type: "raw"; text: string };
@@ -22,10 +24,31 @@ export function tokenizeDescription(s: string): DescriptionToken[] {
   return out;
 }
 
-/** Word indices in left-to-right reading order — same sequence for every player. */
-export function wordRevealOrderReadingOrder(wordCount: number): number[] {
+/** Mulberry32 — deterministic PRNG from a 32-bit seed. */
+function mulberry32(seed: number): () => number {
+  return () => {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Random permutation of word indices — identical for everyone when `seed` matches
+ * (use `getDescriptionRevealOrderSeed`). Initial + wrong-guess reveals follow this order.
+ */
+export function wordRevealOrderSeeded(wordCount: number, seed: string): number[] {
   if (wordCount <= 0) return [];
-  return Array.from({ length: wordCount }, (_, k) => k);
+  const order = Array.from({ length: wordCount }, (_, k) => k);
+  const rand = mulberry32(simpleHash(seed) || 1);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    const tmp = order[i]!;
+    order[i] = order[j]!;
+    order[j] = tmp;
+  }
+  return order;
 }
 
 export function initialRevealedWordCount(totalWords: number): number {
@@ -33,7 +56,7 @@ export function initialRevealedWordCount(totalWords: number): number {
   return Math.max(1, Math.ceil(totalWords * 0.25));
 }
 
-/** Which word indices are visible: initial 25% plus one more per wrong guess (reading order). */
+/** Which word indices are visible: initial ~25% plus one more per wrong guess (order from `revealOrder`). */
 export function revealedWordIndexSet(
   totalWords: number,
   revealOrder: number[],

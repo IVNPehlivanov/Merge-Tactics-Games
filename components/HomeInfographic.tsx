@@ -8,11 +8,18 @@ export default function HomeInfographic() {
   return (
     <section className="w-full max-w-sm mx-auto px-4 pb-6 flex flex-col gap-2" aria-label="Game modes">
       {activeGames.map((game) => (
-        <Link key={game.slug} href={`/${game.slug}`} className="relative group">
+        <Link
+          key={game.slug}
+          href={`/${game.slug}`}
+          className="group relative block overflow-visible"
+        >
             <img src="/homepage/buttons.webp" alt="" className="w-full h-auto block group-hover:brightness-110 transition-all" aria-hidden="true" />
-            <div className="absolute flex items-center justify-center" style={{ left: "20%", right: "4%", top: 0, bottom: 0 }}>
-              <p className="font-supercell text-amber-400 text-lg leading-tight drop-shadow-md group-hover:text-amber-300 transition-colors text-center">
-                {game.title}
+            <div
+              className="absolute flex flex-col items-center justify-center px-1"
+              style={{ left: "18%", right: "4%", top: "6%", bottom: "10%" }}
+            >
+              <p className="font-supercell text-center text-lg leading-tight text-amber-400 drop-shadow-md transition-colors group-hover:text-amber-300">
+                {game.homeTitle ?? game.title}
               </p>
             </div>
         </Link>

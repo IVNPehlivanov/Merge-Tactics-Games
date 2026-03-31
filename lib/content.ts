@@ -9,6 +9,12 @@ export type GameMetaItem = {
   title: string;
   description: string;
   shortDesc: string;
+  /** Shown under the title in Daily Progress only (optional). */
+  tagline?: string;
+  /** Homepage button label only; falls back to `title` when unset. */
+  homeTitle?: string;
+  /** Daily Progress label under the icon; overrides `homeTitle` and `title` when set. */
+  progressTitle?: string;
   mode: "daily" | "endless";
   comingSoon?: boolean;
   seoHowItWorks: string;
@@ -25,7 +31,9 @@ export const GAME_META: GameMetaItem[] = [
   },
   {
     slug: "pixel",
-    title: "Pixel Card",
+    title: "Merge Tactics Pixel Quiz",
+    homeTitle: "Pixel Quiz",
+    progressTitle: "Pixel",
     description: "Identify the card from a pixelated card image",
     shortDesc: "Pixelated image",
     mode: "daily",
@@ -33,7 +41,9 @@ export const GAME_META: GameMetaItem[] = [
   },
   {
     slug: "skin",
-    title: "Guess the Skin",
+    title: "Merge Tactics Skin Quiz",
+    homeTitle: "Skin Quiz",
+    progressTitle: "Skin",
     description: "Which card does this skin belong to?",
     shortDesc: "Skin clue",
     mode: "daily",
@@ -41,7 +51,9 @@ export const GAME_META: GameMetaItem[] = [
   },
   {
     slug: "description",
-    title: "Description",
+    title: "Merge Tactics Description Quiz",
+    homeTitle: "Description Quiz",
+    progressTitle: "Description",
     description: "Read the card description and guess which card it is",
     shortDesc: "Description clue",
     mode: "daily",

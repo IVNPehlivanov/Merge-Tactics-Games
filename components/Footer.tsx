@@ -72,7 +72,7 @@ export default function Footer() {
               {activeGames.map((g) => (
                 <li key={g.slug}>
                   <Link href={`/${g.slug}`} className={footerLinkClass}>
-                    {g.title}
+                    {g.homeTitle ?? g.title}
                   </Link>
                 </li>
               ))}
