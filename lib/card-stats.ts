@@ -133,7 +133,7 @@ export const CARD_STATS: Record<string, CardStats> = {
   royal_giant: {
     name: "Royal Giant",
     rarity: "Common",
-    elixirCost: 2,
+    elixirCost: 3,
     hitSpeed: 2,
     speed: "very_slow",
     primaryTrait: "titan",
