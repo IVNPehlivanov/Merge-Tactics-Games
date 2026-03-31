@@ -51,7 +51,6 @@ mergedle/
 ```
 
 ## Working Rules
-- **Always update "Completed Tasks"** at the bottom of this file when a task is finished
 - **Always update "What's Being Worked On"** if focus shifts
 - At the start of any SEO-related session, read `.claude/skills/SEO_SKILL.md` first
 
@@ -117,3 +116,5 @@ mergedle/
 - [x] Win confetti from card center: `lib/win-confetti.ts` + `DailyGameGuard` summary (Royaledly-style); removed per-game confetti that never ran after instant `onSolved` unmount
 - [x] Dev reliability: static imports in `DailyGameGuard`; `next.config` dev `Cache-Control` on `/_next/static` only; shell/layout fallbacks; `npm run dev:fresh` kills port 3000 + `npm run clean` + `next dev` (fixes 404 on `webpack.js` / `layout.css` when a zombie/stale `next dev` serves HTML whose `?v=` chunks no longer exist)
 - [x] IndexNow matches Royaledly: `scripts/submit-indexnow.mjs` (sitemap → verify key → one Bing POST with full `urlList`); `app/api/indexnow/route.ts` same flow for `GET ?secret=` after deploy
+- [x] Corrected `Goblin Machine` elixir cost in `lib/card-stats.ts` from 5 to 4
+- [x] Removed `rarity` as a Classic mode attribute (logic, headers/types, and grid column count)

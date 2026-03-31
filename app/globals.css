@@ -22,11 +22,11 @@
 .font-game { font-family: var(--font-game); }
 
 .guess-grid {
-  grid-template-columns: 56px repeat(6, 56px);
+  grid-template-columns: 56px repeat(7, 56px);
 }
 @media (min-width: 640px) {
   .guess-grid {
-    grid-template-columns: 96px repeat(6, 110px);
+    grid-template-columns: 84px repeat(7, 92px);
   }
 }
 .font-supercell { font-family: var(--font-supercell); }

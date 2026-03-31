@@ -2,13 +2,13 @@
 import { useEffect, useMemo, useState, useRef } from "react";
 import {
   CARD_STATS,
-  getCardKeys,
+  SPEED_ORDER,
+  type CardSpeed,
+  getClassicCardKeys,
   getCardDisplayName,
   cardMatchesSearch,
   findExactMatchKey,
   cardImagePath,
-  RARITY_ORDER,
-  type CardRarity,
 } from "@/lib/card-stats";
 import {
   getDailySecretFromPool,
@@ -44,12 +44,33 @@ function compareOrdered(guessVal: number, secretVal: number): AttributeResult["r
   return secretVal > guessVal ? "higher" : "lower";
 }
 
+/**
+ * Match Clash-Royale-Games Classic behavior for ordered attrs with possible N/A:
+ * - guess N/A vs secret value => higher (up arrow)
+ * - guess value vs secret N/A => lower (down arrow)
+ */
+function compareOrderedWithNA(
+  guessVal: number | undefined,
+  secretVal: number | undefined,
+): AttributeResult["result"] {
+  if (guessVal === undefined && secretVal === undefined) return "correct";
+  if (guessVal !== undefined && secretVal !== undefined) {
+    if (guessVal === secretVal) return "correct";
+    return secretVal > guessVal ? "higher" : "lower";
+  }
+  if (guessVal === undefined && secretVal !== undefined) return "higher";
+  return "lower";
+}
+
 function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuessAttributes {
   const g = CARD_STATS[guessKey];
   const s = CARD_STATS[secretKey];
-
-  const gi = RARITY_ORDER.indexOf(g.rarity as CardRarity);
-  const si = RARITY_ORDER.indexOf(s.rarity as CardRarity);
+  const gh = g.hitSpeed;
+  const sh = s.hitSpeed;
+  const gsRaw = g.speed ? SPEED_ORDER.indexOf(g.speed as CardSpeed) : undefined;
+  const ssRaw = s.speed ? SPEED_ORDER.indexOf(s.speed as CardSpeed) : undefined;
+  const gs = gsRaw !== undefined && gsRaw >= 0 ? gsRaw : undefined;
+  const ss = ssRaw !== undefined && ssRaw >= 0 ? ssRaw : undefined;
 
   const parseYear = (d: string) => {
     const y = parseInt(d.slice(0, 4), 10);
@@ -59,8 +80,9 @@ function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuess
   const sy = parseYear(s.releaseDate);
 
   return {
-    rarity:         { value: g.rarity,        result: compareOrdered(gi, si) },
     elixirCost:     { value: g.elixirCost,     result: compareOrdered(g.elixirCost, s.elixirCost) },
+    hitSpeed:       { value: gh ?? "N/A",               result: compareOrderedWithNA(gh, sh) },
+    speed:          { value: g.speed ?? "N/A",          result: compareOrderedWithNA(gs, ss) },
     primaryTrait:   { value: g.primaryTrait,   result: g.primaryTrait   === s.primaryTrait   ? "correct" : "wrong" },
     secondaryTrait: { value: g.secondaryTrait, result: g.secondaryTrait === s.secondaryTrait ? "correct" : "wrong" },
     cardType:       { value: g.cardType,       result: g.cardType       === s.cardType       ? "correct" : "wrong" },
@@ -105,33 +127,48 @@ function AttributeCell({
   value: string | number | boolean;
   result: AttributeResult["result"];
 }) {
-  const bg =
-    result === "correct" ? "bg-green-600" :
-    result === "wrong"   ? "bg-red-600" :
-                           "bg-red-600";
-  const arrow = result === "higher" ? "↑" : result === "lower" ? "↓" : null;
-  const display =
+  const isCorrect = result === "correct";
+  const isHigher = result === "higher";
+  const isLower = result === "lower";
+  const bg = isCorrect ? "bg-green-600" : "bg-red-600";
+  const showBigArrow = !isCorrect && (isHigher || isLower);
+  const displayValue =
     typeof value === "boolean"
       ? value
         ? "Yes"
         : "No"
       : attrKey === "primaryTrait" || attrKey === "secondaryTrait"
         ? getTraitDisplayName(String(value))
+        : attrKey === "hitSpeed"
+          ? (typeof value === "number" ? `${String(value)} sec` : String(value))
+          : attrKey === "speed"
+            ? String(value)
+                .split("_")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")
         : String(value);
-  const isTraitCol = attrKey === "primaryTrait" || attrKey === "secondaryTrait";
-  const textClass = isTraitCol ? "normal-case" : "";
 
   return (
-    <div className={`relative flex h-14 w-full items-center justify-center overflow-hidden rounded text-center text-[11px] font-bold text-white sm:h-24 sm:text-sm sm:rounded-lg ${bg}`}>
-      {arrow ? (
-        <>
-          <span className="pointer-events-none absolute inset-0 flex items-center justify-center text-[3.5rem] font-black text-black/60 leading-none sm:text-[5rem]">
-            {arrow}
+    <div
+      className={`relative flex h-[3.5rem] w-full min-w-0 flex-wrap items-center justify-center overflow-hidden rounded-sm px-0.5 py-1 text-center text-[0.6rem] font-sans font-bold leading-tight text-white sm:h-[5rem] sm:px-1.5 sm:py-2 sm:text-sm ${bg}`}
+    >
+      {showBigArrow ? (
+        <span className="pointer-events-none absolute inset-0 flex items-center justify-center" aria-hidden>
+          <span className="relative inline-block">
+            <span className="inline-block text-[3rem] font-bold leading-none text-black opacity-40 sm:text-[6rem] [transform:translateX(0.04em)]">
+              {isHigher ? "↑" : "↓"}
+            </span>
+            <span className="absolute inset-0 flex items-center justify-center leading-none text-white drop-shadow-md [transform:translate(0.04em,0.12em)]">
+              {displayValue}
+            </span>
           </span>
-          <span className={`relative z-10 leading-tight px-0.5 break-words text-center ${textClass}`}>{display}</span>
-        </>
+        </span>
       ) : (
-        <span className={`px-0.5 leading-tight break-words text-center ${textClass}`}>{display}</span>
+        <span className="relative z-10 min-w-0 text-center drop-shadow-sm">
+          {String(displayValue).split(" ").map((word, i) => (
+            <span key={i} className="block">{word}</span>
+          ))}
+        </span>
       )}
     </div>
   );
@@ -139,9 +176,9 @@ function AttributeCell({
 
 // -- Column config --
 
-const ATTR_LABELS = ["Rarity", "Elixir", "Trait 1", "Trait 2", "Type", "Year"] as const;
+const ATTR_LABELS = ["Elixir Cost", "Type", "Trait 1", "Trait 2", "Hit Speed", "Speed", "Release Date"] as const;
 const ATTR_KEYS: (keyof ClassicGuessAttributes)[] = [
-  "rarity", "elixirCost", "primaryTrait", "secondaryTrait", "cardType", "releaseYear",
+  "elixirCost", "cardType", "primaryTrait", "secondaryTrait", "hitSpeed", "speed", "releaseYear",
 ];
 
 const CELL_DELAY_MS = 200;
@@ -150,7 +187,7 @@ const WIN_DELAY_MS  = ATTR_KEYS.length * CELL_DELAY_MS + 500; // 1700ms
 // -- Main component --
 
 export default function ClassicGame({ dayKey, onSolved }: Props) {
-  const cardKeys  = useMemo(() => getCardKeys(), []);
+  const cardKeys  = useMemo(() => getClassicCardKeys(), []);
   const secretKey = useMemo(() => getDailySecretFromPool(cardKeys, "classic", dayKey), [cardKeys, dayKey]);
 
   const [guesses, setGuesses]       = useState<ClassicGuess[]>([]);
@@ -394,17 +431,36 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
       {/* ── Guess table (in progress: all rows; after win: wrong rows then correct row with attributes) ── */}
       {guessesToShow.length > 0 && (
-        <section className="mx-auto w-full max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
+        <section className="mx-auto w-fit max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
           <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">
             YOUR GUESSES
           </h3>
 
-          <div className="w-full overflow-x-auto overscroll-x-contain pb-4 [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible sm:pb-0">
+          <div className="mx-auto w-fit max-w-full overflow-x-auto overscroll-x-contain pb-4 [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible sm:pb-0">
           {/* Column headers */}
           <div className="guess-grid mb-1 grid gap-2 font-game text-[10px] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
-            <div className="text-center">Card</div>
+            <div className="translate-y-0.5 text-center sm:translate-y-1">Card</div>
             {ATTR_LABELS.map((label) => (
-              <div key={label} className="text-center leading-tight">{label}</div>
+              <div
+                key={label}
+                className={`text-center leading-tight ${
+                  label === "Type" || label === "Speed" ? "translate-y-0.5 sm:translate-y-1" : ""
+                }`}
+              >
+                {label === "Trait 1" ? (
+                  <>
+                    <span className="block">Trait</span>
+                    <span className="block">1</span>
+                  </>
+                ) : label === "Trait 2" ? (
+                  <>
+                    <span className="block">Trait</span>
+                    <span className="block">2</span>
+                  </>
+                ) : (
+                  label
+                )}
+              </div>
             ))}
           </div>
 
@@ -417,11 +473,21 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                   key={g.cardKey}
                   className={`guess-grid grid items-stretch gap-2 ${isNewRow ? "animate-wrong-in" : ""}`}
                 >
-                  <div className="flex h-14 w-full items-center justify-center sm:h-24">
+                  <div className="flex h-14 w-full -translate-y-1 items-center justify-center sm:h-24 sm:-translate-y-1">
                     <CardThumbnail cardKey={g.cardKey} size="md" />
                   </div>
                   {ATTR_KEYS.map((key, colIndex) => {
-                    const cell = g.attributes[key];
+                    const cell = g.attributes[key] ?? {
+                      value: key === "hitSpeed" ? (CARD_STATS[g.cardKey]?.hitSpeed ?? 0) :
+                             key === "speed" ? (CARD_STATS[g.cardKey]?.speed ?? "very_slow") :
+                             key === "releaseYear" ? new Date(CARD_STATS[g.cardKey]?.releaseDate ?? "1970-01-01").getUTCFullYear() :
+                             key === "elixirCost" ? (CARD_STATS[g.cardKey]?.elixirCost ?? 0) :
+                             key === "primaryTrait" ? (CARD_STATS[g.cardKey]?.primaryTrait ?? "none") :
+                             key === "secondaryTrait" ? (CARD_STATS[g.cardKey]?.secondaryTrait ?? "none") :
+                             key === "cardType" ? (CARD_STATS[g.cardKey]?.cardType ?? "Troop") :
+                             "—",
+                      result: "wrong" as const,
+                    };
                     return (
                     <div
                       key={key}

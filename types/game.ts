@@ -6,10 +6,11 @@ export interface AttributeResult {
   result: "correct" | "wrong" | "higher" | "lower";
 }
 
-// Classic game guess row — 6 attributes
+// Classic game guess row — 7 attributes
 export interface ClassicGuessAttributes {
-  rarity:         AttributeResult; // ordered: Common→Rare→Epic→Legendary→Champion
   elixirCost:     AttributeResult; // numeric: higher/lower/correct
+  hitSpeed:       AttributeResult; // numeric seconds: higher/lower/correct
+  speed:          AttributeResult; // ordered tier: very_slow→very_fast
   primaryTrait:   AttributeResult; // categorical: correct/wrong
   secondaryTrait: AttributeResult; // categorical: correct/wrong
   cardType:       AttributeResult; // categorical: Troop/Building
