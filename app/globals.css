@@ -125,8 +125,6 @@ html {
      scrollability toggles (e.g. short page + no wrong guesses, then search opens). */
   scrollbar-gutter: stable;
   overflow-y: scroll;
-  /* clip: does not pair with overflow-y:auto like hidden does, so abs dropdowns aren’t vertically clipped */
-  overflow-x: clip;
   overscroll-behavior-x: none;
 }
 html.dark { scrollbar-color: #4b5563 #111827; }

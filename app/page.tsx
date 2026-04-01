@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE } from "@/lib/content";
 import HomeInfographic from "@/components/HomeInfographic";
+import { StreakBadge } from "@/components/StreakBadge";
 import Image from "next/image";
 
 export const metadata: Metadata = {
@@ -39,9 +40,12 @@ export default function HomePage() {
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center">
         {/* Title + logo */}
         <div className="w-full px-4 pt-8 text-center sm:pt-10">
-          <h1 className="font-game text-center text-2xl leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] sm:text-3xl">
-            Merge Tactics Wordle
-          </h1>
+          <div className="relative flex items-center justify-center">
+            <div className="absolute -left-4 top-0"><StreakBadge inline /></div>
+            <h1 className="font-game text-center text-2xl leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] sm:text-3xl">
+              Merge Tactics Wordle
+            </h1>
+          </div>
           <h2 className="font-game mx-auto mt-2 max-w-lg text-center text-pretty text-sm leading-snug text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] sm:text-base">
             Guess the Clash Royale Merge Tactics card mini-game
           </h2>

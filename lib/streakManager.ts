@@ -317,6 +317,21 @@ export function getDisplayStreak(record: StreakRecord): number {
   return record.streak;
 }
 
+/**
+ * Effective streak for display: returns 0 if the streak is broken
+ * (today not completed AND last played wasn't yesterday).
+ * Still shows the streak count when today hasn't been played yet but
+ * yesterday was (streak is alive, user has today to keep it).
+ */
+export function getEffectiveDisplayStreak(record: StreakRecord): number {
+  const today = getUTCDateString();
+  if (record.completedDays.includes(today)) return record.streak;
+  if (!record.lastPlayed) return 0;
+  const yesterday = getUTCDateString(new Date(Date.now() - 86400000));
+  if (record.lastPlayed === yesterday) return record.streak;
+  return 0;
+}
+
 export function isTodayCompletedForUI(record: StreakRecord): boolean {
   return isTodayCompleted(record);
 }

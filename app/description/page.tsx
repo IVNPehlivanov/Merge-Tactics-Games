@@ -7,6 +7,7 @@ import BackToAllGames from "@/components/BackToAllGames";
 import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
 import HowToPlayModal from "@/components/HowToPlayModal";
+import { StreakBadge } from "@/components/StreakBadge";
 
 const SLUG = "description";
 
@@ -41,7 +42,9 @@ export default function DescriptionPage() {
       {/* Nav row */}
       <div className="mb-6 flex items-center justify-between gap-3">
         <BackToAllGames />
-        <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Description Quiz">
+        <div className="flex items-end gap-2">
+          <div className="-translate-y-1"><StreakBadge inline /></div>
+          <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Description Quiz">
           <h2 id="how-to-play-title" className="mb-2 text-base font-semibold text-white">
             How it works
           </h2>
@@ -74,6 +77,7 @@ export default function DescriptionPage() {
             <li><Link href="/skin" className="text-indigo-400 hover:underline">Skin Quiz</Link></li>
           </ul>
         </HowToPlayModal>
+        </div>
       </div>
 
       <DailyProgress currentSlug="description" />

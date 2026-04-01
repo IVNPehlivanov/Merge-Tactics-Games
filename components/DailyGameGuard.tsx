@@ -10,6 +10,8 @@ import {
 } from "@/lib/daily";
 import { getValidSkinPool } from "@/lib/skin-cards";
 import { fireWinConfettiFromViewportCenter } from "@/lib/win-confetti";
+import { updateStreakOnWin } from "@/lib/streakManager";
+import { dispatchStreakUpdated } from "@/components/StreakBadge";
 import ClassicGame from "@/app/classic/ClassicGame";
 import PixelGame from "@/app/pixel/PixelGame";
 import SkinGame from "@/app/skin/SkinGame";
@@ -46,6 +48,7 @@ export default function DailyGameGuard({ slug }: Props) {
     if (slug !== "classic") {
       requestAnimationFrame(() => fireWinConfettiFromViewportCenter());
     }
+    updateStreakOnWin().then(() => dispatchStreakUpdated());
     setHasPlayed(true);
   };
 

@@ -6,6 +6,7 @@ import BackToAllGames from "@/components/BackToAllGames";
 import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
 import HowToPlayModal from "@/components/HowToPlayModal";
+import { StreakBadge } from "@/components/StreakBadge";
 import Link from "next/link";
 
 const SLUG = "pixel";
@@ -33,7 +34,9 @@ export default function PixelPage() {
       {/* Nav row */}
       <div className="mb-6 flex items-center justify-between gap-3">
         <BackToAllGames />
-        <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Pixel Quiz">
+        <div className="flex items-end gap-2">
+          <div className="-translate-y-1"><StreakBadge inline /></div>
+          <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Pixel Quiz">
           <h2 id="how-to-play-title" className="mb-2 text-base font-semibold text-white">
             How it works
           </h2>
@@ -60,6 +63,7 @@ export default function PixelPage() {
             <li><Link href="/description" className="text-indigo-400 hover:underline">Description Quiz</Link></li>
           </ul>
         </HowToPlayModal>
+        </div>
       </div>
 
       <DailyProgress currentSlug="pixel" />
