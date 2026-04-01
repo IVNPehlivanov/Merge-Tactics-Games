@@ -165,7 +165,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "marksman",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description: "A tanky gunner who pushes 3 enemies back every few hits",
   },
   giant: {
@@ -178,7 +178,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "superstar",
     cardType: "Troop",
     troopRole: "Tank",
-    releaseDate: "2024-01-01",
+    releaseDate: "2026-02-23",
     description: "Throws the nearest enemy every few seconds, dealing damage based on target's max HP.",
   },
   valkyrie: {
@@ -191,7 +191,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "tank",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "A melee master who channels her rage into area Damage",
   },
   wizard: {
@@ -204,7 +204,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "hinder",
     cardType: "Troop",
     troopRole: "Magic",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description: "Throws a fireball at enemies in the area",
   },
   dart_goblin: {
@@ -217,7 +217,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "marksman",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "An unarmored ranged attacker who runs fast, shoots far, and chews gum?",
   },
   goblin_demolisher: {
@@ -230,7 +230,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "warrior",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-03-01",
+    releaseDate: "2026-02-23",
     description: "Rushes to lowest HP enemy and detonates below 50% HP with AoE damage",
   },
   // ─── Epic Troops ────────────────────────────────────────────────────────────
@@ -244,7 +244,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "dragon",
     cardType: "Troop",
     troopRole: "Flying",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description: "Burps big fireballs that deal damage in a wide area",
   },
   witch: {
@@ -257,7 +257,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "hinder",
     cardType: "Troop",
     troopRole: "Magic",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description: "Every few seconds, she summons Skeletons with 20% of her max HP and Attack Damage",
   },
   pekka: {
@@ -283,7 +283,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "warrior",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Combat Start: Charges at the nearest target, dealing double Damage, pushing back enemies and stunning them for 2s",
   },
   giant_skeleton: {
@@ -296,7 +296,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "tank",
     cardType: "Troop",
     troopRole: "Tank",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Upon defeat, he drops a bomb that explodes after 1.5s, dealing Damage and stunning enemies in his Hex Radius for 2s",
   },
   electro_giant: {
@@ -307,7 +307,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "giant",
     cardType: "Troop",
     troopRole: "Tank",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description:
       "Summons an electric field around himself, dealing damage and stunning nearby enemies every second",
   },
@@ -319,7 +319,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "thrower",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Throws his boomerang axe at the nearest target across several Hexes",
   },
   // ─── Legendary Troops ───────────────────────────────────────────────────────
@@ -331,7 +331,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "juggernaut",
     cardType: "Troop",
     troopRole: "Tank",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description:
       "Jumps and strikes the largest group of enemies every few seconds, dealing damage and stunning enemies in its Hex Radius for 2s",
   },
@@ -343,7 +343,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "mage",
     cardType: "Troop",
     troopRole: "Magic",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-09-29",
     description: "Shoots lightning with his hands, stunning multiple enemies every few seconds",
   },
   princess: {
@@ -354,7 +354,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "marksman",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Fires flaming arrows at the farthest enemy, dealing Damage in a 2-Hex Radius",
   },
   royal_ghost: {
@@ -365,7 +365,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "assassin",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Becomes invisible for 3s every few seconds",
   },
   bandit: {
@@ -376,7 +376,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description:
       "Dashes to the farthest enemy in 3 Hexes after certain hits, dealing bonus Damage and stunning all in her path for 1s",
   },
@@ -390,7 +390,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "superstar",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-03-01",
+    releaseDate: "2025-06-30",
     description: "Combat Start: Fires a rocket at the farthest enemy after certain hits, dealing 100% bonus Damage",
   },
   // ─── Champion Troops ────────────────────────────────────────────────────────
@@ -404,7 +404,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "assassin",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Dashes to the lowest HP enemy after defeating an enemy and deals bonus Damage",
   },
   skeleton_king: {
@@ -417,7 +417,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "warrior",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Deals Damage to enemies in a cone radius and summons a Skeleton for every enemy he defeats",
   },
   archer_queen: {
@@ -430,7 +430,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "superstar",
     cardType: "Troop",
     troopRole: "Ranged",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Fires multiple arrows at her closest enemies. When her HP drops below 50%, she'll turn invisible and deal bonus Damage",
   },
   monk: {
@@ -443,7 +443,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "tank",
     cardType: "Troop",
     troopRole: "Melee",
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-11-24",
     description: "Creates a Shield that deflects damage onto the offender and heals Monk for a few seconds every few hits",
   },
   // ─── Buildings ──────────────────────────────────────────────────────────────
@@ -455,7 +455,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Building",
     troopRole: null,
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-11-24",
     description: "Long-range building that deals damage to the furthest enemy, shooting boulders that go boom!",
   },
   tesla: {
@@ -466,7 +466,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Building",
     troopRole: null,
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-11-24",
     description: "Deals damage to nearby enemies, only popping up when one's in range… or if it needs little stretch",
   },
   inferno_tower: {
@@ -477,7 +477,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Building",
     troopRole: null,
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-11-24",
     description: "Damage increases over time when attacking the same target. It may only attack one enemy, but it sees them all.",
   },
   elixir_collector: {
@@ -488,7 +488,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Building",
     troopRole: null,
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-06-30",
     description: "Generates Elixir over time, pumped from deep below the Arena",
   },
   x_bow: {
@@ -499,7 +499,7 @@ export const CARD_STATS: Record<string, CardStats> = {
     secondaryTrait: "none",
     cardType: "Building",
     troopRole: null,
-    releaseDate: "2024-01-01",
+    releaseDate: "2025-11-24",
     description: "It may take a while to charge, but the rapid-fire payoff on the lowest HP enemy is worth the wait!",
   },
 };
