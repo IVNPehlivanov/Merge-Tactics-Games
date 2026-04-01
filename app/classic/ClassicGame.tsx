@@ -27,7 +27,6 @@ import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 import { useLockBodyScrollWhileDropdownOpen } from "@/lib/useLockBodyScrollWhileDropdownOpen";
 import { fireWinConfettiFromRect } from "@/lib/win-confetti";
-
 interface Props {
   dayKey: string;
   onSolved: () => void;
@@ -178,6 +177,8 @@ function AttributeCell({
             </span>
           </span>
         </span>
+      ) : attrKey === "releaseYear" ? (
+        <span className="relative z-10 whitespace-nowrap text-center drop-shadow-sm">{displayValue}</span>
       ) : (
         <span className="relative z-10 min-w-0 text-center drop-shadow-sm">
           {String(displayValue).split(" ").map((word, i) => (
@@ -196,8 +197,14 @@ const ATTR_KEYS: (keyof ClassicGuessAttributes)[] = [
   "elixirCost", "cardType", "primaryTrait", "secondaryTrait", "hitSpeed", "speed", "releaseYear",
 ];
 
+const ATTRIBUTE_COLUMNS: { key: keyof ClassicGuessAttributes; label: (typeof ATTR_LABELS)[number] }[] =
+  ATTR_KEYS.map((key, i) => ({ key, label: ATTR_LABELS[i] }));
+
+/** Share row width on desktop (13% + 7×12.43% = 100%) — table stays within panel, no PC horizontal scroll */
+const CARD_COL_PCT = "13%";
+const ATTR_COL_PCT = `${87 / 7}%`;
+
 const CELL_DELAY_MS = 200;
-const WIN_DELAY_MS  = ATTR_KEYS.length * CELL_DELAY_MS + 500; // 1700ms
 
 // -- Main component --
 
@@ -222,6 +229,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   const confettiPendingRef = useRef(false);
   /** Scroll win panel into view only after a fresh correct guess, not on hydrate from storage. */
   const scrollWinPanelIntoViewRef = useRef(false);
+
+  const winDelayMs = ATTR_KEYS.length * CELL_DELAY_MS + 500;
+
   // Restore persisted state
   useEffect(() => {
     const saved = getPersistedGameState<PersistedState>("classic", dayKey);
@@ -242,9 +252,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
       setShowWinMsg(true);
       setStaggerWinningRow(false);
       justWonRef.current = false;
-    }, WIN_DELAY_MS);
+    }, winDelayMs);
     return () => clearTimeout(t);
-  }, [won]);
+  }, [won, winDelayMs]);
 
   // Confetti from the green win panel (not viewport center while the attribute row is animating).
   useEffect(() => {
@@ -433,86 +443,132 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
         </section>
       )}
 
-      {/* ── Guess table (in progress: all rows; after win: wrong rows then correct row with attributes) ── */}
-      {guessesToShow.length > 0 && (
-        <section className="relative z-0 mx-auto w-fit max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
-          <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">
-            YOUR GUESSES
-          </h3>
+      {/* ── Guess table ── */}
+      {(!won || guesses.length > 0) && (
+        <>
+          <section className="relative z-0 mx-auto w-full max-w-full rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm">
+            <h3 className="mb-3 text-center font-supercell text-sm font-bold uppercase tracking-wide text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-base">
+              Your guesses
+            </h3>
 
-          <div className="mx-auto w-fit max-w-full overflow-x-auto overscroll-x-contain pb-4 [-webkit-overflow-scrolling:touch] touch-pan-x sm:overflow-visible sm:pb-0">
-          {/* Column headers */}
-          <div className="guess-grid mb-1 grid gap-2 font-game text-[10px] text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.9)] sm:text-sm">
-            <div className="translate-y-0.5 text-center sm:translate-y-1">Card</div>
-            {ATTR_LABELS.map((label) => (
-              <div
-                key={label}
-                className={`text-center leading-tight ${
-                  label === "Type" || label === "Speed" ? "translate-y-0.5 sm:translate-y-1" : ""
-                }`}
+            <div className="max-sm:overflow-x-auto max-sm:overscroll-x-contain sm:overflow-x-visible [-webkit-overflow-scrolling:touch] touch-pan-x max-sm:touch-pan-x">
+              <table
+                className="w-full min-w-0 table-fixed border-collapse text-base max-sm:min-w-[548px]"
               >
-                {label === "Trait 1" ? (
-                  <>
-                    <span className="block">Trait</span>
-                    <span className="block">1</span>
-                  </>
-                ) : label === "Trait 2" ? (
-                  <>
-                    <span className="block">Trait</span>
-                    <span className="block">2</span>
-                  </>
-                ) : (
-                  label
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Rows */}
-          <div className="space-y-2">
-            {guessesToShow.map((g, rowIndex) => {
-              const staggerCells =
-                (!won && rowIndex === 0) || (won && staggerWinningRow && rowIndex === 0);
-              return (
-                <div
-                  key={g.cardKey}
-                  className={`guess-grid grid items-stretch gap-2 ${staggerCells ? "animate-wrong-in" : ""}`}
-                >
-                  <div className="flex h-14 w-full -translate-y-1 items-center justify-center sm:h-24 sm:-translate-y-1">
-                    <CardThumbnail cardKey={g.cardKey} size="md" />
-                  </div>
-                  {ATTR_KEYS.map((key, colIndex) => {
-                    const cell = g.attributes[key] ?? {
-                      value: key === "hitSpeed" ? (CARD_STATS[g.cardKey]?.hitSpeed ?? 0) :
-                             key === "speed" ? (CARD_STATS[g.cardKey]?.speed ?? "very_slow") :
-                             key === "releaseYear" ? new Date(CARD_STATS[g.cardKey]?.releaseDate ?? "1970-01-01").getUTCFullYear() :
-                             key === "elixirCost" ? (CARD_STATS[g.cardKey]?.elixirCost ?? 0) :
-                             key === "primaryTrait" ? (CARD_STATS[g.cardKey]?.primaryTrait ?? "none") :
-                             key === "secondaryTrait" ? (CARD_STATS[g.cardKey]?.secondaryTrait ?? "none") :
-                             key === "cardType" ? (CARD_STATS[g.cardKey]?.cardType ?? "Troop") :
-                             "—",
-                      result: "wrong" as const,
-                    };
+                <colgroup>
+                  <col style={{ width: CARD_COL_PCT }} />
+                  {ATTRIBUTE_COLUMNS.map((c) => (
+                    <col key={c.key} style={{ width: ATTR_COL_PCT }} />
+                  ))}
+                </colgroup>
+                <thead>
+                  <tr className="border-b border-gray-300 font-supercell dark:border-gray-700">
+                    <th className="px-0.5 py-1.5 text-center text-[0.4375rem] font-semibold text-white sm:px-2 sm:py-4 sm:text-base">
+                      Card
+                    </th>
+                    {ATTRIBUTE_COLUMNS.map(({ key, label }) => (
+                      <th
+                        key={key}
+                        className={`px-0.5 py-1.5 text-center text-[0.4375rem] font-semibold leading-tight text-white sm:px-2 sm:py-4 sm:text-base ${
+                          key === "releaseYear" ? "min-w-0" : "min-w-0 break-words"
+                        }`}
+                      >
+                        {label === "Trait 1" || label === "Trait 2" ? (
+                          <>
+                            <span className="block">Trait</span>
+                            <span className="block">{label === "Trait 1" ? "1" : "2"}</span>
+                          </>
+                        ) : label === "Elixir Cost" || label === "Hit Speed" ? (
+                          <>
+                            {label === "Elixir Cost" ? (
+                              <>
+                                <span className="block">Elixir</span>
+                                <span className="block">Cost</span>
+                              </>
+                            ) : (
+                              <>
+                                <span className="block">Hit</span>
+                                <span className="block">Speed</span>
+                              </>
+                            )}
+                          </>
+                        ) : key === "releaseYear" ? (
+                          <>
+                            <span className="block whitespace-nowrap">Release</span>
+                            <span className="block whitespace-nowrap">Date</span>
+                          </>
+                        ) : (
+                          label
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {guessesToShow.map((g, rowIndex) => {
+                    const staggerCells =
+                      (!won && rowIndex === 0) || (won && staggerWinningRow && rowIndex === 0);
                     return (
-                    <div
-                      key={key}
-                      className={staggerCells ? "animate-attribute-reveal" : ""}
-                      style={staggerCells ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" } : undefined}
-                    >
-                      <AttributeCell
-                        attrKey={key}
-                        value={cell.value}
-                        result={cell.result}
-                      />
-                    </div>
+                      <tr
+                        key={g.cardKey}
+                        className={`border-b border-gray-200 dark:border-gray-700 ${staggerCells ? "animate-wrong-in" : ""}`}
+                      >
+                        <td className="px-1 py-2 align-top sm:px-2 sm:py-4">
+                          <div className="flex flex-col items-center gap-1">
+                            <div className="relative -mt-2 h-16 w-16 sm:hidden">
+                              <CardThumbnail cardKey={g.cardKey} size="lg" />
+                            </div>
+                            <div className="relative -mt-3 hidden h-24 w-24 sm:block">
+                              <CardThumbnail cardKey={g.cardKey} size="xl" />
+                            </div>
+                          </div>
+                        </td>
+                        {ATTRIBUTE_COLUMNS.map(({ key }, colIndex) => {
+                          const cell = g.attributes[key] ?? {
+                            value:
+                              key === "hitSpeed"
+                                ? (CARD_STATS[g.cardKey]?.hitSpeed ?? 0)
+                                : key === "speed"
+                                  ? (CARD_STATS[g.cardKey]?.speed ?? "very_slow")
+                                  : key === "releaseYear"
+                                    ? new Date(CARD_STATS[g.cardKey]?.releaseDate ?? "1970-01-01").getUTCFullYear()
+                                    : key === "elixirCost"
+                                      ? (CARD_STATS[g.cardKey]?.elixirCost ?? 0)
+                                      : key === "primaryTrait"
+                                        ? (CARD_STATS[g.cardKey]?.primaryTrait ?? "none")
+                                        : key === "secondaryTrait"
+                                          ? (CARD_STATS[g.cardKey]?.secondaryTrait ?? "none")
+                                          : key === "cardType"
+                                            ? (CARD_STATS[g.cardKey]?.cardType ?? "Troop")
+                                            : "—",
+                            result: "wrong" as const,
+                          };
+                          return (
+                            <td key={key} className="min-w-0 px-1 py-2 align-top sm:px-2 sm:py-4">
+                              <div
+                                className={staggerCells ? "animate-attribute-reveal" : ""}
+                                style={
+                                  staggerCells
+                                    ? {
+                                        animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`,
+                                        animationFillMode: "both",
+                                      }
+                                    : undefined
+                                }
+                              >
+                                <AttributeCell attrKey={key} value={cell.value} result={cell.result} />
+                              </div>
+                            </td>
+                          );
+                        })}
+                      </tr>
                     );
                   })}
-                </div>
-              );
-            })}
-          </div>
-          </div>{/* end overflow-x-auto */}
-        </section>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
       )}
 
       {/* ── Win message (below YOUR GUESSES) ── */}

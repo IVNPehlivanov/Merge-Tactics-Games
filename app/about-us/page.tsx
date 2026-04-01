@@ -4,7 +4,7 @@ import BackToAllGames from "@/components/BackToAllGames";
 
 const TITLE = "About Mergedle | Daily Merge Tactics Puzzle Games";
 const DESCRIPTION =
-  "Learn about Mergedle, the free daily Merge Tactics puzzle hub with 3 Wordle-style mini-games. Built by fans, for the community. No account required.";
+  "Learn about Mergedle, the free daily Merge Tactics puzzle hub with 4 Wordle-style mini-games. Built by fans, for the community. No account required.";
 
 export function generateMetadata(): Metadata {
   return {
@@ -39,78 +39,43 @@ export default function AboutPage() {
 
         <section className="space-y-4">
           <p>
-            Mergedle is a free daily puzzle hub for Merge Tactics fans. We built it because
-            we play Merge Tactics and wanted a daily challenge that goes beyond the game itself
-            — something that tests your card knowledge, your memory of artwork, and your grasp
-            of card stats. The result is 3 different mini-games, each approaching the same idea
-            from a different angle, with more modes on the way.
-          </p>
-          <p>
-            The site runs entirely in your browser. No ads, no sponsored content, no account
-            required. All game state — your streak, your daily progress, your stats — lives in
-            your browser&apos;s local storage. Nothing is sent to a server.
+            Mergedle offers daily browser-based guessing games where you can test your knowledge of
+            Clash Royale Merge Tactics. All game state like your streak and your daily progress lives in
+            your browser&apos;s local storage.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">The 3 Game Modes</h2>
+          <h2 className="text-white font-semibold text-base mb-3">The 4 Game Modes</h2>
           <ul className="space-y-3">
             <li>
-              <strong className="text-white">Classic Wordle:</strong> Guess the daily card
-              using stat clues — Elixir Cost, Primary Trait, Secondary Trait, Type, and
-              Release Year. Green means an exact match. Arrows point higher or lower for
-              numeric fields. Unlimited guesses, one new card per day.
+              <strong className="text-white">Classic Wordle:</strong> Guess the daily card by using stat
+              clues - Elixir Cost, Primary Trait, Secondary Trait, Type, Hit Speed, Speed and Release Year.
+              Green means it&apos;s an exact match. Arrows point higher or lower to the correct value on some
+              of the fields.
             </li>
             <li>
-              <strong className="text-white">Merge Tactics Pixel Quiz:</strong> Identify the card from its
-              pixelated artwork. The image starts heavily blurred and gets clearer with each
-              wrong guess. The earlier you get it, the better your score.
+              <strong className="text-white">Pixel Quiz:</strong> Guess the card or ruler from its
+              pixelated version. The image starts heavily blurred and gets clearer with each wrong guess.
             </li>
             <li>
-              <strong className="text-white">Skin Quiz:</strong> A Merge Tactics skin is
-              shown — your job is to name which card owns it. Pure cosmetic knowledge, no stat
-              clues, no blur. Either you know it or you don&apos;t.
+              <strong className="text-white">Skin Quiz:</strong> Guess the skin from a zoomed grayscale
+              image. The image starts heavily zoomed in and zooms out more with each wrong guess.
+            </li>
+            <li>
+              <strong className="text-white">Description Quiz:</strong> Guess the card or ruler by its
+              cut-off description. Each wrong guess reveals another word.
             </li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">How It Works</h2>
-          <p>
-            Daily puzzles are seeded by UTC date, so every player worldwide sees the same card
-            each day. Puzzles reset at midnight UTC. All 3 modes are free and run entirely in
-            the browser — there is no backend and no user accounts. Your streak and game history
-            are stored in your browser&apos;s localStorage. Clearing browser data will reset
-            your progress.
-          </p>
-        </section>
-
-        <section>
           <h2 className="text-white font-semibold text-base mb-3">Contact &amp; Feedback</h2>
           <p>
-            Mergedle is built and maintained by a small team of Merge Tactics players. We read
-            every message we receive. If you have a bug report, a suggestion, or just want to
-            say the Skin puzzle stumped you, reach out at{" "}
+            Mergedle is built and maintained by a small team. We read every message we receive. If you
+            have a bug report or a suggestion, you can reach out at{" "}
             <a href={`mailto:${SITE.contactEmail}`} className="text-indigo-400 hover:text-indigo-300 underline">
               {SITE.contactEmail}
-            </a>.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white font-semibold text-base mb-3">Disclaimer</h2>
-          <p>
-            Mergedle is an independent fan site and is not affiliated with, endorsed, sponsored,
-            or approved by Supercell Oy. Merge Tactics and all related trademarks and intellectual
-            property remain the property of Supercell Oy. This site operates in accordance with
-            the{" "}
-            <a
-              href="https://supercell.com/en/fan-content-policy/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-indigo-400 hover:text-indigo-300 underline"
-            >
-              Supercell Fan Content Policy
             </a>.
           </p>
         </section>

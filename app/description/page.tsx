@@ -13,7 +13,7 @@ const SLUG = "description";
 export function generateMetadata(): Metadata {
   return {
     title: "Merge Tactics Description Quiz | Mergedle",
-    description: "Read the in-game description and guess which Merge Tactics card it belongs to. Daily Wordle-style game — free, no login.",
+    description: "Read the in-game description and guess which Merge Tactics card it belongs to. Daily Wordle-style game - free, no login.",
     keywords: ["merge tactics wordle", "guess the card", "mergedle description"],
     alternates: { canonical: `${SITE.url}/${SLUG}` },
     openGraph: {
@@ -26,17 +26,11 @@ export function generateMetadata(): Metadata {
 
 const FAQS = [
   {
-    question: "How do I play Description mode?",
+    question: "How do I play Merge Tactics Description Quiz?",
     answer:
-      "Part of the in-game description is shown. Type a card or ruler name to guess today's answer.",
+      "Part of the in-game description is shown. Each wrong guess reveals one more random word from the description of the card or ruler.",
   },
-  {
-    question: "Why isn't the full description visible?",
-    answer:
-      "Many words start hidden. About a quarter are shown at first; each wrong guess reveals one more word until the full text appears.",
-  },
-  { question: "How many guesses do I get?", answer: "Unlimited — try to get it in as few as possible!" },
-  { question: "When does it reset?", answer: "Every day at midnight UTC." },
+  { question: "When does the game reset?", answer: "Every day at midnight UTC. A new description is selected for all players worldwide." },
 ];
 
 export default function DescriptionPage() {
@@ -48,32 +42,20 @@ export default function DescriptionPage() {
       <div className="mb-6 flex items-center justify-between gap-3">
         <BackToAllGames />
         <HowToPlayModal triggerAriaLabel="How to Play Merge Tactics Description Quiz">
-          <h2 id="how-to-play-title" className="mb-4 text-xl font-bold text-white">
-            How to Play Merge Tactics Description Quiz
+          <h2 id="how-to-play-title" className="mb-2 text-base font-semibold text-white">
+            How it works
           </h2>
-          <p className="text-sm text-slate-300">
-            You see part of an in-game description — guess which card or ruler it belongs to before the full text appears.
-          </p>
-
-          <h3 className="mb-2 mt-4 text-base font-semibold text-white">How it works</h3>
           <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
             <li>
-              <strong className="text-white">Cut-off text</strong> — many words are hidden at first; you only see a slice of the description.
+              <strong className="text-white">Cut-off text</strong> - many words are hidden at first; you only see a slice of the description.
             </li>
             <li>
-              <strong className="text-white">More words over time</strong> — roughly 25% of words are visible to start; each wrong guess reveals one more word (same order for everyone that day).
+              <strong className="text-white">More words over time</strong> - roughly 25% of words are visible to start; each wrong guess reveals one more word.
             </li>
             <li>
-              <strong className="text-white">Type and guess</strong> — search any troop, building, or ruler name.
-            </li>
-            <li>
-              <strong className="text-white">Unlimited guesses</strong> — fewer guesses means a better score and streak.
+              <strong className="text-white">Unlimited guesses</strong> - you have an unlimited amount of wrong guesses until you get it right.
             </li>
           </ul>
-
-          <p className="mt-4 text-sm text-slate-300">
-            A new description challenge unlocks every day at midnight UTC. Come back daily to keep your streak!
-          </p>
 
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
           <div className="space-y-4">
@@ -87,21 +69,9 @@ export default function DescriptionPage() {
 
           <h3 className="mb-2 mt-6 text-base font-semibold text-white">More Games</h3>
           <ul className="space-y-1 text-sm text-slate-300">
-            <li>
-              <Link href="/classic" className="text-indigo-400 hover:underline">
-                Classic Wordle — guess from stat clues
-              </Link>
-            </li>
-            <li>
-              <Link href="/pixel" className="text-indigo-400 hover:underline">
-                Merge Tactics Pixel Quiz — guess from a blurred image
-              </Link>
-            </li>
-            <li>
-              <Link href="/skin" className="text-indigo-400 hover:underline">
-                Skin Quiz — identify the card from a skin
-              </Link>
-            </li>
+            <li><Link href="/classic" className="text-indigo-400 hover:underline">Classic Wordle</Link></li>
+            <li><Link href="/pixel" className="text-indigo-400 hover:underline">Pixel Quiz</Link></li>
+            <li><Link href="/skin" className="text-indigo-400 hover:underline">Skin Quiz</Link></li>
           </ul>
         </HowToPlayModal>
       </div>
