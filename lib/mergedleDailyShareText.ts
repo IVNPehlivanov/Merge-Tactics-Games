@@ -1,11 +1,11 @@
 import { SITE, getGameMetaBySlug } from "@/lib/content";
 import { DAILY_GAME_SLUGS, type DailyGameSlug, getPersistedGameState } from "@/lib/daily";
 
-/** Labels in the daily results share blurb (may differ from page `title` / SEO). */
-const SHARE_LINE_GAME_NAME: Partial<Record<DailyGameSlug, string>> = {
-  pixel: "Pixel Quiz",
-  description: "Description Quiz",
-};
+/** Short names for share lines — same idea as homepage / Daily Progress (`homeTitle` first). */
+function shareLineGameName(slug: DailyGameSlug): string {
+  const meta = getGameMetaBySlug(slug);
+  return meta?.homeTitle ?? meta?.progressTitle ?? meta?.title ?? slug;
+}
 
 type ModeShareStatus = "won" | "in_progress" | "none";
 
@@ -13,8 +13,8 @@ function modeShareOutcome(
   slug: DailyGameSlug,
   dayKey: string,
 ): { tries: number; status: ModeShareStatus } {
-  if (slug === "classic") {
-    const s = getPersistedGameState<{ guesses?: unknown[]; won?: boolean }>("classic", dayKey);
+  if (slug === "classic" || slug === "description") {
+    const s = getPersistedGameState<{ guesses?: unknown[]; won?: boolean }>(slug, dayKey);
     if (!s) return { tries: 0, status: "none" };
     const n = s.guesses?.length ?? 0;
     if (s.won) {
@@ -41,7 +41,7 @@ export function buildMergedleDailyShareText(dayKey: string): string {
   const lines: string[] = ["My #Mergedle results for today:"];
 
   for (const slug of DAILY_GAME_SLUGS) {
-    const gameName = SHARE_LINE_GAME_NAME[slug] ?? getGameMetaBySlug(slug)?.title ?? slug;
+    const gameName = shareLineGameName(slug);
     const { tries, status } = modeShareOutcome(slug, dayKey);
     const w = tries === 1 ? "Try" : "Tries";
 

@@ -22,12 +22,14 @@ import {
   type DescriptionToken,
 } from "@/lib/description-reveal";
 import NextModeLink from "@/components/NextModeLink";
+import { RoyaledlyPromoBox } from "@/components/RoyaledlyPromoBox";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import ClassicShareBox from "@/components/ClassicShareBox";
 import Image from "next/image";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
 import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
+import { useLockBodyScrollWhileDropdownOpen } from "@/lib/useLockBodyScrollWhileDropdownOpen";
 
 /** Small gray underscores per letter — sans font, not the game display font. */
 function HiddenWordSpans({ letterCount }: { letterCount: number }) {
@@ -65,18 +67,34 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
 
   const [guesses, setGuesses] = useState<string[]>([]);
   const [won, setWon] = useState(false);
+  /** false = restored win / revisit: win panel above wrong guesses. true = fresh win this load: win below wrong guesses. */
+  const [winPanelBelowGuesses, setWinPanelBelowGuesses] = useState(true);
   const [search, setSearch] = useState("");
   const [dropdownOpen, setDropdown] = useState(false);
   const [error, setError] = useState("");
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchSectionRef = useRef<HTMLDivElement>(null);
+  const winPanelRef = useRef<HTMLElement | null>(null);
+  const scrollWinPanelIntoViewRef = useRef(false);
+
+  useEffect(() => {
+    if (!won || !scrollWinPanelIntoViewRef.current) return;
+    scrollWinPanelIntoViewRef.current = false;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        winPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [won]);
 
   useEffect(() => {
     const saved = getPersistedGameState<PersistedState>("description", dayKey);
     if (saved && saved.secretKey === secretKey) {
       setGuesses(saved.guesses);
       setWon(saved.won);
+      setWinPanelBelowGuesses(!saved.won);
     }
   }, [dayKey, secretKey]);
 
@@ -102,6 +120,8 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
     });
 
   useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
+
+  useLockBodyScrollWhileDropdownOpen(!won && dropdownOpen && !!search.trim());
 
   useFocusSearchOnTyping(searchInputRef, {
     enabled: !won,
@@ -143,6 +163,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
     setGuesses(newGuesses);
     persist(newGuesses, isWon);
     if (isWon) {
+      scrollWinPanelIntoViewRef.current = true;
       setWon(true);
       markPlayedToday("description");
       onSolved();
@@ -183,6 +204,33 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
     setError("Select a card from the list.");
   };
 
+  const winPanelSection =
+    won ? (
+      <section
+        ref={winPanelRef}
+        className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
+      >
+        <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
+          You guessed correctly!
+        </p>
+        <p className="mt-3 font-game text-2xl font-bold text-white">{getDescriptionDisplayName(secretKey)}!</p>
+        <div className="mt-2 flex justify-center">
+          <Image src={descriptionImagePath(secretKey)} alt={getDescriptionDisplayName(secretKey)} width={80} height={80} className="rounded-xl" unoptimized />
+        </div>
+        <p className="mt-4 font-supercell text-sm text-white sm:text-base">
+          Number of tries: {guesses.length}
+        </p>
+        <ClassicShareBox dayKey={dayKey} className="mt-6" />
+        <div className="mt-6">
+          <DailyResetTimer />
+        </div>
+        <NextModeLink currentSlug="description" />
+        <div className="mt-4">
+          <RoyaledlyPromoBox />
+        </div>
+      </section>
+    ) : null;
+
   return (
     <div className="mx-auto w-full max-w-md space-y-6 px-4">
       <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm sm:p-5">
@@ -217,7 +265,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
       </section>
 
       {!won && (
-        <section ref={searchSectionRef} className="relative w-full min-w-0">
+        <section ref={searchSectionRef} className="relative z-30 w-full min-w-0">
           <div className="relative w-full min-w-0">
             <form onSubmit={handleFormSubmit} className="relative w-full min-w-0">
               <input
@@ -274,7 +322,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
             {dropdownOpen && search.trim() && (
               <div
                 ref={dropdownRef}
-                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1 shadow-lg"
+                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 rounded-xl border-2 border-gray-300 bg-white py-1"
                 role="listbox"
                 data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
                 onPointerLeave={onDropdownPointerLeave}
@@ -291,9 +339,9 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                           data-search-active={highlightIndex === optionIndex ? "true" : undefined}
                           {...optionPointerHandlers(optionIndex)}
                           onClick={() => submitGuess(k)}
-                          className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                          className="card-search-option flex w-full items-center bg-white text-left text-base font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
-                          <Image src={descriptionImagePath(k)} alt="" width={40} height={40} className="h-10 w-10 rounded object-contain" unoptimized />
+                          <Image src={descriptionImagePath(k)} alt="" width={56} height={56} className="card-search-dropdown-thumb rounded object-contain" unoptimized />
                           <span className="text-base font-medium">{getDescriptionDisplayName(k)}</span>
                         </button>
                       </li>
@@ -308,28 +356,10 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
 
       {error && <p className="text-center text-sm font-medium text-red-300 drop-shadow">{error}</p>}
 
-      {won && (
-        <section className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
-          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
-            You guessed correctly!
-          </p>
-          <p className="mt-3 font-game text-2xl font-bold text-white">{getDescriptionDisplayName(secretKey)}!</p>
-          <div className="mt-2 flex justify-center">
-            <Image src={descriptionImagePath(secretKey)} alt={getDescriptionDisplayName(secretKey)} width={80} height={80} className="rounded-xl" unoptimized />
-          </div>
-          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
-            Number of tries: {guesses.length}
-          </p>
-          <ClassicShareBox dayKey={dayKey} className="mt-6" />
-          <div className="mt-6">
-            <DailyResetTimer />
-          </div>
-          <NextModeLink currentSlug="description" />
-        </section>
-      )}
+      {!winPanelBelowGuesses && winPanelSection}
 
       {guessesToShow.length > 0 && (
-        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm font-game">
+        <section className="relative z-0 rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm font-game">
           <h3 className="mb-3 text-center text-sm font-semibold uppercase tracking-wide text-white/90">
             {won ? "Wrong guesses" : "Your guesses"}
           </h3>
@@ -362,6 +392,8 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
           </div>
         </section>
       )}
+
+      {winPanelBelowGuesses && winPanelSection}
     </div>
   );
 }

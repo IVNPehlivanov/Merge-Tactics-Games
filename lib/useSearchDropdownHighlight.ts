@@ -41,7 +41,16 @@ export function useSearchDropdownHighlight(options: {
     const root = dropdownRef.current;
     if (!root) return;
     const el = root.querySelector<HTMLElement>(`[data-search-option-index="${highlightIndex}"]`);
-    el?.scrollIntoView({ block: "nearest" });
+    if (!el) return;
+    // Keep scroll inside the dropdown only — scrollIntoView() also scrolls the page on desktop.
+    const pad = 4;
+    const rootRect = root.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    if (elRect.top < rootRect.top + pad) {
+      root.scrollTop -= rootRect.top + pad - elRect.top;
+    } else if (elRect.bottom > rootRect.bottom - pad) {
+      root.scrollTop += elRect.bottom - (rootRect.bottom - pad);
+    }
   }, [enabled, highlightIndex]);
 
   function handleArrowKeys(e: ReactKeyboardEvent) {

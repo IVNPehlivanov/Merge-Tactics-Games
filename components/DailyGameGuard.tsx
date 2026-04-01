@@ -67,7 +67,7 @@ export default function DailyGameGuard({ slug }: Props) {
     );
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="flex w-full min-w-0 flex-col items-center">
       {game}
       {isDev && hasPlayed && (
         <div className="mt-8 w-full max-w-md space-y-2 rounded-xl border border-indigo-400/30 bg-indigo-400/5 p-3">

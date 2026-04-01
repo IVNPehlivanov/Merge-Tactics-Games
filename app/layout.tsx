@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-950 text-white min-h-screen`}
-        style={{ backgroundColor: "#030712", color: "#f9fafb", minHeight: "100vh" }}
+        style={{ backgroundColor: "#030712", color: "#f9fafb" }}
       >
         {children}
         <div className="relative z-20">

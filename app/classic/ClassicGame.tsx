@@ -19,11 +19,13 @@ import {
 import { getTraitDisplayName } from "@/lib/traits";
 import type { ClassicGuess, ClassicGuessAttributes, AttributeResult } from "@/types/game";
 import NextModeLink from "@/components/NextModeLink";
+import { RoyaledlyPromoBox } from "@/components/RoyaledlyPromoBox";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import ClassicShareBox from "@/components/ClassicShareBox";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
 import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
+import { useLockBodyScrollWhileDropdownOpen } from "@/lib/useLockBodyScrollWhileDropdownOpen";
 import { fireWinConfettiFromRect } from "@/lib/win-confetti";
 
 interface Props {
@@ -92,15 +94,24 @@ function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuess
 
 // -- Sub-components --
 
-function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" | "md" | "lg" | "xl" }) {
+function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" | "md" | "lg" | "xl" | "search" }) {
   const [failed, setFailed] = useState(false);
   const src = cardImagePath(cardKey);
-  const dim = size === "xl" ? "h-24 w-24" : size === "lg" ? "h-16 w-16" : size === "md" ? "h-14 w-14 sm:h-20 sm:w-20" : "h-10 w-10";
-  const px  = size === "xl" ? 96 : size === "lg" ? 64 : size === "md" ? 80 : 40;
+  const dim =
+    size === "search"
+      ? "" /* unused — search uses .card-search-dropdown-thumb on the img */
+      : size === "xl"
+        ? "h-24 w-24"
+        : size === "lg"
+          ? "h-16 w-16"
+          : size === "md"
+            ? "h-14 w-14 sm:h-20 sm:w-20"
+            : "h-10 w-10";
+  const px = size === "search" ? 56 : size === "xl" ? 96 : size === "lg" ? 64 : size === "md" ? 80 : 40;
   if (failed) {
     return (
       <div
-        className={`flex flex-shrink-0 items-center justify-center rounded bg-white/10 text-white/40 text-lg ${dim}`}
+        className={`flex flex-shrink-0 items-center justify-center rounded bg-white/10 text-white/40 text-lg ${size === "search" ? "card-search-dropdown-thumb" : dim}`}
         style={{ minWidth: px, minHeight: px }}
         aria-hidden
       >?</div>
@@ -112,7 +123,11 @@ function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" 
       alt=""
       width={px}
       height={px}
-      className={`${dim} flex-shrink-0 rounded object-contain`}
+      className={
+        size === "search"
+          ? "card-search-dropdown-thumb rounded object-contain"
+          : `${dim} flex-shrink-0 rounded object-contain`
+      }
       onError={() => setFailed(true)}
     />
   );
@@ -193,6 +208,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   const [guesses, setGuesses]       = useState<ClassicGuess[]>([]);
   const [won, setWon]               = useState(false);
   const [showWinMsg, setShowWinMsg] = useState(false);
+  /** Stagger attribute cells on the winning row (won=true skips the old `!won && rowIndex===0` path). */
+  const [staggerWinningRow, setStaggerWinningRow] = useState(false);
   const [search, setSearch]         = useState("");
   const [dropdownOpen, setDropdown] = useState(false);
 
@@ -203,6 +220,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
   const winPanelRef      = useRef<HTMLElement | null>(null);
   /** True only for a win in this session (not restored from localStorage) — gates confetti once. */
   const confettiPendingRef = useRef(false);
+  /** Scroll win panel into view only after a fresh correct guess, not on hydrate from storage. */
+  const scrollWinPanelIntoViewRef = useRef(false);
   // Restore persisted state
   useEffect(() => {
     const saved = getPersistedGameState<PersistedState>("classic", dayKey);
@@ -216,11 +235,12 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     }
   }, [dayKey, secretKey]);
 
-  // Show win message after animations finish
+  // Show win message after attribute stagger finishes; clear winning-row animation flags
   useEffect(() => {
     if (!won || !justWonRef.current) return;
     const t = setTimeout(() => {
       setShowWinMsg(true);
+      setStaggerWinningRow(false);
       justWonRef.current = false;
     }, WIN_DELAY_MS);
     return () => clearTimeout(t);
@@ -239,7 +259,21 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
     return () => cancelAnimationFrame(id);
   }, [showWinMsg, won]);
 
+  // After win panel mounts, center it in the viewport (fresh win only).
+  useEffect(() => {
+    if (!showWinMsg || !won || !scrollWinPanelIntoViewRef.current) return;
+    scrollWinPanelIntoViewRef.current = false;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        winPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [showWinMsg, won]);
+
   useDismissDropdownOnOutside(searchSectionRef, () => setDropdown(false));
+
+  useLockBodyScrollWhileDropdownOpen(!won && dropdownOpen && !!search.trim());
 
   useFocusSearchOnTyping(searchInputRef, {
     enabled: !won,
@@ -296,7 +330,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
     if (isWon) {
       confettiPendingRef.current = true;
+      scrollWinPanelIntoViewRef.current = true;
       justWonRef.current = true;
+      setStaggerWinningRow(true);
       setWon(true);
       markPlayedToday("classic");
       onSolved();
@@ -318,7 +354,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
 
       {/* ── Search input ── */}
       {!won && (
-        <section ref={searchSectionRef} className="relative mx-auto w-full max-w-md px-4">
+        <section ref={searchSectionRef} className="relative z-30 mx-auto w-full max-w-md px-4">
           <div className="relative w-full min-w-0">
             <input
               ref={searchInputRef}
@@ -365,7 +401,7 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
             {dropdownOpen && search.trim() && (
               <div
                 ref={dropdownRef}
-                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
+                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 rounded-xl border-2 border-gray-300 bg-white py-1"
                 role="listbox"
                 data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
                 onPointerLeave={onDropdownPointerLeave}
@@ -382,9 +418,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                             data-search-active={highlightIndex === optionIndex ? "true" : undefined}
                             {...optionPointerHandlers(optionIndex)}
                             onClick={() => { handleGuess(key); }}
-                            className="flex w-full items-center gap-4 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                            className="card-search-option flex w-full items-center bg-white text-left text-base font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                           >
-                            <CardThumbnail cardKey={key} size="md" />
+                            <CardThumbnail cardKey={key} size="search" />
                             <span className="text-base font-medium">{getCardDisplayName(key)}</span>
                           </button>
                         </li>
@@ -397,41 +433,9 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
         </section>
       )}
 
-      {/* ── Win message (above wrong-guess rows) ── */}
-      {won && showWinMsg && (
-        <section
-          ref={winPanelRef}
-          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
-        >
-          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
-            You guessed correctly!
-          </p>
-          <p className="mt-3 font-game text-2xl font-bold text-white">
-            {getCardDisplayName(secretKey)}!
-          </p>
-          <div className="mt-2">
-            <img
-              src={cardImagePath(secretKey)}
-              alt={getCardDisplayName(secretKey)}
-              width={120}
-              height={120}
-              className="mx-auto rounded-xl border border-white/20"
-            />
-          </div>
-          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
-            Number of tries: {guesses.length}
-          </p>
-          <ClassicShareBox dayKey={dayKey} className="mt-6" />
-          <div className="mt-6">
-            <DailyResetTimer />
-          </div>
-          <NextModeLink currentSlug="classic" />
-        </section>
-      )}
-
       {/* ── Guess table (in progress: all rows; after win: wrong rows then correct row with attributes) ── */}
       {guessesToShow.length > 0 && (
-        <section className="mx-auto w-fit max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
+        <section className="relative z-0 mx-auto w-fit max-w-full overflow-hidden rounded-xl border-2 border-white/40 bg-white/10 p-3 backdrop-blur-sm">
           <h3 className="mb-3 text-center font-game text-lg font-bold tracking-wide text-white">
             YOUR GUESSES
           </h3>
@@ -467,11 +471,12 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
           {/* Rows */}
           <div className="space-y-2">
             {guessesToShow.map((g, rowIndex) => {
-              const isNewRow = !won && rowIndex === 0;
+              const staggerCells =
+                (!won && rowIndex === 0) || (won && staggerWinningRow && rowIndex === 0);
               return (
                 <div
                   key={g.cardKey}
-                  className={`guess-grid grid items-stretch gap-2 ${isNewRow ? "animate-wrong-in" : ""}`}
+                  className={`guess-grid grid items-stretch gap-2 ${staggerCells ? "animate-wrong-in" : ""}`}
                 >
                   <div className="flex h-14 w-full -translate-y-1 items-center justify-center sm:h-24 sm:-translate-y-1">
                     <CardThumbnail cardKey={g.cardKey} size="md" />
@@ -491,8 +496,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                     return (
                     <div
                       key={key}
-                      className={isNewRow ? "animate-attribute-reveal" : ""}
-                      style={isNewRow ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" } : undefined}
+                      className={staggerCells ? "animate-attribute-reveal" : ""}
+                      style={staggerCells ? { animationDelay: `${(colIndex + 1) * CELL_DELAY_MS}ms`, animationFillMode: "both" } : undefined}
                     >
                       <AttributeCell
                         attrKey={key}
@@ -507,6 +512,41 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
             })}
           </div>
           </div>{/* end overflow-x-auto */}
+        </section>
+      )}
+
+      {/* ── Win message (below YOUR GUESSES) ── */}
+      {won && showWinMsg && (
+        <section
+          ref={winPanelRef}
+          className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
+        >
+          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
+            You guessed correctly!
+          </p>
+          <p className="mt-3 font-game text-2xl font-bold text-white">
+            {getCardDisplayName(secretKey)}!
+          </p>
+          <div className="mt-2">
+            <img
+              src={cardImagePath(secretKey)}
+              alt={getCardDisplayName(secretKey)}
+              width={120}
+              height={120}
+              className="mx-auto rounded-xl border border-white/20"
+            />
+          </div>
+          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
+            Number of tries: {guesses.length}
+          </p>
+          <ClassicShareBox dayKey={dayKey} className="mt-6" />
+          <div className="mt-6">
+            <DailyResetTimer />
+          </div>
+          <NextModeLink currentSlug="classic" />
+          <div className="mt-4">
+            <RoyaledlyPromoBox />
+          </div>
         </section>
       )}
     </div>

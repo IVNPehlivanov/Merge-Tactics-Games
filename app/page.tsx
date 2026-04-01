@@ -25,7 +25,7 @@ const websiteSchema = {
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen flex flex-col items-center overflow-x-hidden">
+    <main className="relative min-h-screen flex flex-col items-center overflow-x-clip">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }} />
       {/* Background */}
       <link rel="preload" href="/homepage/March_Season_-_Dagger_Duchess_Skin_Color_v1.webp" as="image" />

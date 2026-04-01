@@ -55,7 +55,7 @@ export function useFocusSearchOnTyping(
       const current = input.value;
       const next = isBackspace ? current.slice(0, -1) : current + e.key;
       commitRef.current(next);
-      input.focus();
+      input.focus({ preventScroll: true });
     };
 
     window.addEventListener("keydown", onKeyDown, true);

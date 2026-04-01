@@ -11,6 +11,7 @@ import {
 } from "@/lib/daily";
 import type { SkinEntry } from "@/lib/skin-cards";
 import NextModeLink from "@/components/NextModeLink";
+import { RoyaledlyPromoBox } from "@/components/RoyaledlyPromoBox";
 import DailyResetTimer from "@/components/DailyResetTimer";
 import ClassicShareBox from "@/components/ClassicShareBox";
 import { useFocusSearchOnTyping } from "@/lib/useFocusSearchOnTyping";
@@ -57,13 +58,28 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
 
   const [wrongGuesses, setWrongGuesses] = useState<string[]>([]);
   const [won,          setWon]          = useState(false);
+  /** false = restored win / revisit: win panel above wrong guesses. true = fresh win this load: win below wrong guesses. */
+  const [winPanelBelowGuesses, setWinPanelBelowGuesses] = useState(true);
   const [search,       setSearch]       = useState("");
   const [dropdownOpen, setDropdown]     = useState(false);
 
   const searchInputRef   = useRef<HTMLInputElement>(null);
   const searchSectionRef = useRef<HTMLDivElement>(null);
+  const winPanelRef      = useRef<HTMLElement | null>(null);
+  const scrollWinPanelIntoViewRef = useRef(false);
   // Seed the zoom quadrant from dayKey so all players see the same corner
   const quadrantOrigin = QUADRANT_ORIGINS[seededIndex(dayKey + "_skin_q", 4)];
+
+  useEffect(() => {
+    if (!won || !scrollWinPanelIntoViewRef.current) return;
+    scrollWinPanelIntoViewRef.current = false;
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        winPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [won]);
 
   // Restore persisted state
   useEffect(() => {
@@ -71,6 +87,7 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     if (saved && saved.secretSkinName === secretEntry.skinName) {
       setWrongGuesses(saved.wrongGuesses ?? []);
       if (saved.won) setWon(true);
+      setWinPanelBelowGuesses(!saved.won);
     }
   }, [dayKey, secretEntry.skinName]);
 
@@ -111,6 +128,7 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     setDropdown(false);
 
     if (skinName === secretEntry.skinName) {
+      scrollWinPanelIntoViewRef.current = true;
       setWon(true);
       markPlayedToday("skin");
       setPersistedGameState("skin", dayKey, { wrongGuesses, won: true, secretSkinName: secretEntry.skinName, secretSkinImagePath: secretEntry.imagePath });
@@ -134,10 +152,46 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     handleGuess(filteredSkins[0].skinName);
   }
 
-  return (
-    <div className="w-full space-y-6">
+  const winPanelSection =
+    won ? (
+      <section
+        ref={winPanelRef}
+        className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm"
+      >
+        <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
+          You guessed correctly!
+        </p>
+        <p className="mt-3 font-game text-2xl font-bold text-white">{secretEntry.skinName}!</p>
+        <p className="mt-1 font-game text-sm text-white/60">{rulerName}</p>
+        <div className="mt-4 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={secretEntry.imagePath}
+            alt={secretEntry.skinName}
+            width={168}
+            height={168}
+            className="rounded-xl border border-white/20 shadow-lg object-cover"
+            style={{ width: 168, height: 168 }}
+          />
+        </div>
+        <p className="mt-4 font-supercell text-sm text-white sm:text-base">
+          Number of tries: {wrongGuesses.length + 1}
+        </p>
+        <ClassicShareBox dayKey={dayKey} className="mt-6" />
+        <div className="mt-6">
+          <DailyResetTimer />
+        </div>
+        <NextModeLink currentSlug="skin" />
+        <div className="mt-4">
+          <RoyaledlyPromoBox />
+        </div>
+      </section>
+    ) : null;
 
-      {/* ── Zoomed skin image (in play only — full art lives in win panel) ── */}
+  return (
+    <div className="w-full space-y-6 max-md:pb-48">
+
+      {/* ── Skin image (same layout pattern as Classic: image block, then search block) ── */}
       {!won && (
         <section className="flex flex-col items-center gap-3">
           <div
@@ -162,39 +216,9 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
         </section>
       )}
 
-      {/* ── Win box ── */}
-      {won && (
-        <section className="animate-win-message mx-auto max-w-md rounded-xl border-2 border-green-500/60 bg-white/10 p-6 text-center backdrop-blur-sm">
-          <p className="font-supercell text-lg font-bold tracking-wide text-green-400 drop-shadow-[0_2px_0_rgba(0,0,0,0.5)] sm:text-xl">
-            You guessed correctly!
-          </p>
-          <p className="mt-3 font-game text-2xl font-bold text-white">{secretEntry.skinName}!</p>
-          <p className="mt-1 font-game text-sm text-white/60">{rulerName}</p>
-          <div className="mt-4 flex justify-center">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={secretEntry.imagePath}
-              alt={secretEntry.skinName}
-              width={168}
-              height={168}
-              className="rounded-xl border border-white/20 shadow-lg object-cover"
-              style={{ width: 168, height: 168 }}
-            />
-          </div>
-          <p className="mt-4 font-supercell text-sm text-white sm:text-base">
-            Number of tries: {wrongGuesses.length + 1}
-          </p>
-          <ClassicShareBox dayKey={dayKey} className="mt-6" />
-          <div className="mt-6">
-            <DailyResetTimer />
-          </div>
-          <NextModeLink currentSlug="skin" />
-        </section>
-      )}
-
-      {/* ── Search input ── */}
+      {/* ── Search — matches ClassicGame markup/classes ── */}
       {!won && (
-        <section ref={searchSectionRef} className="relative mx-auto w-full max-w-md px-4">
+        <section ref={searchSectionRef} className="relative z-30 mx-auto w-full max-w-md px-4">
           <div className="relative w-full min-w-0">
             <input
               ref={searchInputRef}
@@ -238,7 +262,7 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
             {dropdownOpen && search.trim() && (
               <div
                 ref={dropdownRef}
-                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 overflow-y-auto rounded-xl border-2 border-gray-300 bg-white py-1"
+                className="card-search-dropdown absolute top-full left-0 right-0 z-50 mt-1 rounded-xl border-2 border-gray-300 bg-white py-1"
                 role="listbox"
                 data-keyboard-nav={highlightIndex >= 0 ? "true" : undefined}
                 onPointerLeave={onDropdownPointerLeave}
@@ -255,15 +279,15 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
                           data-search-active={highlightIndex === optionIndex ? "true" : undefined}
                           {...optionPointerHandlers(optionIndex)}
                           onClick={() => handleGuess(s.skinName)}
-                          className="flex w-full items-center gap-3 bg-white px-4 py-3 text-left text-gray-900 transition-colors hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                          className="card-search-option flex w-full min-w-0 items-center bg-white text-left text-base font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
                           <img
                             src={s.imagePath}
                             alt={s.skinName}
-                            className="h-12 w-12 flex-shrink-0 rounded-lg object-cover"
+                            className="card-search-dropdown-thumb rounded-lg object-cover"
                           />
-                          <span className="flex-1 text-base font-medium">{s.skinName}</span>
-                          <span className="text-sm text-gray-400">{getRulerByKey(s.rulerKey)?.name}</span>
+                          <span className="min-w-0 flex-1 truncate">{s.skinName}</span>
+                          <span className="shrink-0 text-sm text-gray-500">{getRulerByKey(s.rulerKey)?.name}</span>
                         </button>
                       </li>
                     ))}
@@ -275,9 +299,11 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
         </section>
       )}
 
+      {!winPanelBelowGuesses && winPanelSection}
+
       {/* ── Wrong guesses ── */}
       {wrongGuesses.length > 0 && (
-        <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm font-game">
+        <section className="relative z-0 rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm font-game">
           <h3 className="mb-3 text-center text-sm font-semibold uppercase tracking-wide text-white/90">
             Wrong guesses
           </h3>
@@ -293,6 +319,8 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
           </div>
         </section>
       )}
+
+      {winPanelBelowGuesses && winPanelSection}
     </div>
   );
 }

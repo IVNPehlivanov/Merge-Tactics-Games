@@ -96,25 +96,3 @@ mergedle/
 3. Fill trait data in `lib/traits.ts`
 4. Fill skin pool in `lib/skin-cards.ts` (only cards where hasSkins: true)
 5. Critical SEO: og:image, GameSchema on all pages, llms.txt
-
-## Completed Tasks
-- [x] Initial scaffold created (mergdle_scaffold.md)
-- [x] Full project scaffolded — all files created
-- [x] Removed "Coming Soon" slots from homepage game list (HomeInfographic now shows active games only)
-- [x] Removed Pixel helper text line under the image/search area
-- [x] Removed Skin helper text line under the image/search area
-- [x] Fixed Pixel blank-image days by restricting rulers to keys with shipped local ruler art
-- [x] Restyled game-page question-mark help button to match requested icon design
-- [x] Fixed Royale King skin asset paths for Marble/Santa/Velvet/Ghoul in skin pool
-- [x] Fixed Pixel mode persistence so wrong-guess progress restores after leaving and returning
-- [x] Added the "Want more?" Royaledly box to all game pages via shared GamePageBackground
-- [x] Restored Description mode as active (route, DailyGameGuard rendering, progress flow, and internal game links)
-- [x] Matched Description “Your guesses” panel styling to Pixel wrong-guess rows (frosted panel, red/green glass rows, thumbnails)
-- [x] Description mode: word reveal follows left-to-right reading order for all players (replaces seeded shuffle)
-- [x] Updated `card-stats` descriptions for Spear Goblins, Bomber, Mini P.E.K.K.A., Electro Giant, Executioner, Mega Knight, Electro Wizard, Princess, Royal Ghost, Bandit
-- [x] Share results UI (`ClassicShareBox`) aligned with Royaledly `DailyResultsShareBox` layout (Mergedle copy text + `buildMergedleDailyShareText` unchanged)
-- [x] Win confetti from card center: `lib/win-confetti.ts` + `DailyGameGuard` summary (Royaledly-style); removed per-game confetti that never ran after instant `onSolved` unmount
-- [x] Dev reliability: static imports in `DailyGameGuard`; `next.config` dev `Cache-Control` on `/_next/static` only; shell/layout fallbacks; `npm run dev:fresh` kills port 3000 + `npm run clean` + `next dev` (fixes 404 on `webpack.js` / `layout.css` when a zombie/stale `next dev` serves HTML whose `?v=` chunks no longer exist)
-- [x] IndexNow matches Royaledly: `scripts/submit-indexnow.mjs` (sitemap → verify key → one Bing POST with full `urlList`); `app/api/indexnow/route.ts` same flow for `GET ?secret=` after deploy
-- [x] Corrected `Goblin Machine` elixir cost in `lib/card-stats.ts` from 5 to 4
-- [x] Removed `rarity` as a Classic mode attribute (logic, headers/types, and grid column count)
