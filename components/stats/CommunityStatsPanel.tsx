@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { fetchCommunityStats } from "@/lib/community-stats-client";
 import { cardImagePath, getCardDisplayName, getCardKeys, CARD_STATS } from "@/lib/card-stats";
 import { getRulerByKey, getRulerKeys, pixelRulerCardImagePath } from "@/lib/ruler-stats";
 import { getDailySecretFromPool, DAILY_GAME_SLUGS } from "@/lib/daily";
 import { getValidSkinPool } from "@/lib/skin-cards";
 import { getClassicCardKeys } from "@/lib/card-stats";
 import { getDescriptionGameKeys } from "@/lib/description-game";
-import type { CommunityStatsResponse } from "@/lib/community-stats";
 
 const PIXEL_ENABLED_RULER_KEYS = new Set([
   "spirit_empress", "goblin_queen", "elixir_loong", "battle_machine",
@@ -91,23 +89,12 @@ interface Props {
 }
 
 export function CommunityStatsPanel({ gameSlug, dayKey }: Props) {
-  const [stats, setStats] = useState<CommunityStatsResponse | null>(null);
-  const [clientYesterdayKey, setClientYesterdayKey] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchCommunityStats(gameSlug, dayKey)
-      .then((data) => { if (!cancelled) setStats(data); })
-      .catch(() => { if (!cancelled) setStats(null); });
-    return () => { cancelled = true; };
-  }, [gameSlug, dayKey]);
+  const [displayKey, setDisplayKey] = useState<string | null>(null);
 
   useEffect(() => {
     if (!(DAILY_GAME_SLUGS as readonly string[]).includes(gameSlug)) return;
-    setClientYesterdayKey(getClientYesterdayKey(gameSlug, dayKey));
+    setDisplayKey(getClientYesterdayKey(gameSlug, dayKey));
   }, [gameSlug, dayKey]);
-
-  const displayKey = stats?.yesterdayCardKey ?? clientYesterdayKey;
   const displayInfo = displayKey ? getDisplayInfo(gameSlug, displayKey) : null;
 
   return (
