@@ -8,6 +8,7 @@ import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
 import HowToPlayModal from "@/components/HowToPlayModal";
 import { StreakBadge } from "@/components/StreakBadge";
+import { CommunityStatsPanelWrapper } from "@/components/stats/CommunityStatsPanelWrapper";
 
 const SLUG = "description";
 
@@ -81,6 +82,7 @@ export default function DescriptionPage() {
       </div>
 
       <DailyProgress currentSlug="description" />
+      <CommunityStatsPanelWrapper gameSlug="description" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Merge Tactics Description Quiz</h1>
       <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Can you guess the card or ruler by its cut-off description?</h2>
       <DailyGameGuard slug={SLUG} />

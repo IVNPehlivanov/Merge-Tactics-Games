@@ -133,7 +133,7 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
       markPlayedToday("skin");
       setPersistedGameState("skin", dayKey, { wrongGuesses, won: true, secretSkinName: secretEntry.skinName, secretSkinImagePath: secretEntry.imagePath });
       onSolved({
-        cardKey: secretEntry.rulerKey,
+        cardKey: secretEntry.skinName,
         guessCount: wrongGuesses.length + 1,
         wrongGuessKeys: wrongGuesses,
       });

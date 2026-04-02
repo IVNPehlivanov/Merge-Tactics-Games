@@ -7,6 +7,7 @@ import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
 import HowToPlayModal from "@/components/HowToPlayModal";
 import { StreakBadge } from "@/components/StreakBadge";
+import { CommunityStatsPanelWrapper } from "@/components/stats/CommunityStatsPanelWrapper";
 import Link from "next/link";
 
 const SLUG = "classic";
@@ -69,6 +70,7 @@ export default function ClassicPage() {
       </div>
 
       <DailyProgress currentSlug="classic" />
+      <CommunityStatsPanelWrapper gameSlug="classic" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Merge Tactics Wordle</h1>
       <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Guess the Daily Card</h2>
       <p className="font-game -mt-4 mb-6 text-center text-sm text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Current Season Cards and Stats</p>

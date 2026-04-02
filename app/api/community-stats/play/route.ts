@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { DAILY_GAME_SLUGS, type PostPlayPayload, type PostPlayResponse } from "@/lib/community-stats";
 import { getCardKeys } from "@/lib/card-stats";
+import { getValidSkinPool } from "@/lib/skin-cards";
 function getUTCDateString(date: Date = new Date()): string {
   const y = date.getUTCFullYear();
   const m = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -11,6 +12,10 @@ function getUTCDateString(date: Date = new Date()): string {
 
 function getAllCardKeys(): Set<string> {
   return new Set(getCardKeys());
+}
+
+function getAllSkinNames(): Set<string> {
+  return new Set(getValidSkinPool().map((s) => s.skinName));
 }
 
 async function sha256(message: string): Promise<string> {
@@ -55,7 +60,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (typeof guessCount !== "number" || guessCount < 1 || guessCount > 50) {
     return NextResponse.json({ ok: false, error: "Invalid guessCount" }, { status: 400 });
   }
-  const allKeys = getAllCardKeys();
+  const isSkinGame = gameSlug === "skin";
+  const allKeys = isSkinGame ? getAllSkinNames() : getAllCardKeys();
   if (!allKeys.has(cardKey)) {
     return NextResponse.json({ ok: false, error: "Invalid cardKey" }, { status: 400 });
   }

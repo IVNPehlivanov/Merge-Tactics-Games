@@ -7,6 +7,7 @@ import GamePageBackground from "@/components/GamePageBackground";
 import GameSchema from "@/components/seo/GameSchema";
 import HowToPlayModal from "@/components/HowToPlayModal";
 import { StreakBadge } from "@/components/StreakBadge";
+import { CommunityStatsPanelWrapper } from "@/components/stats/CommunityStatsPanelWrapper";
 import Link from "next/link";
 
 const SLUG = "skin";
@@ -67,6 +68,7 @@ export default function SkinPage() {
       </div>
 
       <DailyProgress currentSlug="skin" />
+      <CommunityStatsPanelWrapper gameSlug="skin" />
       <h1 className="font-game text-3xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] text-center mt-6">Merge Tactics Skin Quiz</h1>
       <h2 className="font-game mb-6 text-center text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">Can you guess the skin from a zoomed grayscale image?</h2>
       <DailyGameGuard slug={SLUG} />
