@@ -27,9 +27,10 @@ import { useDismissDropdownOnOutside } from "@/lib/useDismissDropdownOnOutside";
 import { useSearchDropdownHighlight } from "@/lib/useSearchDropdownHighlight";
 import { useLockBodyScrollWhileDropdownOpen } from "@/lib/useLockBodyScrollWhileDropdownOpen";
 import { fireWinConfettiFromRect } from "@/lib/win-confetti";
+import type { SolvedPayload } from "@/components/DailyGameGuard";
 interface Props {
   dayKey: string;
-  onSolved: () => void;
+  onSolved: (payload: SolvedPayload) => void;
 }
 
 interface PersistedState {
@@ -345,7 +346,11 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
       setStaggerWinningRow(true);
       setWon(true);
       markPlayedToday("classic");
-      onSolved();
+      onSolved({
+        cardKey: secretKey,
+        guessCount: newGuesses.length,
+        wrongGuessKeys: newGuesses.slice(0, -1).map((g) => g.cardKey),
+      });
     }
   }
 

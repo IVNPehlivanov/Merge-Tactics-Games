@@ -50,9 +50,10 @@ function HiddenWordSpans({ letterCount }: { letterCount: number }) {
   );
 }
 
+import type { SolvedPayload } from "@/components/DailyGameGuard";
 interface Props {
   dayKey: string;
-  onSolved: () => void;
+  onSolved: (payload: SolvedPayload) => void;
 }
 
 interface PersistedState {
@@ -69,6 +70,8 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
   const [won, setWon] = useState(false);
   /** false = restored win / revisit: win panel above wrong guesses. true = fresh win this load: win below wrong guesses. */
   const [winPanelBelowGuesses, setWinPanelBelowGuesses] = useState(true);
+  const [giveawayId, setGiveawayId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [search, setSearch] = useState("");
   const [dropdownOpen, setDropdown] = useState(false);
   const [error, setError] = useState("");
@@ -95,6 +98,12 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
       setGuesses(saved.guesses);
       setWon(saved.won);
       setWinPanelBelowGuesses(!saved.won);
+      if (saved.won) {
+        fetch(`/api/my-id?day=${dayKey}`)
+          .then((r) => r.json())
+          .then((data: { id: string | null }) => { if (data.id) setGiveawayId(data.id); })
+          .catch(() => {});
+      }
     }
   }, [dayKey, secretKey]);
 
@@ -166,7 +175,15 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
       scrollWinPanelIntoViewRef.current = true;
       setWon(true);
       markPlayedToday("description");
-      onSolved();
+      onSolved({
+        cardKey: secretKey,
+        guessCount: newGuesses.length,
+        wrongGuessKeys: newGuesses.slice(1).map((g) => g),
+      });
+      fetch(`/api/my-id?day=${dayKey}`)
+        .then((r) => r.json())
+        .then((data: { id: string | null }) => { if (data.id) setGiveawayId(data.id); })
+        .catch(() => {});
     }
   };
 
@@ -220,6 +237,28 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
         <p className="mt-4 font-supercell text-sm text-white sm:text-base">
           Number of tries: {guesses.length}
         </p>
+        {giveawayId && (
+          <div className="mt-4 rounded-lg border border-yellow-400/40 bg-yellow-400/10 p-3">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-300">
+              Giveaway Entry ID
+            </p>
+            <p className="mb-3 break-all font-mono text-xs text-white/80">
+              {giveawayId}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(giveawayId).then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                });
+              }}
+              className="rounded-md bg-yellow-400 px-4 py-1.5 text-xs font-bold text-black transition hover:bg-yellow-300"
+            >
+              {copied ? "Copied!" : "Copy ID"}
+            </button>
+          </div>
+        )}
         <ClassicShareBox dayKey={dayKey} className="mt-6" />
         <div className="mt-6">
           <DailyResetTimer />

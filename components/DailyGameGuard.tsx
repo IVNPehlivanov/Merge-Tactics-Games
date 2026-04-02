@@ -12,10 +12,17 @@ import { getValidSkinPool } from "@/lib/skin-cards";
 import { fireWinConfettiFromViewportCenter } from "@/lib/win-confetti";
 import { updateStreakOnWin } from "@/lib/streakManager";
 import { dispatchStreakUpdated } from "@/components/StreakBadge";
+import { recordPlay } from "@/lib/community-stats-client";
 import ClassicGame from "@/app/classic/ClassicGame";
 import PixelGame from "@/app/pixel/PixelGame";
 import SkinGame from "@/app/skin/SkinGame";
 import DescriptionGame from "@/app/description/DescriptionGame";
+
+export interface SolvedPayload {
+  cardKey: string;
+  guessCount: number;
+  wrongGuessKeys: string[];
+}
 
 interface Props {
   slug: string;
@@ -43,12 +50,19 @@ export default function DailyGameGuard({ slug }: Props) {
     );
   }
 
-  const onSolved = () => {
-    // Classic fires confetti from the green win panel after attribute animations (see ClassicGame).
+  const onSolved = (payload: SolvedPayload) => {
     if (slug !== "classic") {
       requestAnimationFrame(() => fireWinConfettiFromViewportCenter());
     }
     updateStreakOnWin().then(() => dispatchStreakUpdated());
+    recordPlay({
+      gameSlug: slug,
+      dayKey,
+      cardKey: payload.cardKey,
+      guessCount: payload.guessCount,
+      won: true,
+      wrongGuessKeys: payload.wrongGuessKeys,
+    });
     setHasPlayed(true);
   };
 

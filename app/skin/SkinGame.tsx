@@ -28,7 +28,7 @@ const QUADRANT_ORIGINS = ["0% 0%", "100% 0%", "0% 100%", "100% 100%"];
 interface Props {
   secretEntry: SkinEntry;
   dayKey: string;
-  onSolved: () => void;
+  onSolved: (payload: import("@/components/DailyGameGuard").SolvedPayload) => void;
 }
 
 interface PersistedState {
@@ -132,7 +132,11 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
       setWon(true);
       markPlayedToday("skin");
       setPersistedGameState("skin", dayKey, { wrongGuesses, won: true, secretSkinName: secretEntry.skinName, secretSkinImagePath: secretEntry.imagePath });
-      onSolved();
+      onSolved({
+        cardKey: secretEntry.rulerKey,
+        guessCount: wrongGuesses.length + 1,
+        wrongGuessKeys: wrongGuesses,
+      });
       return;
     }
 

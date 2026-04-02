@@ -148,7 +148,8 @@ function buildPool(): PoolEntry[] {
 }
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-interface Props { dayKey: string; onSolved: () => void; }
+import type { SolvedPayload } from "@/components/DailyGameGuard";
+interface Props { dayKey: string; onSolved: (payload: SolvedPayload) => void; }
 interface PersistedState { wrongGuesses: string[]; won: boolean; secretKey: string; }
 
 function pickBestPersistedState(
@@ -260,7 +261,11 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
       if (liveDayKey !== dayKey) {
         setPersistedGameState("pixel", liveDayKey, solvedState);
       }
-      onSolved();
+      onSolved({
+        cardKey: secretKey,
+        guessCount: wrongGuessesRef.current.length + 1,
+        wrongGuessKeys: wrongGuessesRef.current,
+      });
       return;
     }
 
