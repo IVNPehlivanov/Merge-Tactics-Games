@@ -238,7 +238,10 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
           Number of tries: {guesses.length}
         </p>
         {giveawayId && (
-          <div className="mt-4 rounded-lg border border-yellow-400/40 bg-yellow-400/10 p-3">
+          <div
+            className="mt-4 hidden rounded-lg border border-yellow-400/40 bg-yellow-400/10 p-3"
+            aria-hidden
+          >
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-yellow-300">
               Giveaway Entry ID
             </p>
