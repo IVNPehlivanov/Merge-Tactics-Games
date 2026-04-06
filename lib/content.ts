@@ -2,6 +2,7 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://mergedle.com",
   name: process.env.NEXT_PUBLIC_SITE_NAME ?? "Mergedle",
   contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "contact@mergedle.com",
+  xUrl: "https://x.com/Mergedle",
 };
 
 export type GameMetaItem = {

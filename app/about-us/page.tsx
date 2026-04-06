@@ -74,9 +74,13 @@ export default function AboutPage() {
           <p>
             Mergedle is built and maintained by a small team. We read every message we receive. If you
             have a bug report or a suggestion, you can reach out at{" "}
-            <a href={`mailto:${SITE.contactEmail}`} className="text-indigo-400 hover:text-indigo-300 underline">
+            <a
+              href={`mailto:${SITE.contactEmail}`}
+              className="text-[#00B9E7] no-underline transition-colors duration-200 hover:text-[#4ddbff] [text-shadow:0_2px_4px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.95)]"
+            >
               {SITE.contactEmail}
-            </a>.
+            </a>
+            .
           </p>
         </section>
       </div>

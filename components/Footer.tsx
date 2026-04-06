@@ -4,25 +4,8 @@ import { GAME_META, SITE } from "@/lib/content";
 const footerAccentLinkClass =
   "text-sky-400 no-underline transition-colors hover:text-sky-300 [text-shadow:0_1px_4px_rgba(0,0,0,0.95),0_2px_10px_rgba(0,0,0,0.85),0_0_12px_rgba(56,189,248,0.35)]";
 
-function MailIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2}
-      stroke="currentColor"
-      aria-hidden
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
-      />
-    </svg>
-  );
-}
+const footerContactLinkClass =
+  "inline-flex items-center gap-1.5 text-[0.78rem] text-[#00B9E7] no-underline transition-colors duration-200 hover:text-[#4ddbff] [text-shadow:0_2px_4px_rgba(0,0,0,0.85),0_1px_2px_rgba(0,0,0,0.95)]";
 
 function BrandBlurb() {
   return (
@@ -31,13 +14,19 @@ function BrandBlurb() {
         Mergedle offers daily browser-based guessing games where you can test your knowledge of Clash Royale
         Merge Tactics.
       </p>
-      <a
-        href={`mailto:${SITE.contactEmail}`}
-        className={`mt-3 inline-flex items-center gap-1.5 text-xs ${footerAccentLinkClass}`}
-      >
-        <MailIcon className="h-3.5 w-3.5 shrink-0" />
-        {SITE.contactEmail}
-      </a>
+      <div className="mt-3 flex flex-col items-center gap-[10px] md:items-start">
+        <a href={`mailto:${SITE.contactEmail}`} className={footerContactLinkClass}>
+          ✉ {SITE.contactEmail}
+        </a>
+        <a
+          href={SITE.xUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={footerContactLinkClass}
+        >
+          𝕏 @Mergedle
+        </a>
+      </div>
     </>
   );
 }
