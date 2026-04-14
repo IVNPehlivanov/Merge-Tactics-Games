@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getDayKey,
   hasPlayedOnDay,
@@ -12,11 +12,68 @@ import { getValidSkinPool } from "@/lib/skin-cards";
 import { fireWinConfettiFromViewportCenter } from "@/lib/win-confetti";
 import { updateStreakOnWin } from "@/lib/streakManager";
 import { dispatchStreakUpdated } from "@/components/StreakBadge";
-import { recordPlay } from "@/lib/community-stats-client";
+import { recordPlay, fetchCommunityStats } from "@/lib/community-stats-client";
 import ClassicGame from "@/app/classic/ClassicGame";
 import PixelGame from "@/app/pixel/PixelGame";
 import SkinGame from "@/app/skin/SkinGame";
 import DescriptionGame from "@/app/description/DescriptionGame";
+
+function LivePlayerCount({ slug, dayKey, justSolved }: { slug: string; dayKey: string; justSolved: boolean }) {
+  const [count, setCount] = useState<number | null>(null);
+  const [optimisticBump, setOptimisticBump] = useState(0);
+  const lastServerCountRef = useRef(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    lastServerCountRef.current = 0;
+    const applyStats = (d: Awaited<ReturnType<typeof fetchCommunityStats>>) => {
+      if (!d || cancelled) return;
+      if (d.playerCount > lastServerCountRef.current) {
+        lastServerCountRef.current = d.playerCount;
+        setOptimisticBump(0);
+      } else {
+        lastServerCountRef.current = d.playerCount;
+      }
+      setCount(d.playerCount);
+    };
+    fetchCommunityStats(slug, dayKey).then((d) => {
+      if (cancelled) return;
+      if (d) applyStats(d);
+      else {
+        lastServerCountRef.current = 0;
+        setCount(0);
+      }
+    });
+    const interval = setInterval(() => {
+      fetchCommunityStats(slug, dayKey).then((d) => {
+        if (cancelled || !d) return;
+        applyStats(d);
+      });
+    }, 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [slug, dayKey]);
+
+  useEffect(() => {
+    if (justSolved) setOptimisticBump(1);
+  }, [justSolved]);
+
+  const displayed = count !== null ? count + optimisticBump : null;
+  const countText =
+    displayed === null
+      ? "\u00A0"
+      : displayed === 0
+        ? "Be the first to find out today!"
+        : `${displayed.toLocaleString()} ${displayed === 1 ? "person has" : "people have"} already found out!`;
+
+  return (
+    <div className="mb-4 shrink-0 flex items-center justify-center h-[44px] min-h-[44px] text-center overflow-hidden">
+      <p className="font-supercell text-sm font-bold text-yellow-400">{countText}</p>
+    </div>
+  );
+}
 
 export interface SolvedPayload {
   cardKey: string;
@@ -32,6 +89,7 @@ export default function DailyGameGuard({ slug }: Props) {
   const [mounted, setMounted] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [dayKey, setDayKey] = useState("");
+  const [justSolved, setJustSolved] = useState(false);
   const isDev = typeof window !== "undefined" && window.location.hostname === "localhost";
 
   useEffect(() => {
@@ -63,6 +121,7 @@ export default function DailyGameGuard({ slug }: Props) {
       won: true,
       wrongGuessKeys: payload.wrongGuessKeys,
     });
+    setJustSolved(true);
     setHasPlayed(true);
   };
 
@@ -85,6 +144,7 @@ export default function DailyGameGuard({ slug }: Props) {
 
   return (
     <div className="flex w-full min-w-0 flex-col items-center">
+      <LivePlayerCount slug={slug} dayKey={dayKey} justSolved={justSolved} />
       {game}
       {isDev && hasPlayed && (
         <div className="mt-8 w-full max-w-md space-y-2 rounded-xl border border-indigo-400/30 bg-indigo-400/5 p-3">
