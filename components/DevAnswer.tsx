@@ -20,6 +20,7 @@ const PIXEL_ENABLED_RULER_KEYS = new Set<string>([
   "echo_sage",
   "dagger_duchess",
   "royale_king",
+  "grand_warden",
 ]);
 
 function buildPixelPoolKeys(): string[] {

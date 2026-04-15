@@ -66,6 +66,14 @@ export const RULERS: Record<string, Ruler> = {
     modifierDescription: "Leaves you a Dagger to equip to any troop",
     skins: ["Disguised Duchess", "Duchess of Hearts", "Crystalline Duchess"],
   },
+  grand_warden: {
+    key: "grand_warden",
+    name: "Grand Warden",
+    description: "A bookworm with great knowledge of the mighty shield. Grand Warden's unparalleled powers give his allies the gift of confidence and charisma.",
+    modifierName: "",
+    modifierDescription: "",
+    skins: ["Grand Warden", "Gilded Warden", "Bubblin Warden"],
+  },
 };
 
 export function getRulerKeys(): string[] { return Object.keys(RULERS); }

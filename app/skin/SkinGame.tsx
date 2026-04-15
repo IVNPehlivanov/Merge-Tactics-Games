@@ -193,7 +193,7 @@ export default function SkinGame({ secretEntry, dayKey, onSolved }: Props) {
     ) : null;
 
   return (
-    <div className="w-full space-y-6 max-md:pb-48">
+    <div className="w-full space-y-6 pb-48">
 
       {/* ── Skin image (same layout pattern as Classic: image block, then search block) ── */}
       {!won && (

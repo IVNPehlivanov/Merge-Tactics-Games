@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import { SITE } from "@/lib/content";
 import HomeInfographic from "@/components/HomeInfographic";
 import { StreakBadge } from "@/components/StreakBadge";
+import HowToPlayModal from "@/components/HowToPlayModal";
+import Link from "next/link";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Mergedle — Daily Merge Tactics Wordle Games",
+  title: "Merge Tactics Wordle | Card Guessing Games | Mergedle",
   description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
   alternates: { canonical: SITE.url },
   openGraph: {
@@ -40,11 +42,47 @@ export default function HomePage() {
       <div className="relative z-10 mx-auto flex w-full max-w-md flex-col items-center">
         {/* Title + logo */}
         <div className="w-full px-4 pt-8 text-center sm:pt-10">
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex w-full items-center justify-center">
             <div className="absolute -left-4 top-0"><StreakBadge inline /></div>
             <h1 className="font-game text-center text-2xl leading-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] sm:text-3xl">
               Merge Tactics Wordle
             </h1>
+            <div className="absolute -right-4 top-2">
+              <HowToPlayModal triggerAriaLabel="How to play Mergedle">
+                <div className="text-left">
+                  <h2 id="how-to-play-title" className="mb-2 text-base font-semibold text-white">
+                    What is Mergedle?
+                  </h2>
+                  <p className="text-sm text-slate-300">
+                    Mergedle is a collection of free daily Wordle-style mini-games based on Merge Tactics cards. A new puzzle is available every day at midnight UTC - no login required.
+                  </p>
+
+                  <h3 className="mb-2 mt-6 text-base font-semibold text-white">Game Modes</h3>
+                  <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
+                    <li><Link href="/classic" className="font-medium text-indigo-400 hover:underline">Classic Wordle</Link> - guess the mystery card from stat clues. Green = match, red = no match, arrows = higher/lower.</li>
+                    <li><Link href="/pixel" className="font-medium text-indigo-400 hover:underline">Pixel Quiz</Link> - identify the card from a pixelated image that gets clearer with each wrong guess.</li>
+                    <li><Link href="/skin" className="font-medium text-indigo-400 hover:underline">Skin Quiz</Link> - guess which ruler the skin belongs to from its cosmetic image.</li>
+                    <li><Link href="/description" className="font-medium text-indigo-400 hover:underline">Description Quiz</Link> - guess the card from its in-game description text, revealed word by word.</li>
+                  </ul>
+
+                  <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium text-white">When does the daily puzzle reset?</p>
+                      <p className="text-sm text-slate-300">Every day at midnight UTC. Everyone worldwide gets the same card.</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">Do I need an account?</p>
+                      <p className="text-sm text-slate-300">No - all progress is saved locally in your browser. No sign-up required.</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">How many guesses do I get?</p>
+                      <p className="text-sm text-slate-300">Unlimited. Keep guessing until you find the right card.</p>
+                    </div>
+                  </div>
+                </div>
+              </HowToPlayModal>
+            </div>
           </div>
           <h2 className="font-game mx-auto mt-2 max-w-lg text-center text-pretty text-sm leading-snug text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] sm:text-base">
             Guess the Clash Royale Merge Tactics card mini-game

@@ -274,7 +274,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
     ) : null;
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6 px-4">
+    <div className="mx-auto w-full max-w-md space-y-6 px-4 pb-48">
       <section className="rounded-xl border-2 border-white/40 bg-white/10 p-4 backdrop-blur-sm sm:p-5">
         {won ? (
           <p className="text-center font-game text-base leading-relaxed text-white whitespace-pre-line [text-shadow:0_1px_4px_rgba(0,0,0,0.9)]">

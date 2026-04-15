@@ -129,6 +129,7 @@ const PIXEL_ENABLED_RULER_KEYS = new Set<string>([
   "echo_sage",
   "dagger_duchess",
   "royale_king",
+  "grand_warden",
 ]);
 
 function buildPool(): PoolEntry[] {
@@ -328,7 +329,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
     ) : null;
 
   return (
-    <div className="w-full space-y-6 max-md:pb-48">
+    <div className="w-full space-y-6 pb-48">
 
       {/* ── Pixelated image (same layout pattern as Classic: image block, then search block) ── */}
       {!won && (

@@ -55,6 +55,10 @@ export const SKIN_POOL: SkinEntry[] = [
   { rulerKey: "dagger_duchess", skinName: "Disguised Duchess",   imagePath: "/Rulers/Dagger_Duchess/Disguised_Duchess.webp" },
   { rulerKey: "dagger_duchess", skinName: "Duchess of Hearts",   imagePath: "/Rulers/Dagger_Duchess/Duchess_of_Hearts.webp" },
   { rulerKey: "dagger_duchess", skinName: "Crystalline Duchess", imagePath: "/Rulers/Dagger_Duchess/Crystalline_Duchess.webp" },
+  // Grand Warden
+  { rulerKey: "grand_warden",   skinName: "Grand Warden",        imagePath: "/Rulers/Grand_Warden/Grand_Warden.webp" },
+  { rulerKey: "grand_warden",   skinName: "Gilded Warden",       imagePath: "/Rulers/Grand_Warden/Gilded_Warden.webp" },
+  { rulerKey: "grand_warden",   skinName: "Bubblin Warden",      imagePath: "/Rulers/Grand_Warden/Bubblin_Warden.webp" },
 ];
 
 export function getValidSkinPool(): SkinEntry[] {
