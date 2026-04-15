@@ -383,7 +383,7 @@ export default function DescriptionGame({ dayKey, onSolved }: Props) {
                           onClick={() => submitGuess(k)}
                           className="card-search-option flex w-full items-center bg-white text-left text-base font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
-                          <Image src={descriptionImagePath(k)} alt="" width={56} height={56} className="card-search-dropdown-thumb rounded object-contain" unoptimized />
+                          <Image src={descriptionImagePath(k)} alt="" width={56} height={56} className="card-search-dropdown-thumb rounded object-contain" style={k === "grand_warden" ? { transform: "scale(1.4)" } : undefined} unoptimized />
                           <span className="text-base font-medium">{getDescriptionDisplayName(k)}</span>
                         </button>
                       </li>

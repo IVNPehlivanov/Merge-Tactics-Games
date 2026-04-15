@@ -98,7 +98,7 @@ function PixelatedCard({ src, pixelWidth, pixelHeight }: { src: string; pixelWid
 }
 
 // ── EntryThumbnail ────────────────────────────────────────────────────────────
-function EntryThumbnail({ imagePath }: { imagePath: string }) {
+function EntryThumbnail({ imagePath, scale }: { imagePath: string; scale?: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) {
     return (
@@ -112,13 +112,14 @@ function EntryThumbnail({ imagePath }: { imagePath: string }) {
       width={56}
       height={56}
       className="card-search-dropdown-thumb rounded object-contain"
+      style={scale ? { transform: `scale(${scale})` } : undefined}
       onError={() => setFailed(true)}
     />
   );
 }
 
 // ── Combined pool (cards + rulers) ───────────────────────────────────────────
-interface PoolEntry { key: string; name: string; imagePath: string; }
+interface PoolEntry { key: string; name: string; imagePath: string; scale?: string; }
 
 // Rulers with shipped `/public/Cards/{Name}.webp` art (used for pixelation + search thumbnails).
 const PIXEL_ENABLED_RULER_KEYS = new Set<string>([
@@ -144,6 +145,7 @@ function buildPool(): PoolEntry[] {
       key: `ruler__${k}`,
       name: getRulerByKey(k)?.name ?? k,
       imagePath: pixelRulerCardImagePath(k),
+      scale: k === "grand_warden" ? "1.4" : undefined,
     }));
   return [...cards, ...rulers];
 }
@@ -403,7 +405,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
                           onClick={() => handleGuess(entry.key)}
                           className="card-search-option flex w-full items-center bg-white text-left text-base font-medium text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         >
-                          <EntryThumbnail imagePath={entry.imagePath} />
+                          <EntryThumbnail imagePath={entry.imagePath} scale={entry.scale} />
                           <span className="text-base font-medium">{entry.name}</span>
                         </button>
                       </li>
@@ -432,7 +434,7 @@ export default function PixelGame({ dayKey, onSolved }: Props) {
                   key={key}
                   className="animate-wrong-guess-in flex w-full items-center gap-3 rounded-xl border-2 border-red-400/80 bg-white/10 px-4 py-3 backdrop-blur-sm"
                 >
-                  {entry && <EntryThumbnail imagePath={entry.imagePath} />}
+                  {entry && <EntryThumbnail imagePath={entry.imagePath} scale={entry.scale} />}
                   <span className="text-base font-medium text-white">{entry?.name ?? key}</span>
                 </div>
               );
