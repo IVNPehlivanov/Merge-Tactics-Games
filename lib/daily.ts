@@ -27,6 +27,15 @@ export function setDevDayKey(key: string | null): void {
   else localStorage.setItem(DEV_DAY_KEY, key);
 }
 
+export function addUtcDaysToDayKey(dayKey: string, days: number): string {
+  const [y, m, d] = dayKey.split("-").map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d + days));
+  const yy = date.getUTCFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(date.getUTCDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
+}
+
 export function getNextMidnightUTC(): Date {
   const now = new Date();
   return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1));

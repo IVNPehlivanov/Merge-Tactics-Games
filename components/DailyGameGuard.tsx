@@ -17,6 +17,7 @@ import ClassicGame from "@/app/classic/ClassicGame";
 import PixelGame from "@/app/pixel/PixelGame";
 import SkinGame from "@/app/skin/SkinGame";
 import DescriptionGame from "@/app/description/DescriptionGame";
+import { DevAnswer } from "@/components/DevAnswer";
 
 function LivePlayerCount({ slug, dayKey, justSolved }: { slug: string; dayKey: string; justSolved: boolean }) {
   const [count, setCount] = useState<number | null>(null);
@@ -193,6 +194,7 @@ export default function DailyGameGuard({ slug }: Props) {
           </button>
         </div>
       )}
+      {isDev && <DevAnswer label="Mergedle" />}
     </div>
   );
 }
