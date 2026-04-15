@@ -8,10 +8,10 @@ import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Merge Tactics Wordle | Card Guessing Games | Mergedle",
-  description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
+  description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more.",
   alternates: { canonical: SITE.url },
   openGraph: {
-    description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more. Free, no login.",
+    description: "Daily Wordle-style Merge Tactics games. Guess the Card, Skin, and more.",
     images: [{ url: `${SITE.url}/og/ogimage.webp`, width: 1200, height: 630 }],
   },
 };
@@ -22,7 +22,7 @@ const websiteSchema = {
   "@id": `${SITE.url}/#website`,
   name: "Mergedle",
   url: SITE.url,
-  description: "Daily Wordle-style Merge Tactics games. Free, no login required.",
+  description: "Daily Wordle-style Merge Tactics games.",
   inLanguage: "en",
 };
 
@@ -54,7 +54,7 @@ export default function HomePage() {
                     What is Mergedle?
                   </h2>
                   <p className="text-sm text-slate-300">
-                    Mergedle is a collection of free daily Wordle-style mini-games based on Merge Tactics cards. A new puzzle is available every day at midnight UTC - no login required.
+                    Mergedle is a collection of free daily Wordle-style mini-games based on Merge Tactics cards. A new puzzle is available every day at midnight UTC.
                   </p>
 
                   <h3 className="mb-2 mt-6 text-base font-semibold text-white">Game Modes</h3>
@@ -65,21 +65,7 @@ export default function HomePage() {
                     <li><Link href="/description" className="font-medium text-indigo-400 hover:underline">Description Quiz</Link> - guess the card from its in-game description text, revealed word by word.</li>
                   </ul>
 
-                  <h3 className="mb-2 mt-6 text-base font-semibold text-white">Frequently Asked Questions</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <p className="text-sm font-medium text-white">When does the daily puzzle reset?</p>
-                      <p className="text-sm text-slate-300">Every day at midnight UTC. Everyone worldwide gets the same card.</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">Do I need an account?</p>
-                      <p className="text-sm text-slate-300">No - all progress is saved locally in your browser. No sign-up required.</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">How many guesses do I get?</p>
-                      <p className="text-sm text-slate-300">Unlimited. Keep guessing until you find the right card.</p>
-                    </div>
-                  </div>
+  
                 </div>
               </HowToPlayModal>
             </div>
