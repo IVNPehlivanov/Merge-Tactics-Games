@@ -18,7 +18,7 @@ export default function TermsOfServicePage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Terms of Service</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 22.03.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 16.04.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
         <section>
@@ -143,7 +143,20 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">9. Changes to These Terms</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            9. Third-Party Advertising
+          </h2>
+          <p>
+            The Website may display advertisements provided by third-party advertising
+            partners. We do not control and are not responsible for the content, accuracy, or
+            practices of such advertisements or third-party websites.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-white font-semibold text-base mb-3">
+            10. Changes to These Terms
+          </h2>
           <p>
             We may update these Terms at any time. Continued use of the Website constitutes
             acceptance of changes.
@@ -151,7 +164,9 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">10. Termination</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            11. Termination
+          </h2>
           <p>
             We reserve the right to suspend or terminate access to the Website at our discretion,
             without notice, for conduct that violates these Terms or is otherwise harmful.
@@ -159,7 +174,9 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">11. Governing Law</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            12. Governing Law
+          </h2>
           <p>
             These Terms shall be governed by and construed in accordance with the laws of the
             jurisdiction in which the Website operator is established, without regard to conflict
@@ -168,7 +185,9 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">12. Contact</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            13. Contact
+          </h2>
           <p>If you have questions about these Terms, you may contact us at:</p>
           <p className="mt-3">
             Email:{" "}

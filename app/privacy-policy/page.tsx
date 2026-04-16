@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Privacy Policy</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 22.03.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 16.04.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
         <section>
@@ -86,24 +86,55 @@ export default function PrivacyPolicyPage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">4. Children&apos;s Privacy</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            4. Advertising and Cookies
+          </h2>
           <p>
-            We do not knowingly collect personal information from children under the age of 13 (or
-            the minimum age required by applicable law). If you believe a child has provided
-            personal information, please contact us so appropriate steps can be taken.
+            This website uses cookies and similar tracking technologies, including those
+            from third-party vendors such as Google, to serve and personalize advertisements
+            based on users&apos; previous visits to this website and other websites.
+          </p>
+          <p className="mt-3">
+            Google&apos;s use of advertising cookies enables it and its partners to serve
+            ads based on your visits to this and other sites.
+          </p>
+          <p className="mt-3">
+            Users may opt out of personalized advertising by visiting{" "}
+            <a
+              href="https://www.google.com/settings/ads"
+              className="text-indigo-400 hover:text-indigo-300 underline"
+            >
+              Ads Settings
+            </a>
+            . By continuing to use this website, you acknowledge the use of cookies for
+            advertising purposes.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">5. Changes to This Policy</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            5. Children&apos;s Privacy
+          </h2>
           <p>
-            We may update this Privacy Policy from time to time. Updates will be posted on this
-            page with a revised &quot;Last Updated&quot; date.
+            We do not knowingly collect personal information from children under the age of
+            13 (or the minimum age required by applicable law). If you believe a child has
+            provided personal information, please contact us so appropriate steps can be
+            taken.
           </p>
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">6. Contact</h2>
+          <h2 className="text-white font-semibold text-base mb-3">
+            6. Changes to This Policy
+          </h2>
+          <p>
+            We may update this Privacy Policy from time to time. Updates will be posted on
+            this page with a revised &quot;Last Updated&quot; date.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-white font-semibold text-base mb-3">7. Contact</h2>
           <p>If you have questions about this Privacy Policy, you may contact us at:</p>
           <p className="mt-3">
             Email:{" "}
