@@ -54,15 +54,15 @@ export default function HomePage() {
                     What is Mergedle?
                   </h2>
                   <p className="text-sm text-slate-300">
-                    Mergedle is a collection of free daily Wordle-style mini-games based on Merge Tactics cards. A new puzzle is available every day at midnight UTC.
+                    Mergedle is a collection of daily Wordle-style mini-games based on Clash Royale Merge Tactics cards. The games reset every day at midnight UTC with new cards.
                   </p>
 
                   <h3 className="mb-2 mt-6 text-base font-semibold text-white">Game Modes</h3>
                   <ul className="list-disc space-y-2 pl-5 text-sm text-slate-300">
-                    <li><Link href="/classic" className="font-medium text-indigo-400 hover:underline">Classic Wordle</Link> - guess the mystery card from stat clues. Green = match, red = no match, arrows = higher/lower.</li>
-                    <li><Link href="/pixel" className="font-medium text-indigo-400 hover:underline">Pixel Quiz</Link> - identify the card from a pixelated image that gets clearer with each wrong guess.</li>
-                    <li><Link href="/skin" className="font-medium text-indigo-400 hover:underline">Skin Quiz</Link> - guess which ruler the skin belongs to from its cosmetic image.</li>
-                    <li><Link href="/description" className="font-medium text-indigo-400 hover:underline">Description Quiz</Link> - guess the card from its in-game description text, revealed word by word.</li>
+                    <li><Link href="/classic" className="font-medium text-indigo-400 hover:underline">Classic Wordle</Link>: Guess the daily card by using stat clues - Elixir Cost, Primary Trait, Secondary Trait, Type, Hit Speed, Speed and Release Year. Green means it's an exact match. Arrows point higher or lower to the correct value on some of the fields.</li>
+                    <li><Link href="/pixel" className="font-medium text-indigo-400 hover:underline">Pixel Quiz</Link>: Guess the card or ruler from its pixelated version. The image starts heavily blurred and gets clearer with each wrong guess.</li>
+                    <li><Link href="/skin" className="font-medium text-indigo-400 hover:underline">Skin Quiz</Link>: Guess the skin from a zoomed grayscale image. The image starts heavily zoomed in and zooms out more with each wrong guess.</li>
+                    <li><Link href="/description" className="font-medium text-indigo-400 hover:underline">Description Quiz</Link>: Guess the card or ruler by its cut-off description. Each wrong guess reveals another word.</li>
                   </ul>
 
   
