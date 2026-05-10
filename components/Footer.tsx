@@ -40,7 +40,7 @@ export default function Footer() {
   const activeGames = GAME_META.filter((g) => !g.comingSoon);
 
   return (
-    <footer className="font-game mt-16 w-full border-t border-white/10 px-4 py-12 text-sm text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.95),0_2px_10px_rgba(0,0,0,0.85)] sm:px-6">
+    <footer className="font-game mt-16 w-full border-t border-white/10 px-4 pt-10 pb-6 text-sm text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.95),0_2px_10px_rgba(0,0,0,0.85)] sm:px-6">
       {/* Centered column block — matches reference: one row, three equal columns, text left in each */}
       <div className="mx-auto w-full max-w-5xl">
         {/* Phone: title + blurb + email, all centered */}
@@ -90,21 +90,8 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* REQUIRED: Supercell fan content disclaimer — DO NOT REMOVE */}
-      <div className="mx-auto mt-10 max-w-5xl border-t border-white/10 px-2 pt-6 text-center text-xs font-sans md:px-0">
+      <div className="mx-auto mt-8 max-w-5xl border-t border-white/10 px-2 pt-4 text-center text-xs font-sans md:px-0">
         <p>© {new Date().getFullYear()} Mergedle. All rights reserved.</p>
-        <p className="mx-auto mt-2 max-w-sm text-pretty md:max-w-none">
-          This material is unofficial and is not endorsed by Supercell. For more information see{" "}
-          <a
-            href="https://supercell.com/en/fan-content-policy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={footerAccentLinkClass}
-          >
-            Supercell&apos;s Fan Content Policy
-          </a>
-          .
-        </p>
       </div>
     </footer>
   );

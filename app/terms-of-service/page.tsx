@@ -18,7 +18,7 @@ export default function TermsOfServicePage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Terms of Service</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 16.04.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 10.05.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
         <section>
@@ -46,19 +46,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">
-            2. Unofficial Fan Content Disclaimer
-          </h2>
-          <p>
-            {SITE.name} is not affiliated with, endorsed, sponsored, or approved by Supercell Oy.
-            Merge Tactics and all related trademarks, logos, and intellectual property are the
-            property of Supercell Oy. This Website complies with the Supercell Fan Content Policy.
-            Any content displayed remains the property of its respective owners.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-white font-semibold text-base mb-3">3. Eligibility</h2>
+          <h2 className="text-white font-semibold text-base mb-3">2. Eligibility</h2>
           <p>
             You must be at least 13 years old (or the minimum legal age in your jurisdiction) to
             use this Website.
@@ -69,7 +57,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">4. Acceptable Use</h2>
+          <h2 className="text-white font-semibold text-base mb-3">3. Acceptable Use</h2>
           <p>You agree not to:</p>
           <ul className="mt-2 list-disc pl-6 space-y-1">
             <li>Use the Website for any unlawful purpose.</li>
@@ -84,7 +72,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">5. Intellectual Property</h2>
+          <h2 className="text-white font-semibold text-base mb-3">4. Intellectual Property</h2>
           <p>
             Unless otherwise stated, all original content on this Website (including game design,
             layout, graphics, text, and code) is owned by or licensed to us and is protected under
@@ -100,7 +88,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">6. Privacy</h2>
+          <h2 className="text-white font-semibold text-base mb-3">5. Privacy</h2>
           <p>We do not require user registration.</p>
           <p className="mt-3">
             However, certain technical data (such as IP address, browser type, and server logs)
@@ -109,7 +97,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">7. Disclaimer of Warranties</h2>
+          <h2 className="text-white font-semibold text-base mb-3">6. Disclaimer of Warranties</h2>
           <p>
             The Website and all games are provided &quot;AS IS&quot; and &quot;AS AVAILABLE&quot;
             without warranties of any kind, either express or implied.
@@ -127,7 +115,7 @@ export default function TermsOfServicePage() {
         </section>
 
         <section>
-          <h2 className="text-white font-semibold text-base mb-3">8. Limitation of Liability</h2>
+          <h2 className="text-white font-semibold text-base mb-3">7. Limitation of Liability</h2>
           <p>
             To the maximum extent permitted by law, we shall not be liable for any indirect,
             incidental, special, consequential, or punitive damages arising out of or related to
@@ -144,7 +132,7 @@ export default function TermsOfServicePage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            9. Third-Party Advertising
+            8. Third-Party Advertising
           </h2>
           <p>
             The Website may display advertisements provided by third-party advertising
@@ -155,7 +143,7 @@ export default function TermsOfServicePage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            10. Changes to These Terms
+            9. Changes to These Terms
           </h2>
           <p>
             We may update these Terms at any time. Continued use of the Website constitutes
@@ -165,7 +153,7 @@ export default function TermsOfServicePage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            11. Termination
+            10. Termination
           </h2>
           <p>
             We reserve the right to suspend or terminate access to the Website at our discretion,
@@ -175,7 +163,7 @@ export default function TermsOfServicePage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            12. Governing Law
+            11. Governing Law
           </h2>
           <p>
             These Terms shall be governed by and construed in accordance with the laws of the
@@ -186,7 +174,7 @@ export default function TermsOfServicePage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            13. Contact
+            12. Contact
           </h2>
           <p>If you have questions about these Terms, you may contact us at:</p>
           <p className="mt-3">

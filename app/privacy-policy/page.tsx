@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
         <BackToAllGames />
       </div>
       <h1 className="text-3xl font-bold mb-2 text-indigo-400 font-game">Privacy Policy</h1>
-      <p className="text-white/50 text-sm mb-8">Last Updated: 16.04.2026</p>
+      <p className="text-white/50 text-sm mb-8">Last Updated: 10.05.2026</p>
 
       <div className="space-y-8 text-white/80 leading-relaxed text-sm">
         <section>
@@ -87,27 +87,12 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-white font-semibold text-base mb-3">
-            4. Advertising and Cookies
+            4. Cookies and Tracking Technologies
           </h2>
           <p>
-            This website uses cookies and similar tracking technologies, including those
-            from third-party vendors such as Google, to serve and personalize advertisements
-            based on users&apos; previous visits to this website and other websites.
-          </p>
-          <p className="mt-3">
-            Google&apos;s use of advertising cookies enables it and its partners to serve
-            ads based on your visits to this and other sites.
-          </p>
-          <p className="mt-3">
-            Users may opt out of personalized advertising by visiting{" "}
-            <a
-              href="https://www.google.com/settings/ads"
-              className="text-indigo-400 hover:text-indigo-300 underline"
-            >
-              Ads Settings
-            </a>
-            . By continuing to use this website, you acknowledge the use of cookies for
-            advertising purposes.
+            We may use cookies and similar tracking technologies to enhance your experience on the
+            Website. These technologies allow us to collect information about your browsing
+            activities and usage patterns.
           </p>
         </section>
 

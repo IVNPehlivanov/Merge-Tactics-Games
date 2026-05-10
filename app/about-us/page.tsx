@@ -45,6 +45,12 @@ export default function AboutPage() {
           </p>
         </section>
 
+        <p className="text-white/70 text-sm leading-relaxed">
+          Mergedle is not affiliated with, endorsed or sponsored by Supercell Oy. Merge
+          Tactics and all related trademarks, logos, and intellectual property are the property of
+          Supercell Oy.
+        </p>
+
         <section>
           <h2 className="text-white font-semibold text-base mb-3">The 4 Game Modes</h2>
           <ul className="space-y-3">
