@@ -74,6 +74,14 @@ export const RULERS: Record<string, Ruler> = {
     modifierDescription: "",
     skins: ["Grand Warden", "Gilded Warden", "Bubblin Warden"],
   },
+  tomb_queen: {
+    key: "tomb_queen",
+    name: "Tomb Queen",
+    description: "Armie of Skeletons are dying to serve this Ruler of the afterlife, but she only summons those closest to her heart.",
+    modifierName: "",
+    modifierDescription: "",
+    skins: [],
+  },
 };
 
 export function getRulerKeys(): string[] { return Object.keys(RULERS); }
