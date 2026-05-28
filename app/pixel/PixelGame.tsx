@@ -134,11 +134,14 @@ const PIXEL_ENABLED_RULER_KEYS = new Set<string>([
   "tomb_queen",
 ]);
 
+const PADDED_CARD_KEYS = new Set(["boss_bandit", "firecracker", "goblin_cage", "magic_archer"]);
+
 function buildPool(): PoolEntry[] {
   const cards = getCardKeys().map((k) => ({
     key: k,
     name: getCardDisplayName(k),
     imagePath: cardImagePath(k),
+    scale: PADDED_CARD_KEYS.has(k) ? "1.32" : undefined,
   }));
   const rulers = getRulerKeys()
     .filter((k) => PIXEL_ENABLED_RULER_KEYS.has(k))
@@ -146,7 +149,7 @@ function buildPool(): PoolEntry[] {
       key: `ruler__${k}`,
       name: getRulerByKey(k)?.name ?? k,
       imagePath: pixelRulerCardImagePath(k),
-      scale: k === "grand_warden" ? "1.4" : undefined,
+      scale: (k === "grand_warden" || k === "tomb_queen") ? "1.4" : undefined,
     }));
   return [...cards, ...rulers];
 }

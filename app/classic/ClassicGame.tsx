@@ -93,6 +93,8 @@ function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuess
 
 // -- Sub-components --
 
+const PADDED_CARD_KEYS = new Set(["boss_bandit", "firecracker", "goblin_cage", "magic_archer"]);
+
 function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" | "md" | "lg" | "xl" | "search" }) {
   const [failed, setFailed] = useState(false);
   const src = cardImagePath(cardKey);
@@ -107,6 +109,7 @@ function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" 
             ? "h-14 w-14 sm:h-20 sm:w-20"
             : "h-10 w-10";
   const px = size === "search" ? 56 : size === "xl" ? 96 : size === "lg" ? 64 : size === "md" ? 80 : 40;
+  const scale = PADDED_CARD_KEYS.has(cardKey) ? { transform: "scale(1.32)" } : undefined;
   if (failed) {
     return (
       <div
@@ -122,6 +125,7 @@ function CardThumbnail({ cardKey, size = "sm" }: { cardKey: string; size?: "sm" 
       alt=""
       width={px}
       height={px}
+      style={scale}
       className={
         size === "search"
           ? "card-search-dropdown-thumb rounded object-contain"
