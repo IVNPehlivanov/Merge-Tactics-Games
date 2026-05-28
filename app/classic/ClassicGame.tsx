@@ -85,8 +85,7 @@ function buildGuessAttributes(guessKey: string, secretKey: string): ClassicGuess
     elixirCost:     { value: g.elixirCost,     result: compareOrdered(g.elixirCost, s.elixirCost) },
     hitSpeed:       { value: gh ?? "N/A",               result: compareOrderedWithNA(gh, sh) },
     speed:          { value: g.speed ?? "N/A",          result: compareOrderedWithNA(gs, ss) },
-    primaryTrait:   { value: g.primaryTrait,   result: g.primaryTrait   === s.primaryTrait   ? "correct" : "wrong" },
-    secondaryTrait: { value: g.secondaryTrait, result: g.secondaryTrait === s.secondaryTrait ? "correct" : "wrong" },
+    primaryTrait:   { value: g.trait,   result: g.trait   === s.trait   ? "correct" : "wrong" },
     cardType:       { value: g.cardType,       result: g.cardType       === s.cardType       ? "correct" : "wrong" },
     releaseYear:    { value: gy,               result: compareOrdered(gy, sy) },
   };
@@ -152,7 +151,7 @@ function AttributeCell({
       ? value
         ? "Yes"
         : "No"
-      : attrKey === "primaryTrait" || attrKey === "secondaryTrait"
+      : attrKey === "primaryTrait"
         ? getTraitDisplayName(String(value))
         : attrKey === "hitSpeed"
           ? (typeof value === "number" ? `${String(value)} sec` : String(value))
@@ -193,17 +192,17 @@ function AttributeCell({
 
 // -- Column config --
 
-const ATTR_LABELS = ["Elixir Cost", "Type", "Trait 1", "Trait 2", "Hit Speed", "Speed", "Release Date"] as const;
+const ATTR_LABELS = ["Elixir Cost", "Type", "Trait", "Hit Speed", "Speed", "Release Date"] as const;
 const ATTR_KEYS: (keyof ClassicGuessAttributes)[] = [
-  "elixirCost", "cardType", "primaryTrait", "secondaryTrait", "hitSpeed", "speed", "releaseYear",
+  "elixirCost", "cardType", "primaryTrait", "hitSpeed", "speed", "releaseYear",
 ];
 
 const ATTRIBUTE_COLUMNS: { key: keyof ClassicGuessAttributes; label: (typeof ATTR_LABELS)[number] }[] =
   ATTR_KEYS.map((key, i) => ({ key, label: ATTR_LABELS[i] }));
 
-/** Share row width on desktop (13% + 7×12.43% = 100%) — table stays within panel, no PC horizontal scroll */
+/** Share row width on desktop (13% + 6×14.5% = 100%) — table stays within panel, no PC horizontal scroll */
 const CARD_COL_PCT = "13%";
-const ATTR_COL_PCT = `${87 / 7}%`;
+const ATTR_COL_PCT = `${87 / 6}%`;
 
 const CELL_DELAY_MS = 200;
 
@@ -478,11 +477,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                           key === "releaseYear" ? "min-w-0" : "min-w-0 break-words"
                         }`}
                       >
-                        {label === "Trait 1" || label === "Trait 2" ? (
-                          <>
-                            <span className="block">Trait</span>
-                            <span className="block">{label === "Trait 1" ? "1" : "2"}</span>
-                          </>
+                        {label === "Trait" ? (
+                          <span className="block">Trait</span>
                         ) : label === "Elixir Cost" || label === "Hit Speed" ? (
                           <>
                             {label === "Elixir Cost" ? (
@@ -540,10 +536,8 @@ export default function ClassicGame({ dayKey, onSolved }: Props) {
                                     : key === "elixirCost"
                                       ? (CARD_STATS[g.cardKey]?.elixirCost ?? 0)
                                       : key === "primaryTrait"
-                                        ? (CARD_STATS[g.cardKey]?.primaryTrait ?? "none")
-                                        : key === "secondaryTrait"
-                                          ? (CARD_STATS[g.cardKey]?.secondaryTrait ?? "none")
-                                          : key === "cardType"
+                                        ? (CARD_STATS[g.cardKey]?.trait ?? "none")
+                                        : key === "cardType"
                                             ? (CARD_STATS[g.cardKey]?.cardType ?? "Troop")
                                             : "—",
                             result: "wrong" as const,

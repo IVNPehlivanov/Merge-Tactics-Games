@@ -18,14 +18,6 @@ function BrandBlurb() {
         <a href={`mailto:${SITE.contactEmail}`} className={footerContactLinkClass}>
           ✉ {SITE.contactEmail}
         </a>
-        <a
-          href={SITE.xUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={footerContactLinkClass}
-        >
-          𝕏 @Mergedle
-        </a>
       </div>
     </>
   );
