@@ -131,6 +131,7 @@ const PIXEL_ENABLED_RULER_KEYS = new Set<string>([
   "dagger_duchess",
   "royale_king",
   "grand_warden",
+  "tomb_queen",
 ]);
 
 function buildPool(): PoolEntry[] {
